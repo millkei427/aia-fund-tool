@@ -32,12 +32,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK"
 .amount-input { font-size: 22px; font-weight: 800; color: #c8102e; border: 2px solid #d4dae3; border-radius: 8px; padding: 8px 14px; width: 220px; text-align: right; font-variant-numeric: tabular-nums; }
 .amount-input:focus { outline: none; border-color: #c8102e; }
 .equals-sign { font-size: 22px; color: #8a96a8; font-weight: 600; }
-.rmb-display {
-  font-size: 22px; font-weight: 800; color: #d97706;
-  border: 2px solid #fed7aa; border-radius: 8px; background: #fff7ed;
-  padding: 8px 14px; min-width: 220px; text-align: right;
-  font-variant-numeric: tabular-nums; display: inline-block;
-}
+.rmb-display { font-size: 22px; font-weight: 800; color: #d97706; border: 2px solid #fed7aa; border-radius: 8px; background: #fff7ed; padding: 8px 14px; min-width: 220px; text-align: right; font-variant-numeric: tabular-nums; display: inline-block; }
 .ccy-label { color: #8a96a8; font-size: 13px; font-weight: 600; }
 .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { padding: 5px 12px; border: 1px solid #d4dae3; background: #fff; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; color: #56657a; transition: all 0.15s; }
@@ -119,176 +114,276 @@ table.funds tr:hover td { background: #fbfcfe; }
 .toggle-row { display: flex; gap: 12px; align-items: center; font-size: 12px; color: #56657a; margin-top: 8px; }
 .toggle-row label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
 .cls-tag { display: inline-block; padding: 1px 6px; background: #eef1f5; color: #56657a; border-radius: 3px; font-size: 10px; font-weight: 600; }
-@media (max-width: 880px) {
-  .summary-row { grid-template-columns: 1fr 1fr; }
-  .charts-row { grid-template-columns: 1fr; }
-  .proj-grid { grid-template-columns: repeat(3, 1fr); }
-  .equals-sign { display: none; }
-  .rmb-display { width: 100%; }
-}
+@media (max-width: 880px) { .summary-row { grid-template-columns: 1fr 1fr; } .charts-row { grid-template-columns: 1fr; } .proj-grid { grid-template-columns: repeat(3, 1fr); } .equals-sign { display: none; } .rmb-display { width: 100%; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-
-<div class="header">
-  <h1>卓達智悅 · 月月派息基金分析工具 v3.2</h1>
-  <div class="sub">兩個預設組合 + 4 個主題組合 + 自選組合 · HKD/RMB 雙幣顯示 · 24 隻 USD Z 字頭基金</div>
-  <div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
-</div>
-
-<div class="section">
-  <div class="label-bar">
-    <span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span>
-    <div class="fx-group">
-      <div class="fx-control">
-        <span>USD/HKD 匯率</span>
-        <input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0">
-      </div>
-      <div class="fx-control">
-        <span>HKD/CNY 匯率</span>
-        <input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00">
-      </div>
-    </div>
-  </div>
-  <div class="amount-row">
-    <input type="text" class="amount-input" id="amountInput" value="2,000,000">
-    <span class="ccy-label">HKD</span>
-    <span class="equals-sign">=</span>
-    <span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span>
-    <span class="ccy-label">人民幣</span>
-  </div>
-  <div class="preset-chips" id="presets"></div>
-</div>
-
-<div class="tabs">
-  <div class="tab active" data-port="A">🎯 組合 A · 集中型</div>
-  <div class="tab" data-port="B">🌐 組合 B · 分散型</div>
-  <div class="tab" data-port="NA">🇺🇸 北美市場</div>
-  <div class="tab" data-port="ASIA">🌏 亞洲市場</div>
-  <div class="tab" data-port="TECH">💻 科技類</div>
-  <div class="tab" data-port="CONS">🛒 消費類</div>
-  <div class="tab" data-port="C">⚙️ 自選</div>
-</div>
-
-<div class="section">
-  <div class="summary-row">
-    <div class="metric hero">
-      <div class="label">每月派息</div>
-      <div class="value" id="sumMonthly">—</div>
-      <div class="sub-value" id="sumMonthlyRmb">≈ ¥ —</div>
-    </div>
-    <div class="metric">
-      <div class="label">每年回報</div>
-      <div class="value" id="sumAnnual">—</div>
-      <div class="sub-value" id="sumAnnualRmb">≈ ¥ —</div>
-    </div>
-    <div class="metric">
-      <div class="label">派息利率</div>
-      <div class="value" id="sumYield">—</div>
-    </div>
-    <div class="metric">
-      <div class="label">已選基金</div>
-      <div class="value" id="sumCount">—</div>
-    </div>
-  </div>
-  <div id="builderArea" style="display:none">
-    <div class="section-title" style="margin-top:8px">⚙️ 自訂基金組合 (24 隻 USD Z 字頭基金可選)</div>
-    <div class="builder-controls">
-      <button class="btn primary" id="btnSelectAll">全選</button>
-      <button class="btn" id="btnDeselectAll">全部清除</button>
-      <button class="btn" id="btnEqualize">平均分配</button>
-      <button class="btn" id="btnNormalize">自動湊夠 100%</button>
-      <span class="preset-divider"></span>
-      <span class="preset-label">📦 載入預設:</span>
-      <button class="btn" id="btnLoadA">組合 A (集中)</button>
-      <button class="btn" id="btnLoadB">組合 B (分散)</button>
-      <button class="btn theme-na" id="btnLoadNA">🇺🇸 北美</button>
-      <button class="btn theme-asia" id="btnLoadASIA">🌏 亞洲</button>
-      <button class="btn theme-tech" id="btnLoadTECH">💻 科技</button>
-      <button class="btn theme-cons" id="btnLoadCONS">🛒 消費</button>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="builder-table">
-        <thead>
-          <tr>
-            <th></th><th>代號</th><th>基金名稱</th><th>資產類別</th><th>派息率</th><th>價格 (USD)</th><th>風險</th><th>1年</th><th>3年</th><th>5年</th><th>比例 (%)</th>
-          </tr>
-        </thead>
-        <tbody id="builderBody"></tbody>
-      </table>
-    </div>
-    <div class="total-bar" id="totalBar">
-      <span>合計比例</span>
-      <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-      <span class="total-text" id="totalText">0%</span>
-    </div>
-  </div>
-</div>
-
-<div class="proj-card">
-  <h3>📅 多年累積派息模擬 (HKD / 人民幣 雙幣顯示)</h3>
-  <div class="proj-grid" id="projGrid"></div>
-  <div class="toggle-row">
-    <label><input type="checkbox" id="toggleReinvest"> 假設派息再投入 (按目前派息率複利)</label>
-    <span class="tiny">※ 模擬假設派息率不變,實際派息會隨基金表現而波動</span>
-  </div>
-</div>
-
-<div class="charts-row">
-  <div class="chart-card">
-    <h3>📈 累積派息趨勢 (1-30 年)</h3>
-    <div class="chart-wrap"><canvas id="chartProj"></canvas></div>
-  </div>
-  <div class="chart-card">
-    <h3>🌍 地區分佈 (依組合權重)</h3>
-    <div class="chart-wrap"><canvas id="chartGeo"></canvas></div>
-  </div>
-</div>
-
+<div class="header"><h1>卓達智悅 · 月月派息基金分析工具 v3.2</h1><div class="sub">兩個預設組合 + 4 個主題組合 + 自選組合 · HKD/RMB 雙幣顯示 · 24 隻 USD Z 字頭基金</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div></div>
+<div class="section"><div class="label-bar"><span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span><div class="fx-group"><div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0"></div><div class="fx-control"><span>HKD/CNY 匯率</span><input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00"></div></div></div><div class="amount-row"><input type="text" class="amount-input" id="amountInput" value="2,000,000"><span class="ccy-label">HKD</span><span class="equals-sign">=</span><span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span><span class="ccy-label">人民幣</span></div><div class="preset-chips" id="presets"></div></div>
+<div class="tabs"><div class="tab active" data-port="A">🎯 組合 A · 集中型</div><div class="tab" data-port="B">🌐 組合 B · 分散型</div><div class="tab" data-port="NA">🇺🇸 北美市場</div><div class="tab" data-port="ASIA">🌏 亞洲市場</div><div class="tab" data-port="TECH">💻 科技類</div><div class="tab" data-port="CONS">🛒 消費類</div><div class="tab" data-port="C">⚙️ 自選</div></div>
+<div class="section"><div class="summary-row"><div class="metric hero"><div class="label">每月派息</div><div class="value" id="sumMonthly">—</div><div class="sub-value" id="sumMonthlyRmb">≈ ¥ —</div></div><div class="metric"><div class="label">每年回報</div><div class="value" id="sumAnnual">—</div><div class="sub-value" id="sumAnnualRmb">≈ ¥ —</div></div><div class="metric"><div class="label">派息利率</div><div class="value" id="sumYield">—</div></div><div class="metric"><div class="label">已選基金</div><div class="value" id="sumCount">—</div></div></div>
+<div id="builderArea" style="display:none"><div class="section-title" style="margin-top:8px">⚙️ 自訂基金組合 (24 隻 USD Z 字頭基金可選)</div><div class="builder-controls"><button class="btn primary" id="btnSelectAll">全選</button><button class="btn" id="btnDeselectAll">全部清除</button><button class="btn" id="btnEqualize">平均分配</button><button class="btn" id="btnNormalize">自動湊夠 100%</button><span class="preset-divider"></span><span class="preset-label">📦 載入預設:</span><button class="btn" id="btnLoadA">組合 A</button><button class="btn" id="btnLoadB">組合 B</button><button class="btn theme-na" id="btnLoadNA">🇺🇸 北美</button><button class="btn theme-asia" id="btnLoadASIA">🌏 亞洲</button><button class="btn theme-tech" id="btnLoadTECH">💻 科技</button><button class="btn theme-cons" id="btnLoadCONS">🛒 消費</button></div>
+<div style="overflow-x:auto"><table class="builder-table"><thead><tr><th></th><th>代號</th><th>基金名稱</th><th>資產類別</th><th>派息率</th><th>價格 (USD)</th><th>風險</th><th>1年</th><th>3年</th><th>5年</th><th>比例 (%)</th></tr></thead><tbody id="builderBody"></tbody></table></div>
+<div class="total-bar" id="totalBar"><span>合計比例</span><div class="progress"><div class="progress-fill" id="progressFill"></div></div><span class="total-text" id="totalText">0%</span></div></div></div>
+<div class="proj-card"><h3>📅 多年累積派息模擬 (HKD / 人民幣 雙幣顯示)</h3><div class="proj-grid" id="projGrid"></div><div class="toggle-row"><label><input type="checkbox" id="toggleReinvest"> 假設派息再投入 (按目前派息率複利)</label><span class="tiny">※ 模擬假設派息率不變</span></div></div>
+<div class="charts-row"><div class="chart-card"><h3>📈 累積派息趨勢 (1-30 年)</h3><div class="chart-wrap"><canvas id="chartProj"></canvas></div></div><div class="chart-card"><h3>🌍 地區分佈 (依組合權重)</h3><div class="chart-wrap"><canvas id="chartGeo"></canvas></div></div></div>
 <div class="section-title">📋 基金詳細資料</div>
-<div class="fund-table-wrap">
-  <table class="funds">
-    <thead>
-      <tr>
-        <th>代號</th><th>基金名稱</th><th>資產類別</th><th>比例</th><th>配置 (HKD)</th><th>價格 (USD)</th><th>派息率</th><th>每月派息<br>HKD / RMB</th><th>每年回報<br>HKD / RMB</th><th>1年</th><th>3年</th><th>5年</th><th>風險</th>
-      </tr>
-    </thead>
-    <tbody id="fundBody"></tbody>
-  </table>
+<div class="fund-table-wrap"><table class="funds"><thead><tr><th>代號</th><th>基金名稱</th><th>資產類別</th><th>比例</th><th>配置 (HKD)</th><th>價格 (USD)</th><th>派息率</th><th>每月派息<br>HKD / RMB</th><th>每年回報<br>HKD / RMB</th><th>1年</th><th>3年</th><th>5年</th><th>風險</th></tr></thead><tbody id="fundBody"></tbody></table></div>
+<div class="footer"><strong>📚 AIA 官方參考連結</strong><div class="links"><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a></div><div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。基金價格採自 AIA 官方公佈 (04/24/2026)。HKD/CNY 匯率僅作參考。本工具不構成投資建議,投資涉及風險。</div></div>
 </div>
-
-<div class="footer">
-  <strong>📚 AIA 官方參考連結</strong>
-  <div class="links">
-    <a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊 (基金價格)</a>
-    <a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a>
-    <a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a>
-  </div>
-  <div class="disclaimer">
-    ⚠️ <strong>免責聲明:</strong> 本工具僅作銷售輔助參考。基金價格採自 AIA 官方公佈 (04/24/2026)。HKD/CNY 匯率僅作參考,實際匯率以銀行報價為準。本工具不構成投資建議,投資涉及風險。多年累積數據假設派息率不變,實際結果可能有顯著差異。<br>
-    💡 <strong>主題組合說明:</strong> 4 個主題組合 (北美/亞洲/科技/消費) 為按基金特性設計嘅參考配置, 並非 AIA 官方建議, 銷售時請按客戶風險取向調整。
-  </div>
-</div>
-
-</div>
-
 <script>
 const FUNDS = {
-  Z01: { name:"惠理高息", full:"惠理高息股票基金 A2 MDis", cls:"股票-亞太區", oldPrice:12.35, newPrice:12.98, annYield:0.05, risk:"高", region:"中國、香港、台灣、韓國、印度", regionGroup:"亞太(日本除外)", holdings:"三星、中國建設、騰訊、中人壽、香港華潤", r1:31.15, r3:39.58, r5:19.32 },
-  Z03: { name:"摩根亞太", full:"摩根基金 - 亞太入息基金 A (每月派息)", cls:"多元資產-亞太", oldPrice:118.7, newPrice:121.16, annYield:0.04, risk:"低", region:"中國、香港、台灣、韓國、印度、澳洲、新加坡", regionGroup:"亞太", holdings:"三星、中電、中國平安、招商銀行、康師傅", r1:16.86, r3:31.18, r5:18.74 },
-  Z04: { name:"摩根中國", full:"摩根中國股票高息 (美元) 每月派息", cls:"股票-中國香港", oldPrice:10.07, newPrice:9.96, annYield:0.10, risk:"高", region:"中國", regionGroup:"中國", holdings:"中國平安、招商銀行、興業銀行、長江電力、中國建設", r1:7.48, r3:15.60, r5:-4.67 },
-  Z05: { name:"路博邁", full:"路博邁 - NB 新興市場債券基金 強勢貨幣 A", cls:"固定收入-新興市場", oldPrice:7.91, newPrice:7.94, annYield:0.08, risk:"低", region:"墨西哥、印尼、烏克蘭、埃及", regionGroup:"新興市場", holdings:"各國國債、貨幣基金", r1:11.60, r3:42.08, r5:17.06 },
-  Z06: { name:"柏瑞環球", full:"柏瑞環球動態資產配置基金 ADC", cls:"多元資產-環球", oldPrice:8.36, newPrice:8.3967, annYield:0.07, risk:"低", region:"北美、歐洲、新興市場、英國、日本", regionGroup:"環球", holdings:"美國、歐洲股票、黃金、美國債券", r1:9.39, r3:14.34, r5:2.53 },
-  Z07: { name:"安聯增長", full:"安聯收益及增長基金 收息股份 (AM)", cls:"多元資產-美國", oldPrice:8.403, newPrice:8.5893, annYield:0.08, risk:"高", region:"美國、加拿大", regionGroup:"美國", holdings:"蘋果、微軟、谷歌、特斯拉、臉書、VISA、亞馬遜", r1:10.71, r3:32.43, r5:22.17 },
-  Z08: { name:"安聯亞洲", full:"安聯動力亞洲高收益債券基金 收息股份 (AMg)", cls:"固定收入-亞太區", oldPrice:4.3318, newPrice:4.2837, annYield:0.08, risk:"高", region:"中國、印度、印尼、港澳、新興市場", regionGroup:"亞太", holdings:"復星、融創、房地產、週期性消費、能源", r1:6.22, r3:22.43, r5:-23.62 },
-  Z11: { name:"晉達中國債券", full:"晉達全方位中國債券基金 A 收益-3", cls:"固定收入-中國香港", oldPrice:14.76, newPrice:14.80, annYield:0.03, risk:"高", region:"政府債券 (中國、菲律賓、香港、新興)", regionGroup:"中國香港", holdings:"銀行、公司、貨幣債券", r1:2.28, r3:-1.00, r5:-11.82 },
-  Z12: { name:"摩根環球債券", full:"摩根基金 - 環球債券收益基金 A (每月派息)", cls:"固定收入-環球", oldPrice:7.71, newPrice:7.68, annYield:0.06, risk:"高", region:"北美、歐洲、亞洲", regionGroup:"環球", holdings:"企業、抵押債券", r1:4.32, r3:16.95, r5:9.33 },
-  Z13: { name:"富達高收益", full:"富達美元高收益基金 A 每月特色派息 (G)", cls:"固定收入-美國", oldPrice:7.839, newPrice:7.857, annYield:0.07, risk:"高", region:"美國、荷蘭、加拿大", regionGroup:"美國", holdings:"通訊、週期性產品、能源、非週期消費品、基本工業", r1:6.75, r3:22.31, r5:18.53 },
-  Z15: { name:"霸菱環球高收益", full:"霸菱環球高收益債券基金 G 美元分派", cls:"固定收入-環球", oldPrice:74.33, newPrice:74.26, annYield:0.10, risk:"高", region:"環球", regionGroup:"環球", holdings:"醫療、電訊、能源、金融、工業、媒體、科技", r1:6.71, r3:27.19, r5:21.69 },
-  Z16: { name:"滙豐亞洲高收益", full:"滙豐亞洲高收益債券基金 AM2-美元", cls:"固定收入-亞太區", oldPrice:4.729, newPrice:4.68, annYield:0.07, risk:"高", region:"中國、印尼、印度、澳門、香港", regionGroup:"亞太", holdings:"永利澳門、新濠博亞、金沙中國、印度、印尼債券", r1:3.36, r3:8.64, r5:-25.95 },
-  Z17: { name:"貝萊德高息", full:"貝萊德系統分析環球股票高息基金 A6", cls:"股票-環球", oldPrice:9.42, newPrice:9.58, annYield:0.08, risk:"低", region:"美國", regionGroup:"環球", holdings:"蘋果、微軟、可口可樂、Walmart", r1:12.06, r3:44.54, r5:43.57 },
-  Z18: { name:"富蘭克林入息", full:"富蘭克林鄧普頓 - 富蘭克林入息基金 A (每月派息)", cls:"多元資產-美國", oldPrice:9.99, newPrice:9.99, annYield:0.08, risk:"高", region:"美國", regionGroup:"美國", holdings:"美國股票、企業債券", r1:11.65, r3:25.15, r5:28.21 },
-  Z20: { name:"施羅德動力收息", full:"施羅德環球基金系列 - 動力收息 A (MF2)", cls:"多元資產-環球", oldPrice:103.4262, newPrice:103.4262, annYield:0.07, risk:"中", region:"環球", regionGroup:"環球", holdings:"環球股票、債券、另類資產", r1:11.29, r3:null, r5:null },
-  Z29: { name:"資本集團公司債", full:"Capital International - 資本集團全球公司債券基金 (盧森堡) Bfdm", cls:"固定收入-環球", oldPrice:10.811, newPrice:10.811, annYield:0.05, risk:"低", region:"環球", regionGroup:"環球", holdings:"全球企業債券", r1:4.14, r3:null, r5:null },
-  Z31: { name:"駿利環球地產", full:"駿利亨德森 - 駿利亨德森環球房地產股票 A5m", cls:"股票-行業", oldPrice:8.04, newPrice:8.04, annYield:0.06, risk:"高", region:"環球地產", regionGroup:"環球", holdings:"地產投資信託 (REITs)", r1:6.17, r3:16.18, r5:nu
+  Z01: { name:"惠理高息", full:"惠理高息股票基金 A2 MDis", cls:"股票-亞太區", newPrice:12.98, annYield:0.05, risk:"高", regionGroup:"亞太(日本除外)", r1:31.15, r3:39.58, r5:19.32 },
+  Z03: { name:"摩根亞太", full:"摩根亞太入息基金 A", cls:"多元資產-亞太", newPrice:121.16, annYield:0.04, risk:"低", regionGroup:"亞太", r1:16.86, r3:31.18, r5:18.74 },
+  Z04: { name:"摩根中國", full:"摩根中國股票高息 (美元)", cls:"股票-中國香港", newPrice:9.96, annYield:0.10, risk:"高", regionGroup:"中國", r1:7.48, r3:15.60, r5:-4.67 },
+  Z05: { name:"路博邁", full:"路博邁 NB 新興市場債券 A", cls:"固定收入-新興市場", newPrice:7.94, annYield:0.08, risk:"低", regionGroup:"新興市場", r1:11.60, r3:42.08, r5:17.06 },
+  Z06: { name:"柏瑞環球", full:"柏瑞環球動態資產配置 ADC", cls:"多元資產-環球", newPrice:8.3967, annYield:0.07, risk:"低", regionGroup:"環球", r1:9.39, r3:14.34, r5:2.53 },
+  Z07: { name:"安聯增長", full:"安聯收益及增長 (AM)", cls:"多元資產-美國", newPrice:8.5893, annYield:0.08, risk:"高", regionGroup:"美國", r1:10.71, r3:32.43, r5:22.17 },
+  Z08: { name:"安聯亞洲", full:"安聯動力亞洲高收益債券 (AMg)", cls:"固定收入-亞太區", newPrice:4.2837, annYield:0.08, risk:"高", regionGroup:"亞太", r1:6.22, r3:22.43, r5:-23.62 },
+  Z11: { name:"晉達中國債", full:"晉達全方位中國債券 A 收益-3", cls:"固定收入-中國香港", newPrice:14.80, annYield:0.03, risk:"高", regionGroup:"中國香港", r1:2.28, r3:-1.00, r5:-11.82 },
+  Z12: { name:"摩根環球債", full:"摩根環球債券收益 A", cls:"固定收入-環球", newPrice:7.68, annYield:0.06, risk:"高", regionGroup:"環球", r1:4.32, r3:16.95, r5:9.33 },
+  Z13: { name:"富達高收益", full:"富達美元高收益 A (G)", cls:"固定收入-美國", newPrice:7.857, annYield:0.07, risk:"高", regionGroup:"美國", r1:6.75, r3:22.31, r5:18.53 },
+  Z15: { name:"霸菱環球高收益", full:"霸菱環球高收益債券 G", cls:"固定收入-環球", newPrice:74.26, annYield:0.10, risk:"高", regionGroup:"環球", r1:6.71, r3:27.19, r5:21.69 },
+  Z16: { name:"滙豐亞洲高收益", full:"滙豐亞洲高收益債券 AM2", cls:"固定收入-亞太區", newPrice:4.68, annYield:0.07, risk:"高", regionGroup:"亞太", r1:3.36, r3:8.64, r5:-25.95 },
+  Z17: { name:"貝萊德高息", full:"貝萊德系統分析環球股票高息 A6", cls:"股票-環球", newPrice:9.58, annYield:0.08, risk:"低", regionGroup:"環球", r1:12.06, r3:44.54, r5:43.57 },
+  Z18: { name:"富蘭克林入息", full:"富蘭克林入息基金 A", cls:"多元資產-美國", newPrice:9.99, annYield:0.08, risk:"高", regionGroup:"美國", r1:11.65, r3:25.15, r5:28.21 },
+  Z20: { name:"施羅德動力收息", full:"施羅德動力收息 A (MF2)", cls:"多元資產-環球", newPrice:103.4262, annYield:0.07, risk:"中", regionGroup:"環球", r1:11.29, r3:null, r5:null },
+  Z29: { name:"資本集團公司債", full:"Capital International 全球公司債 Bfdm", cls:"固定收入-環球", newPrice:10.811, annYield:0.05, risk:"低", regionGroup:"環球", r1:4.14, r3:null, r5:null },
+  Z31: { name:"駿利環球地產", full:"駿利亨德森環球房地產股票 A5m", cls:"股票-行業", newPrice:8.04, annYield:0.06, risk:"高", regionGroup:"環球", r1:6.17, r3:16.18, r5:null },
+  Z33: { name:"駿利平衡基金", full:"駿利亨德森平衡基金 A6m", cls:"多元資產-美國", newPrice:11.47, annYield:0.07, risk:"低", regionGroup:"美國", r1:10.03, r3:null, r5:null },
+  Z36: { name:"東匯理短債", full:"東方匯理美元短期債券 A2 MTD3", cls:"固定收入-美國", newPrice:49.05, annYield:0.06, risk:"低", regionGroup:"美國", r1:4.26, r3:17.26, r5:null },
+  Z51: { name:"友邦股票入息", full:"友邦股票入息基金 (RDM)", cls:"股票-環球", newPrice:11.2653, annYield:0.08, risk:"中", regionGroup:"環球", r1:18.07, r3:null, r5:null },
+  Z52: { name:"友邦美高收益", full:"友邦美國高收益債券 (RDM)", cls:"固定收入-美國", newPrice:10.0501, annYield:0.07, risk:"高", regionGroup:"美國", r1:5.83, r3:null, r5:null },
+  Z69: { name:"安本新興市場債", full:"安本新興市場公司債券 A 加速派息", cls:"固定收入-新興市場", newPrice:9.9384, annYield:0.05, risk:"低", regionGroup:"新興市場", r1:null, r3:null, r5:null },
+  ZL1: { name:"FTGF亞洲機會債", full:"FTGF 西方資產亞洲機會債券 A (M)", cls:"固定收入-亞太區", newPrice:62, annYield:0.05, risk:"低", regionGroup:"亞太", r1:0.78, r3:5.09, r5:-1.51 },
+  ZP4: { name:"信安優先證券", full:"信安優先證券基金 D2", cls:"固定收入-環球", newPrice:8.35, annYield:0.08, risk:"低", regionGroup:"環球", r1:5.19, r3:24.27, r5:12.81 }
+};
+Object.keys(FUNDS).forEach(c => { FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12; });
+const PORTFOLIOS = {
+  A: { alloc:{ Z07:30, Z15:30, Z17:40 } },
+  B: { alloc:{ Z01:10, Z03:10, Z04:10, Z05:10, Z06:10, Z07:10, Z08:10, Z11:5, Z12:5, Z13:5, Z15:5, Z16:5, Z17:5 } },
+  NA: { alloc:{ Z07:25, Z17:25, Z18:20, Z13:15, Z52:15 } },
+  ASIA: { alloc:{ Z03:25, Z01:20, Z08:20, Z16:20, Z04:15 } },
+  TECH: { alloc:{ Z07:40, Z17:35, Z01:15, Z18:10 } },
+  CONS: { alloc:{ Z16:25, Z17:25, Z03:20, Z08:15, Z13:15 } }
+};
+let amount = 2000000, fx = 7.80, fxRmb = 0.92, activeTab = "A", reinvest = false;
+let customAlloc = { ...PORTFOLIOS.A.alloc };
+const PRESETS = [{label:"30萬",v:300000},{label:"50萬",v:500000},{label:"80萬",v:800000},{label:"100萬",v:1000000},{label:"200萬",v:2000000},{label:"300萬",v:3000000},{label:"500萬",v:5000000},{label:"1000萬",v:10000000}];
+const fmtHKD = n => "HKD " + Math.round(n).toLocaleString();
+const fmtRMB = n => "¥ " + Math.round(n).toLocaleString();
+const fmtPct = n => (n*100).toFixed(2) + "%";
+const fmtRet = n => n == null ? "—" : (n > 0 ? "+" : "") + n.toFixed(2) + "%";
+const retClass = n => n == null ? "delta-flat" : n > 0 ? "delta-up" : n < 0 ? "delta-down" : "delta-flat";
+const fmtCompact = n => n >= 1000000 ? "HKD " + (n/1000000).toFixed(2) + "M" : n >= 1000 ? "HKD " + (n/1000).toFixed(0) + "K" : "HKD " + Math.round(n).toLocaleString();
+const fmtCompactRmb = n => n >= 1000000 ? "¥ " + (n/1000000).toFixed(2) + "M" : n >= 1000 ? "¥ " + (n/1000).toFixed(0) + "K" : "¥ " + Math.round(n).toLocaleString();
+
+const presetsEl = document.getElementById("presets");
+PRESETS.forEach(p => {
+  const c = document.createElement("div");
+  c.className = "chip"; c.textContent = p.label; c.dataset.v = p.v;
+  c.onclick = () => { amount = p.v; document.getElementById("amountInput").value = amount.toLocaleString(); updateChipsHighlight(); render(); };
+  presetsEl.appendChild(c);
+});
+function updateChipsHighlight() { document.querySelectorAll("#presets .chip").forEach(c => c.classList.toggle("active", +c.dataset.v === amount)); }
+
+const amountInputEl = document.getElementById("amountInput");
+amountInputEl.addEventListener("input", () => {
+  const n = parseInt(amountInputEl.value.replace(/[^0-9]/g, ""), 10);
+  if (!isNaN(n) && n > 0) { amount = n; updateChipsHighlight(); render(); }
+});
+amountInputEl.addEventListener("blur", () => { amountInputEl.value = amount.toLocaleString(); });
+document.getElementById("fx").addEventListener("input", e => { const v = +e.target.value; if (v >= 7.5 && v <= 8.0) { fx = v; render(); } });
+document.getElementById("fxRmb").addEventListener("input", e => { const v = +e.target.value; if (v >= 0.85 && v <= 1.00) { fxRmb = v; render(); } });
+
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", e => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  e.target.classList.add("active");
+  activeTab = e.target.dataset.port;
+  document.getElementById("builderArea").style.display = (activeTab === "C") ? "block" : "none";
+  if (activeTab === "C" && Object.keys(customAlloc).length === 0) customAlloc = { ...PORTFOLIOS.A.alloc };
+  render();
+}));
+
+function renderBuilder() {
+  const body = document.getElementById("builderBody");
+  body.innerHTML = Object.keys(FUNDS).map(code => {
+    const f = FUNDS[code];
+    const checked = customAlloc[code] !== undefined && customAlloc[code] > 0;
+    const yld = (f.div * 12 / f.newPrice * 100).toFixed(2);
+    const rc = f.risk === "低" ? "risk-low" : f.risk === "中" ? "risk-mid" : "risk-high";
+    return '<tr class="' + (checked ? '' : 'disabled') + '" data-code="' + code + '">' +
+      '<td><input type="checkbox" data-code="' + code + '" ' + (checked ? 'checked' : '') + '></td>' +
+      '<td><span class="code-pill">' + code + '</span></td>' +
+      '<td><strong>' + f.name + '</strong></td>' +
+      '<td><span class="cls-tag">' + f.cls + '</span></td>' +
+      '<td>' + yld + '%</td>' +
+      '<td>' + f.newPrice.toFixed(4) + '</td>' +
+      '<td class="' + rc + '">' + f.risk + '</td>' +
+      '<td class="' + retClass(f.r1) + '">' + fmtRet(f.r1) + '</td>' +
+      '<td class="' + retClass(f.r3) + '">' + fmtRet(f.r3) + '</td>' +
+      '<td class="' + retClass(f.r5) + '">' + fmtRet(f.r5) + '</td>' +
+      '<td><input type="number" class="alloc-input" data-code="' + code + '" value="' + (customAlloc[code] || 0) + '" min="0" max="100" step="1" ' + (checked ? '' : 'disabled') + '></td></tr>';
+  }).join("");
+  body.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener("change", e => {
+      const code = e.target.dataset.code;
+      if (e.target.checked) { if (!customAlloc[code]) customAlloc[code] = 5; } else { delete customAlloc[code]; }
+      renderBuilder(); render();
+    });
+  });
+  body.querySelectorAll('input.alloc-input').forEach(inp => {
+    inp.addEventListener("input", e => {
+      const code = e.target.dataset.code, v = +e.target.value;
+      if (v > 0) customAlloc[code] = v;
+      else { delete customAlloc[code]; e.target.disabled = true; e.target.closest('tr').classList.add('disabled'); e.target.closest('tr').querySelector('input[type=checkbox]').checked = false; }
+      updateTotalBar(); render();
+    });
+  });
+  updateTotalBar();
+}
+
+function updateTotalBar() {
+  const total = Object.values(customAlloc).reduce((s,x)=>s+(+x||0), 0);
+  document.getElementById("progressFill").style.width = Math.min(100, total) + "%";
+  document.getElementById("totalText").textContent = total.toFixed(0) + "%";
+  const bar = document.getElementById("totalBar");
+  bar.classList.remove("valid", "over");
+  if (Math.abs(total - 100) < 0.01) bar.classList.add("valid");
+  else if (total > 100) bar.classList.add("over");
+}
+
+document.getElementById("btnSelectAll").onclick = () => {
+  const codes = Object.keys(FUNDS), each = Math.floor(100 / codes.length);
+  customAlloc = {};
+  codes.forEach((c, i) => customAlloc[c] = (i === 0 ? 100 - each*(codes.length-1) : each));
+  renderBuilder(); render();
+};
+document.getElementById("btnDeselectAll").onclick = () => { customAlloc = {}; renderBuilder(); render(); };
+document.getElementById("btnEqualize").onclick = () => {
+  const codes = Object.keys(customAlloc);
+  if (codes.length === 0) return;
+  const each = Math.floor(100 / codes.length), remain = 100 - each * codes.length;
+  codes.forEach((c, i) => customAlloc[c] = each + (i === 0 ? remain : 0));
+  renderBuilder(); render();
+};
+const loadPreset = key => () => { customAlloc = { ...PORTFOLIOS[key].alloc }; renderBuilder(); render(); };
+document.getElementById("btnLoadA").onclick = loadPreset("A");
+document.getElementById("btnLoadB").onclick = loadPreset("B");
+document.getElementById("btnLoadNA").onclick = loadPreset("NA");
+document.getElementById("btnLoadASIA").onclick = loadPreset("ASIA");
+document.getElementById("btnLoadTECH").onclick = loadPreset("TECH");
+document.getElementById("btnLoadCONS").onclick = loadPreset("CONS");
+document.getElementById("btnNormalize").onclick = () => {
+  const total = Object.values(customAlloc).reduce((s,x)=>s+(+x||0), 0);
+  if (total <= 0) return;
+  const factor = 100 / total;
+  Object.keys(customAlloc).forEach(c => customAlloc[c] = Math.round(customAlloc[c] * factor));
+  const newTotal = Object.values(customAlloc).reduce((s,x)=>s+x, 0);
+  const codes = Object.keys(customAlloc);
+  if (codes.length > 0) customAlloc[codes[0]] += (100 - newTotal);
+  renderBuilder(); render();
+};
+document.getElementById("toggleReinvest").addEventListener("change", e => { reinvest = e.target.checked; render(); });
+
+function computePortfolio(allocPct, totalHKD, fxRate) {
+  const items = []; let annualHKD = 0;
+  Object.keys(allocPct).forEach(code => {
+    const f = FUNDS[code]; if (!f) return;
+    const w = allocPct[code] / 100; if (w <= 0) return;
+    const allocHKD = totalHKD * w;
+    const units = allocHKD / (f.newPrice * fxRate);
+    const annHKD = units * f.div * 12 * fxRate;
+    items.push({ code, weight: w, allocHKD, monthlyHKD: annHKD/12, annualHKD: annHKD, yield_: (f.div * 12) / f.newPrice, ...f });
+    annualHKD += annHKD;
+  });
+  return { items, annualHKD, monthlyHKD: annualHKD / 12, yield_: totalHKD ? annualHKD / totalHKD : 0 };
+}
+
+let chartProj, chartGeo;
+
+function render() {
+  document.getElementById("rmbDisplay").textContent = fmtRMB(amount * fxRmb);
+  const allocPct = (activeTab === "C") ? customAlloc : PORTFOLIOS[activeTab].alloc;
+  const totalAlloc = Object.values(allocPct).reduce((s,x)=>s+(+x||0), 0);
+  const port = computePortfolio(allocPct, amount, fx);
+  document.getElementById("sumMonthly").textContent = fmtHKD(port.monthlyHKD);
+  document.getElementById("sumMonthlyRmb").textContent = "≈ " + fmtRMB(port.monthlyHKD * fxRmb);
+  document.getElementById("sumAnnual").textContent = fmtHKD(port.annualHKD);
+  document.getElementById("sumAnnualRmb").textContent = "≈ " + fmtRMB(port.annualHKD * fxRmb);
+  document.getElementById("sumYield").textContent = totalAlloc > 0 ? ((port.annualHKD / amount) * 100).toFixed(2) + "%" : "—";
+  document.getElementById("sumCount").textContent = port.items.length + " 隻";
+  renderProjection(port);
+  renderTable(port);
+  if (typeof Chart !== "undefined") renderChart(port);
+}
+
+function renderProjection(port) {
+  const years = [1, 3, 5, 10, 20, 30];
+  const rate = port.annualHKD / amount;
+  document.getElementById("projGrid").innerHTML = years.map(y => {
+    const total = reinvest ? amount * (Math.pow(1 + rate, y) - 1) : port.annualHKD * y;
+    const hl = (y === 5 || y === 10) ? 'highlight' : '';
+    return '<div class="proj-cell ' + hl + '"><div class="yr">' + y + ' 年累積</div><div class="amt">' + fmtCompact(total) + '</div><div class="amt-rmb">≈ ' + fmtCompactRmb(total * fxRmb) + '</div></div>';
+  }).join("");
+}
+
+function renderTable(port) {
+  const rc = r => r==="低" ? "risk-low" : r==="中" ? "risk-mid" : "risk-high";
+  if (port.items.length === 0) {
+    document.getElementById("fundBody").innerHTML = '<tr><td colspan="13" style="text-align:center;padding:30px;color:#8a96a8">請於上方自選組合區揀基金</td></tr>';
+    return;
+  }
+  document.getElementById("fundBody").innerHTML = port.items.map(x =>
+    '<tr><td><span class="code-pill">' + x.code + '</span></td>' +
+    '<td><strong>' + x.name + '</strong><div class="tiny">' + x.full + '</div></td>' +
+    '<td><span class="cls-tag">' + x.cls + '</span></td>' +
+    '<td><strong>' + (x.weight*100).toFixed(1) + '%</strong></td>' +
+    '<td>' + fmtHKD(x.allocHKD) + '</td>' +
+    '<td>' + x.newPrice.toFixed(4) + '</td>' +
+    '<td><strong>' + fmtPct(x.yield_) + '</strong></td>' +
+    '<td><strong>' + fmtHKD(x.monthlyHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(x.monthlyHKD * fxRmb) + '</div></td>' +
+    '<td><strong style="color:#c8102e">' + fmtHKD(x.annualHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(x.annualHKD * fxRmb) + '</div></td>' +
+    '<td class="' + retClass(x.r1) + '">' + fmtRet(x.r1) + '</td>' +
+    '<td class="' + retClass(x.r3) + '">' + fmtRet(x.r3) + '</td>' +
+    '<td class="' + retClass(x.r5) + '">' + fmtRet(x.r5) + '</td>' +
+    '<td class="' + rc(x.risk) + '">' + x.risk + '</td></tr>'
+  ).join("") +
+    '<tr style="background:#f7f9fc;font-weight:700"><td colspan="4">合計</td><td>' + fmtHKD(port.items.reduce((s,x)=>s+x.allocHKD,0)) + '</td><td>—</td>' +
+    '<td><strong style="color:#c8102e">' + (port.yield_*100).toFixed(2) + '%</strong></td>' +
+    '<td><strong style="color:#c8102e">' + fmtHKD(port.monthlyHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(port.monthlyHKD * fxRmb) + '</div></td>' +
+    '<td><strong style="color:#c8102e">' + fmtHKD(port.annualHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(port.annualHKD * fxRmb) + '</div></td>' +
+    '<td colspan="4"></td></tr>';
+}
+
+function renderChart(port) {
+  const years = Array.from({length:30}, (_,i) => i+1);
+  const rate = amount > 0 ? port.annualHKD / amount : 0;
+  if (chartProj) chartProj.destroy();
+  chartProj = new Chart(document.getElementById("chartProj"), {
+    type: "line",
+    data: { labels: years.map(y => y + "年"), datasets: [
+      { label: "純現金派息", data: years.map(y => port.annualHKD * y), borderColor: "#c8102e", backgroundColor: "rgba(200,16,46,0.08)", fill: true, tension: 0.2, pointRadius: 0, borderWidth: 2 },
+      { label: "派息再投入 (複利)", data: years.map(y => amount * (Math.pow(1 + rate, y) - 1)), borderColor: "#0d6efd", fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2, borderDash: [5,5] }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom", labels: { font:{size:11} } }, tooltip: { callbacks: { label: c => c.dataset.label + ": " + fmtHKD(c.parsed.y) + " (≈ " + fmtRMB(c.parsed.y * fxRmb) + ")" } } }, scales: { y: { ticks: { callback: v => fmtCompact(v), font:{size:10} } }, x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10, font:{size:10} } } } }
+  });
+  const geoMap = {};
+  port.items.forEach(x => { geoMap[x.regionGroup] = (geoMap[x.regionGroup] || 0) + x.weight; });
+  const geoLabels = Object.keys(geoMap), geoValues = geoLabels.map(k => geoMap[k] * 100);
+  const colors = ["#c8102e","#0d6efd","#059669","#d97706","#7c3aed","#0891b2","#db2777","#9333ea"];
+  if (chartGeo) chartGeo.destroy();
+  chartGeo = new Chart(document.getElementById("chartGeo"), {
+    type: "doughnut",
+    data: { labels: geoLabels, datasets: [{ data: geoValues, backgroundColor: colors }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "right", labels: { font:{size:11}, boxWidth:12 } }, tooltip: { callbacks: { label: c => c.label + ": " + c.parsed.toFixed(1) + "%" } } } }
+  });
+}
+
+renderBuilder();
+updateChipsHighlight();
+render();
+</script>
+</body>
+</html>
