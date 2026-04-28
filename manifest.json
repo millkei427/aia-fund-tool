@@ -1,0 +1,26 @@
+{
+  "name": "卓達智悅基金分析工具",
+  "short_name": "AIA基金",
+  "description": "AIA 卓達智悅月月派息基金分析工具 - 即時試算每月派息、比較組合、HKD/RMB 雙幣顯示",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f9fc",
+  "theme_color": "#c8102e",
+  "lang": "zh-HK",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
