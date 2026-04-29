@@ -2,7 +2,6 @@ name: 自動更新基金價格
 
 on:
   schedule:
-    # 香港時間每星期日凌晨 2:00 = UTC 星期六 18:00
     - cron: '0 18 * * 6'
   workflow_dispatch:
 
@@ -13,34 +12,27 @@ jobs:
   update-funds:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install Playwright
         run: |
           pip install playwright
           playwright install chromium --with-deps
-
       - name: Run fund scraper
-        id: scrape
         run: python scripts/fetch_funds.py
-
-      - name: Upload debug screenshot if failure
+      - name: Upload debug artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: debug-screenshot
-          path: scripts/_debug_screenshot.png
+          name: debug-artifacts
+          path: |
+            scripts/_debug_screenshot.png
+            scripts/_debug_page.html
           if-no-files-found: ignore
           retention-days: 7
-
       - name: Commit & Push if changed
         if: success()
         run: |
@@ -52,5 +44,4 @@ jobs:
             git add data/funds.json
             git commit -m "🤖 Auto-update fund prices ($(date -u +'%Y-%m-%d %H:%M UTC'))"
             git push
-            echo "✅ Pushed updated fund prices."
           fi
