@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AIA基金">
-<title>卓達智悅・月月派息基金分析工具 v3.2</title>
+<title>AIA 銷售工具・卓達智悅基金 + 環宇盈活儲蓄 v3.5</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
 <style>
 :root { color-scheme: light; }
@@ -173,6 +173,19 @@ table.funds tr:hover td { background: #fbfcfe; }
 .status-bar .status-text { flex: 1; color: #1a2332; font-weight: 600; }
 .status-bar .status-meta { color: #8a96a8; font-weight: 500; font-size: 12px; }
 .status-bar .status-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.product-tabs { display: flex; gap: 6px; background: #fff; padding: 6px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); flex-wrap: wrap; }
+.ptab { flex: 1; min-width: 140px; text-align: center; padding: 13px 10px; font-size: 14px; font-weight: 700; cursor: pointer; border-radius: 8px; color: #56657a; transition: all 0.15s; border: 2px solid transparent; }
+.ptab:hover:not(.active) { background: #fef2f4; color: #c8102e; }
+.ptab.active { background: linear-gradient(135deg, #c8102e 0%, #8b0a1f 100%); color: #fff; box-shadow: 0 2px 6px rgba(200,16,46,0.3); }
+.btn[data-sc].active, .btn[data-mode].active { background: #c8102e; border-color: #c8102e; color: #fff; }
+.gf-row-highlight { background: #fef2f4 !important; }
+.gf-row-highlight td { font-weight: 700; }
+#page-gf .summary-row { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 880px) { #page-gf .summary-row { grid-template-columns: 1fr 1fr; } }
+.growth-chip { display: inline-block; margin-top: 6px; padding: 4px 10px; background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; border-radius: 14px; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.2px; }
+.growth-chip:empty { display: none; }
+.growth-chip.flat { background: #f3f4f6; color: #6b7280; border-color: #d1d5db; }
+.growth-chip.huge { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; border-color: #34d399; font-size: 14px; }
 
 @media print {
   body { background: #fff; padding: 0; }
@@ -189,7 +202,7 @@ table.funds tr:hover td { background: #fbfcfe; }
 </head>
 <body>
 <div class="wrap">
-<div class="header"><h1>卓達智悅 · 月月派息基金分析工具 v3.3</h1><div class="sub">客戶管理 · HKD/RMB 雙幣 · 24 隻 USD Z 字頭基金 · 6 預設組合 + 自選</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
+<div class="header"><h1>AIA 銷售工具 v3.5</h1><div class="sub">📊 卓達智悅基金分析 · 💰 環宇盈活儲蓄 · 🛡️ 愛伴航 2 (即將推出) · 客戶管理 · HKD/RMB/USD 多幣</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
 <div class="action-bar">
   <button class="btn-action solid" id="btnOpenClients">👥 客戶管理 <span class="client-pill" id="clientCountPill" style="display:none">0</span></button>
   <button class="btn-action" id="btnSaveScenario">💾 保存目前方案</button>
@@ -204,6 +217,12 @@ table.funds tr:hover td { background: #fbfcfe; }
   <div style="flex:1;min-width:200px"><div class="status-text" id="statusText"></div><div class="status-meta" id="statusMeta"></div></div>
   <div class="status-actions" id="statusActions"></div>
 </div>
+<div class="product-tabs">
+  <div class="ptab active" data-product="fund">📊 基金分析</div>
+  <div class="ptab" data-product="gf">💰 環宇盈活 · 儲蓄</div>
+  <div class="ptab" data-product="lc2">🛡️ 愛伴航 2 · 危疾</div>
+</div>
+<div id="page-fund">
 <div class="section"><div class="label-bar"><span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span><div class="fx-group"><div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0"></div><div class="fx-control"><span>HKD/CNY 匯率</span><input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00"></div></div></div><div class="amount-row"><input type="text" class="amount-input" id="amountInput" value="2,000,000"><span class="ccy-label">HKD</span><span class="equals-sign">=</span><span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span><span class="ccy-label">人民幣</span></div><div class="preset-chips" id="presets"></div></div>
 <div class="tabs"><div class="tab active" data-port="A">🎯 組合 A · 集中型</div><div class="tab" data-port="B">🌐 組合 B · 分散型</div><div class="tab" data-port="NA">🇺🇸 北美市場</div><div class="tab" data-port="ASIA">🌏 亞洲市場</div><div class="tab" data-port="TECH">💻 科技類</div><div class="tab" data-port="CONS">🛒 消費類</div><div class="tab" data-port="C">⚙️ 自選</div></div>
 <div class="section"><div class="summary-row"><div class="metric hero"><div class="label">每月派息</div><div class="value" id="sumMonthly">—</div><div class="sub-value" id="sumMonthlyRmb">≈ ¥ —</div></div><div class="metric"><div class="label">每年回報</div><div class="value" id="sumAnnual">—</div><div class="sub-value" id="sumAnnualRmb">≈ ¥ —</div></div><div class="metric"><div class="label">派息利率</div><div class="value" id="sumYield">—</div></div><div class="metric"><div class="label">已選基金</div><div class="value" id="sumCount">—</div></div></div>
@@ -215,6 +234,138 @@ table.funds tr:hover td { background: #fbfcfe; }
 <div class="section-title">📋 基金詳細資料</div>
 <div class="fund-table-wrap"><table class="funds"><thead><tr><th>代號</th><th>基金名稱</th><th>資產類別</th><th>比例</th><th>配置 (HKD)</th><th>價格 (USD)</th><th>派息率</th><th>每月派息<br>HKD / RMB</th><th>每年回報<br>HKD / RMB</th><th>1年</th><th>3年</th><th>5年</th><th>風險</th></tr></thead><tbody id="fundBody"></tbody></table></div>
 <div class="footer"><strong>📚 AIA 官方參考連結</strong><div class="links"><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a></div><div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。基金價格採自 AIA 官方公佈 (04/24/2026)。HKD/CNY 匯率僅作參考。本工具不構成投資建議,投資涉及風險。</div></div>
+</div>
+
+<!-- ===== 環宇盈活儲蓄計劃 ===== -->
+<div id="page-gf" style="display:none">
+  <div class="section">
+    <div class="label-bar">
+      <span>💰 環宇盈活儲蓄保險計劃 · 5 年繳費 · 終身分紅</span>
+      <div class="fx-group">
+        <div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="gfFx" value="7.69" step="0.01" min="7.5" max="8.0"></div>
+      </div>
+    </div>
+    <div class="amount-row">
+      <span class="ccy-label">年繳保費</span>
+      <select id="gfCcy" style="font-size:18px;font-weight:700;padding:8px 10px;border:2px solid #d4dae3;border-radius:8px;background:#fff">
+        <option value="HKD">HKD</option>
+        <option value="USD">USD</option>
+      </select>
+      <input type="text" class="amount-input" id="gfAmount" value="100,000" style="width:200px">
+      <span class="equals-sign">×</span>
+      <span style="font-size:18px;font-weight:700;color:#56657a">5 年 =</span>
+      <span class="rmb-display" id="gfTotalDisplay" style="background:#fef2f4;border-color:#fcd3da;color:#c8102e">HKD 500,000</span>
+    </div>
+    <div class="preset-chips" id="gfPresets"></div>
+  </div>
+
+  <div class="section">
+    <div class="label-bar"><span>⚙️ 模式 · 情景</span></div>
+    <div class="builder-controls" style="margin-bottom:0">
+      <span class="preset-label">用法:</span>
+      <button class="btn primary" id="gfModeWithdraw" data-mode="withdraw">🪙 提取模式 · 每年領取</button>
+      <button class="btn" id="gfModeKeep" data-mode="keep">💎 不提取 · 終身增值</button>
+      <span class="preset-divider"></span>
+      <span class="preset-label">情景:</span>
+      <button class="btn primary" data-sc="expected">預期 (現時)</button>
+      <button class="btn" data-sc="pessimistic">悲觀 (-2.7%)</button>
+      <button class="btn" data-sc="optimistic">樂觀 (+2.7%)</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="summary-row" id="gfSummary">
+      <div class="metric hero"><div class="label" id="gfMetricTotalLabel">5 年總供款</div><div class="value" id="gfMetricTotal">—</div><div class="sub-value" id="gfMetricTotalAlt">—</div></div>
+      <div class="metric"><div class="label" id="gfMetricFlowLabel">每年提取</div><div class="value" id="gfMetricFlow">—</div><div class="sub-value" id="gfMetricFlowAlt">—</div><div class="growth-chip" id="gfMetricFlowGrowth"></div></div>
+      <div class="metric"><div class="label" id="gfMetric20Label">第 20 年</div><div class="value" id="gfMetric20">—</div><div class="sub-value" id="gfMetric20Alt">—</div><div class="growth-chip" id="gfMetric20Growth"></div></div>
+      <div class="metric"><div class="label" id="gfMetric30Label">第 30 年總回收</div><div class="value" id="gfMetric30">—</div><div class="sub-value" id="gfMetric30Alt">—</div><div class="growth-chip" id="gfMetric30Growth"></div></div>
+      <div class="metric"><div class="label" id="gfMetricBELabel">資金回本年</div><div class="value" id="gfMetricBE">—</div><div class="sub-value" id="gfMetricBESub">—</div></div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card"><h3>📈 累積回收 vs 已繳保費 (USD)</h3><div class="chart-wrap"><canvas id="gfChart"></canvas></div></div>
+    <div class="chart-card"><h3>🥧 第 30 年構成</h3><div class="chart-wrap"><canvas id="gfChartPie"></canvas></div></div>
+  </div>
+
+  <div class="section-title">📋 多年保單價值表 <span class="tiny" id="gfTableNote">(USD)</span></div>
+  <div class="fund-table-wrap">
+    <table class="funds" id="gfTable"><thead id="gfTableHead"></thead><tbody id="gfTableBody"></tbody></table>
+  </div>
+
+  <div class="footer">
+    <strong>📚 環宇盈活官方參考</strong>
+    <div class="links">
+      <a href="https://www.aia.com.hk/zh-hk/our-products/life-insurance/global-flexi-savings.html" target="_blank">📖 產品官網</a>
+      <a href="https://www.aia.com.hk/zh-hk/dividend-philosophy-history.html" target="_blank">📊 過往派發紅利資料</a>
+    </div>
+    <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於 AIA 環宇盈活儲蓄保險計劃（5 年繳費）標準個案建議書（30歲女非吸煙標準），實際保證及非保證金額由 AIA 全權決定。預期內部回報率受 6.5% 上限約束。投保前請詳閱保單契約。</div>
+  </div>
+</div>
+
+<!-- ===== 愛伴航 2 危疾保險計劃 ===== -->
+<div id="page-lc2" style="display:none">
+  <div class="section">
+    <div class="label-bar"><span>🛡️ 愛伴航 2 危疾保險計劃 · 終身保障 · 115 種疾病 · HKD</span></div>
+    <div class="builder-controls" style="margin-bottom:0">
+      <span class="preset-label">投保年齡:</span>
+      <select id="lc2Age" style="padding:7px 10px;border:1px solid #d4dae3;border-radius:6px;font-size:13px;font-weight:600;background:#fff">
+        <option value="0">0 歲</option><option value="5">5 歲</option><option value="10">10 歲</option><option value="15">15 歲</option><option value="20">20 歲</option>
+        <option value="25">25 歲</option><option value="30" selected>30 歲</option><option value="35">35 歲</option><option value="40">40 歲</option><option value="45">45 歲</option>
+      </select>
+      <span class="preset-divider"></span>
+      <span class="preset-label">保費年期:</span>
+      <button class="btn primary" data-lc2term="25">25 年</button>
+      <button class="btn" data-lc2term="18">18 年</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label-bar"><span>💰 基本保額（HKD）</span></div>
+    <div class="preset-chips" id="lc2FaceChips"></div>
+  </div>
+
+  <div class="section">
+    <div class="summary-row" id="lc2Summary">
+      <div class="metric hero"><div class="label">每月保費</div><div class="value" id="lc2Monthly">—</div><div class="sub-value" id="lc2MonthlyAlt">—</div></div>
+      <div class="metric"><div class="label">已繳總保費</div><div class="value" id="lc2Total">—</div><div class="sub-value" id="lc2TotalAlt">—</div></div>
+      <div class="metric"><div class="label">月持續現金保障</div><div class="value" id="lc2Cash">—</div><div class="sub-value" id="lc2CashAlt">最長 100 個月</div></div>
+      <div class="metric"><div class="label">基本保額</div><div class="value" id="lc2Face">—</div><div class="sub-value" id="lc2FaceAlt">最高賠 1,100% + 升級 50%/35%</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label-bar"><span>📅 行賠額（不同年齡可領取總額 · 包括持續現金保障）</span></div>
+    <div class="summary-row" id="lc2Payouts" style="grid-template-columns: repeat(4, 1fr)">
+      <div class="metric"><div class="label">65 歲可領取</div><div class="value" id="lc2P65">—</div><div class="growth-chip" id="lc2P65Growth"></div></div>
+      <div class="metric"><div class="label">70 歲可領取</div><div class="value" id="lc2P70">—</div><div class="growth-chip" id="lc2P70Growth"></div></div>
+      <div class="metric"><div class="label">75 歲可領取</div><div class="value" id="lc2P75">—</div><div class="growth-chip" id="lc2P75Growth"></div></div>
+      <div class="metric"><div class="label">80 歲可領取</div><div class="value" id="lc2P80">—</div><div class="growth-chip" id="lc2P80Growth"></div></div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card"><h3>📈 累積已繳保費 vs 行賠額 (HKD)</h3><div class="chart-wrap"><canvas id="lc2Chart"></canvas></div></div>
+    <div class="chart-card"><h3>🏥 產品保障特色</h3><div class="chart-wrap" style="height:auto"><div style="font-size:13px;line-height:1.9;color:#1a2332;padding:4px 8px">
+      <div>🔁 <strong>多次癌症賠償</strong>：最多 6 次（包括首次）</div>
+      <div>❤️ <strong>多次心臟病/中風</strong>：合共最多 3 次</div>
+      <div>🧠 <strong>阿爾茨海默症</strong>：1 次</div>
+      <div>📊 <strong>持續現金保障</strong>：每月 5% 基本保額 × 最長 100 個月</div>
+      <div>💎 <strong>升級保障</strong>：首 10 個保單年度，0-30歲 +50%、31歲+ +35%</div>
+      <div>🏥 <strong>級別二深切治療保障</strong>賠償</div>
+      <div>♾️ <strong>終身保障</strong> · 受保 <strong>115 種疾病</strong> (58 危疾 + 44 早期 + 13 嚴重兒童)</div>
+      <div>💵 <strong>延繳保費惠益</strong> + <strong>深切治療保費惠益</strong></div>
+    </div></div></div>
+  </div>
+
+  <div class="footer">
+    <strong>📚 愛伴航 2 官方參考</strong>
+    <div class="links">
+      <a href="https://www.aia.com.hk/zh-hk/our-products/critical-illness/on-your-side-insurance-plan-2.html" target="_blank">📖 產品官網</a>
+    </div>
+    <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於 AIA 愛伴航 2 標準個案（更新至 2025/10/6 內部試算）。實際保費受核保結果影響。投保前請詳閱保單契約。</div>
+  </div>
+</div>
 
 <!-- Client Management Modal -->
 <div class="modal-bg" id="clientModal">
@@ -480,6 +631,636 @@ function renderChart(port) {
   });
 }
 
+// === 環宇盈活 Data (USD-denominated) ===
+// 資料來源：AIA 環宇盈活儲蓄保險計劃 5 年繳費，30 歲女非吸煙標準個案建議書
+// 三個 tier：USD 10,300 / 13,000 / 15,000 (年繳)
+// 兩個 mode：withdraw（第 6 年起每年提取總保費的 5.5%/6%）/ keep（不提取）
+// 四個 scenario：guarantee / expected / pessimistic / optimistic
+// columns: [year, surrenderTotal] for keep mode (= guaranteed cash + reversionary + terminal)
+// columns: [year, withdrawAnnual, withdrawCum, remainSurrender, fullSurrender] for withdraw
+const GF_DATA = {
+  // tier key = annual premium USD
+  10300: {
+    withdrawRate: 0.055,
+    expected: { withdraw: [
+      // [yr, ann_w, cum_w, remain, full]
+      [6, 2833, 2833, null, null],
+      [7, 2833, 5666, 45798, 51531],
+      [8, 2833, 8499, 50722, 59438],
+      [9, 2833, 11332, 51591, 63500],
+      [10, 2833, 14165, 51801, 67128],
+      [15, 2833, 28330, 57667, 94957],
+      [20, 2833, 42495, 68325, 138144],
+      [25, 2833, 56660, 86960, 209845],
+      [30, 2833, 70825, 108254, 301522],
+      [35, 2833, 84990, 131176, 413111],
+      [40, 2833, 99155, 162748, 565998],
+      [45, 2833, 113320, 208239, 775467],
+      [50, 2833, 127485, 271404, 1062657],
+      [55, 2833, 141650, 356646, 1455658]
+    ], keep: null /* derived from full column */ }
+  },
+  13000: {
+    withdrawRate: 0.06,
+    expected: { withdraw: [
+      [6, 3900, 3900, null, null],
+      [7, 3900, 7800, 57147, 65038],
+      [8, 3900, 11700, 62926, 75019],
+      [9, 3900, 15600, 63618, 80146],
+      [10, 3900, 19500, 63471, 84725],
+      [15, 3900, 39000, 68172, 119849],
+      [20, 3900, 58500, 77542, 174356],
+      [25, 3900, 78000, 94647, 264852],
+      [30, 3900, 97500, 113085, 380560],
+      [35, 3900, 117000, 131690, 521401],
+      [40, 3900, 136500, 157380, 714365],
+      [45, 3900, 156000, 194744, 978742],
+      [50, 3900, 175500, 246669, 1340961],
+      [55, 3900, 195000, 316589, 1837233]
+    ], keep: null }
+  },
+  15000: {
+    withdrawRate: 0.06,
+    expected: { withdraw: [
+      [6, 4500, 4500, null, null],
+      [7, 4500, 9000, 66168, 75274],
+      [8, 4500, 13500, 72875, 86824],
+      [9, 4500, 18000, 73693, 92758],
+      [10, 4500, 22500, 73541, 98058],
+      [15, 4500, 45000, 79096, 138709],
+      [20, 4500, 67500, 90114, 201795],
+      [25, 4500, 90000, 110182, 306533],
+      [30, 4500, 112500, 131879, 439109],
+      [35, 4500, 135000, 153851, 601617],
+      [40, 4500, 157500, 184183, 824268],
+      [45, 4500, 180000, 228278, 1129319],
+      [50, 4500, 202500, 289553, 1547265],
+      [55, 4500, 225000, 372073, 2119887]
+    ], keep: null }
+  },
+  // ===== USD 標準 case (10K USD - 6% withdraw) =====
+  10000: {
+    withdrawRate: 0.06,
+    expected: { withdraw: [
+      [6, 3000, 3000, null, null],
+      [7, 3000, 6000, 43959, null],
+      [8, 3000, 9000, 48404, null],
+      [9, 3000, 12000, 48937, null],
+      [10, 3000, 15000, 48824, null],
+      [15, 3000, 30000, 52440, null],
+      [20, 3000, 45000, 59648, null],
+      [25, 3000, 60000, 72805, null],
+      [30, 3000, 75000, 86988, null],
+      [35, 3000, 90000, 101300, null],
+      [40, 3000, 105000, 121061, null],
+      [45, 3000, 120000, 149803, null],
+      [50, 3000, 135000, 189745, null],
+      [55, 3000, 150000, 243529, null]
+    ], keep: null }
+  },
+  30000: {
+    withdrawRate: 0.07,
+    expected: { withdraw: [
+      [6, 10500, 10500, null, null],
+      [7, 10500, 21000, 129763, null],
+      [8, 10500, 31500, 141239, null],
+      [9, 10500, 42000, 141048, null],
+      [10, 10500, 52500, 138869, null],
+      [15, 10500, 105000, 137747, null],
+      [20, 10500, 157500, 141319, null],
+      [25, 10500, 210000, 152460, null],
+      [30, 10500, 262500, 157686, null],
+      [35, 10500, 315000, 154892, null],
+      [40, 10500, 367500, 151474, null],
+      [45, 10500, 420000, 148921, null],
+      [50, 10500, 472500, 145663, null],
+      [55, 10500, 525000, 140231, null]
+    ], keep: null }
+  },
+  50000: {
+    withdrawRate: 0.07,
+    expected: { withdraw: [
+      [6, 17500, 17500, null, null],
+      [7, 17500, 35000, 217044, null],
+      [8, 17500, 52500, 236303, null],
+      [9, 17500, 70000, 236050, null],
+      [10, 17500, 87500, 232476, null],
+      [15, 17500, 175000, 231048, null],
+      [20, 17500, 262500, 237696, null],
+      [25, 17500, 350000, 257386, null],
+      [30, 17500, 437500, 267521, null],
+      [35, 17500, 525000, 264562, null],
+      [40, 17500, 612500, 261195, null],
+      [45, 17500, 700000, 260250, null],
+      [50, 17500, 787500, 259412, null],
+      [55, 17500, 875000, 256575, null]
+    ], keep: null }
+  },
+  100000: {
+    withdrawRate: 0.07,
+    expected: { withdraw: [
+      [6, 35000, 35000, null, null],
+      [7, 35000, 70000, 435645, null],
+      [8, 35000, 105000, 474427, null],
+      [9, 35000, 140000, 474053, null],
+      [10, 35000, 175000, 467019, null],
+      [15, 35000, 350000, 465053, null],
+      [20, 35000, 525000, 479749, null],
+      [25, 35000, 700000, 521382, null],
+      [30, 35000, 875000, 544522, null],
+      [35, 35000, 1050000, 542019, null],
+      [40, 35000, 1225000, 539972, null],
+      [45, 35000, 1400000, 544746, null],
+      [50, 35000, 1575000, 552309, null],
+      [55, 35000, 1750000, 559145, null]
+    ], keep: null }
+  },
+  200000: {
+    withdrawRate: 0.07,
+    expected: { withdraw: [
+      [6, 70000, 70000, null, null],
+      [7, 70000, 140000, 874422, null],
+      [8, 70000, 210000, 952516, null],
+      [9, 70000, 280000, 952035, null],
+      [10, 70000, 350000, 938200, null],
+      [15, 70000, 700000, 936058, null],
+      [20, 70000, 1050000, 968266, null],
+      [25, 70000, 1400000, 1056070, null],
+      [30, 70000, 1750000, 1108123, null],
+      [35, 70000, 2100000, 1109993, null],
+      [40, 70000, 2450000, 1115334, null],
+      [45, 70000, 2800000, 1138290, null],
+      [50, 70000, 3150000, 1172012, null],
+      [55, 70000, 3500000, 1210862, null]
+    ], keep: null }
+  }
+};
+// 13K USD 完整 4-scenario 數據（從 proposal 提取）— 用於 scenario toggle
+const GF_13K_FULL = {
+  // [yr, guarantee_surr, expected_surr, pessimistic_surr, optimistic_surr]
+  expected: [
+    [1,13,13,13,13],[2,13,13,13,13],[3,3431,6496,6294,6702],[4,9635,16215,15680,16716],[5,18213,30259,29079,31451],
+    [10,40518,84725,70612,101333],[15,46985,119849,81667,145094],[20,65198,174356,108746,202734],
+    [25,65858,264852,137463,277764],[30,66518,380560,167622,380560]
+  ]
+};
+const GF_TIERS = [
+  { usd: 10000,  hkd: 77000,   showHkd: false, showUsd: true,  hasData: true },
+  { usd: 10300,  hkd: 80000,   showHkd: true,  showUsd: false, hasData: true },
+  { usd: 13000,  hkd: 100000,  showHkd: true,  showUsd: true,  hasData: true },
+  { usd: 15000,  hkd: 120000,  showHkd: true,  showUsd: true,  hasData: true },
+  { usd: 30000,  hkd: 230000,  showHkd: true,  showUsd: true,  hasData: true },
+  { usd: 50000,  hkd: 385000,  showHkd: true,  showUsd: true,  hasData: true },
+  { usd: 100000, hkd: 770000,  showHkd: true,  showUsd: true,  hasData: true },
+  { usd: 200000, hkd: 1540000, showHkd: true,  showUsd: true,  hasData: true }
+];
+
+let gfState = { ccy: 'HKD', amount: 100000, fxUsd: 7.69, mode: 'withdraw', scenario: 'expected' };
+
+function gfUsdAmount() { return gfState.ccy === 'USD' ? gfState.amount : gfState.amount / gfState.fxUsd; }
+function gfHkdAmount() { return gfState.ccy === 'HKD' ? gfState.amount : gfState.amount * gfState.fxUsd; }
+
+function gfFindNearestTier(usdAnnual) {
+  const data = GF_TIERS.filter(t => t.hasData);
+  let best = data[0], bestDiff = Math.abs(usdAnnual - best.usd);
+  data.forEach(t => { const d = Math.abs(usdAnnual - t.usd); if (d < bestDiff) { best = t; bestDiff = d; } });
+  return best;
+}
+
+function gfScale(rows, fromUsd, toUsd) {
+  const f = toUsd / fromUsd;
+  return rows.map(r => [r[0], Math.round(r[1]*f), Math.round(r[2]*f),
+    r[3] == null ? null : Math.round(r[3]*f),
+    r[4] == null ? null : Math.round(r[4]*f)]);
+}
+
+function gfComputeRows() {
+  const usdAnnual = gfUsdAmount();
+  const tier = gfFindNearestTier(usdAnnual);
+  const baseRows = GF_DATA[tier.usd].expected.withdraw;
+  let rows = baseRows.map(r => r.slice());
+  if (Math.abs(usdAnnual - tier.usd) >= 1) {
+    rows = gfScale(rows, tier.usd, usdAnnual);
+  }
+  // keep mode: fill missing full surrender value by scaling from 13K USD reference
+  const keepBase = GF_DATA[13000].expected.withdraw;
+  rows.forEach(r => {
+    if (r[4] == null) {
+      const ref = keepBase.find(b => b[0] === r[0]);
+      if (ref && ref[4] != null) r[4] = Math.round(ref[4] * usdAnnual / 13000);
+    }
+  });
+  // scenario factor
+  const sc = gfState.scenario;
+  const scFactor = sc === 'pessimistic' ? 0.55 : sc === 'optimistic' ? 1.18 : 1.0;
+  return rows.map(r => {
+    const remain = r[3] == null ? null : Math.round(r[3] * scFactor);
+    const full = r[4] == null ? null : Math.round(r[4] * scFactor);
+    return [r[0], r[1], r[2], remain, full];
+  });
+}
+
+function gfFmtUsd(n) { return 'US$ ' + Math.round(n).toLocaleString(); }
+function gfFmtHkd(n) { return 'HKD ' + Math.round(n).toLocaleString(); }
+function gfFmtCcy(n, ccy) { return (ccy === 'HKD' ? 'HKD ' : 'US$ ') + Math.round(n).toLocaleString(); }
+function gfFmtCompact(n) { return n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? (n/1e3).toFixed(0)+'K' : Math.round(n).toString(); }
+
+let gfChart, gfChartPie;
+
+function gfRender() {
+  const fx = gfState.fxUsd;
+  const usdAnnual = gfUsdAmount();
+  const totalPaidUsd = usdAnnual * 5;
+  const totalPaidHkd = totalPaidUsd * fx;
+  document.getElementById('gfTotalDisplay').textContent = gfState.ccy === 'HKD'
+    ? 'HKD ' + Math.round(totalPaidHkd).toLocaleString() + '  (≈ US$ ' + Math.round(totalPaidUsd).toLocaleString() + ')'
+    : 'US$ ' + Math.round(totalPaidUsd).toLocaleString() + '  (≈ HKD ' + Math.round(totalPaidHkd).toLocaleString() + ')';
+
+  // active button highlights
+  document.querySelectorAll('#page-gf .btn[data-mode]').forEach(b => b.classList.toggle('primary', b.dataset.mode === gfState.mode));
+  document.querySelectorAll('#page-gf .btn[data-sc]').forEach(b => b.classList.toggle('primary', b.dataset.sc === gfState.scenario));
+
+  const rows = gfComputeRows();
+  const isWithdraw = gfState.mode === 'withdraw';
+
+  // Reset all metric fields first (avoid stale text from previous mode)
+  ['gfMetricTotalLabel','gfMetricTotal','gfMetricTotalAlt',
+   'gfMetricFlowLabel','gfMetricFlow','gfMetricFlowAlt',
+   'gfMetric20Label','gfMetric20','gfMetric20Alt',
+   'gfMetric30Label','gfMetric30','gfMetric30Alt',
+   'gfMetricBELabel','gfMetricBE','gfMetricBESub'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = '—';
+  });
+  // Reset growth chips
+  ['gfMetricFlowGrowth','gfMetric20Growth','gfMetric30Growth'].forEach(id => {
+    const el = document.getElementById(id); if (el) { el.textContent = ''; el.className = 'growth-chip'; }
+  });
+  // Helper: compute growth chip text/style based on value vs paid
+  const setGrowth = (id, value, paid) => {
+    const el = document.getElementById(id); if (!el) return;
+    if (!value || !paid || value <= 0) { el.textContent = ''; return; }
+    const mult = value / paid;
+    const pct = (mult - 1) * 100;
+    const sign = pct >= 0 ? '+' : '';
+    el.textContent = sign + pct.toFixed(0) + '%  ·  ' + mult.toFixed(2) + ' 倍';
+    el.className = 'growth-chip' + (mult >= 2 ? ' huge' : mult < 1 ? ' flat' : '');
+  };
+
+  // Card 1: 5 年總供款 (hero)
+  document.getElementById('gfMetricTotalLabel').textContent = '5 年總供款';
+  document.getElementById('gfMetricTotal').textContent = gfFmtUsd(totalPaidUsd);
+  document.getElementById('gfMetricTotalAlt').textContent = '≈ ' + gfFmtHkd(totalPaidHkd);
+
+  const r10 = rows.find(r => r[0] === 10);
+  const r20 = rows.find(r => r[0] === 20);
+  const r30 = rows.find(r => r[0] === 30);
+
+  if (isWithdraw) {
+    const annualW = rows[0] ? rows[0][1] : 0;
+    const rate = GF_DATA[gfFindNearestTier(usdAnnual).usd].withdrawRate;
+    // Card 2: 每年提取
+    document.getElementById('gfMetricFlowLabel').textContent = '第 6 年起每年提取';
+    document.getElementById('gfMetricFlow').textContent = gfFmtUsd(annualW);
+    document.getElementById('gfMetricFlowAlt').textContent = '≈ ' + gfFmtHkd(annualW * fx) + ' / 年';
+    // Card 3: 第 20 年總回收
+    document.getElementById('gfMetric20Label').textContent = '第 20 年總回收';
+    if (r20) {
+      const total20 = (r20[2]||0) + (r20[3]||0);
+      document.getElementById('gfMetric20').textContent = gfFmtUsd(total20);
+      document.getElementById('gfMetric20Alt').textContent = '≈ ' + gfFmtHkd(total20 * fx);
+      setGrowth('gfMetric20Growth', total20, totalPaidUsd);
+    }
+    // Card 4: 第 30 年總回收
+    document.getElementById('gfMetric30Label').textContent = '第 30 年總回收';
+    if (r30) {
+      const total30 = (r30[2]||0) + (r30[3]||0);
+      document.getElementById('gfMetric30').textContent = gfFmtUsd(total30);
+      document.getElementById('gfMetric30Alt').textContent = '≈ ' + gfFmtHkd(total30 * fx) + ' (提取+剩餘)';
+      setGrowth('gfMetric30Growth', total30, totalPaidUsd);
+    }
+    // Card 5: 回本年
+    document.getElementById('gfMetricBELabel').textContent = '回本年（累積收 ≥ 已繳）';
+    let beYr = '—';
+    for (const r of rows) {
+      const recv = (r[2]||0) + (r[3]||0);
+      if (r[3] != null && recv >= totalPaidUsd) { beYr = '第 ' + r[0] + ' 年'; break; }
+    }
+    document.getElementById('gfMetricBE').textContent = beYr;
+    document.getElementById('gfMetricBESub').textContent = '提取率 ' + (rate*100).toFixed(1) + '% / 年';
+  } else {
+    // Card 2: 第 10 年退保價值
+    document.getElementById('gfMetricFlowLabel').textContent = '第 10 年退保價值';
+    if (r10 && r10[4]) {
+      document.getElementById('gfMetricFlow').textContent = gfFmtUsd(r10[4]);
+      document.getElementById('gfMetricFlowAlt').textContent = '≈ ' + gfFmtHkd(r10[4] * fx);
+      setGrowth('gfMetricFlowGrowth', r10[4], totalPaidUsd);
+    }
+    // Card 3: 第 20 年退保價值
+    document.getElementById('gfMetric20Label').textContent = '第 20 年退保價值';
+    if (r20 && r20[4]) {
+      document.getElementById('gfMetric20').textContent = gfFmtUsd(r20[4]);
+      document.getElementById('gfMetric20Alt').textContent = '≈ ' + gfFmtHkd(r20[4] * fx);
+      setGrowth('gfMetric20Growth', r20[4], totalPaidUsd);
+    }
+    // Card 4: 第 30 年退保價值
+    document.getElementById('gfMetric30Label').textContent = '第 30 年退保價值';
+    if (r30 && r30[4]) {
+      document.getElementById('gfMetric30').textContent = gfFmtUsd(r30[4]);
+      document.getElementById('gfMetric30Alt').textContent = '≈ ' + gfFmtHkd(r30[4] * fx);
+      setGrowth('gfMetric30Growth', r30[4], totalPaidUsd);
+    }
+    // Card 4: 預期 IRR
+    document.getElementById('gfMetricBELabel').textContent = '預期 IRR (第 30 年)';
+    if (r30 && r30[4] > 0 && totalPaidUsd > 0) {
+      const irr = Math.pow(r30[4] / totalPaidUsd, 1/30) - 1;
+      document.getElementById('gfMetricBE').textContent = (irr*100).toFixed(2) + '%';
+      document.getElementById('gfMetricBESub').textContent = '已繳 → 第 30 年 (年化)';
+    } else {
+      document.getElementById('gfMetricBE').textContent = '—';
+      document.getElementById('gfMetricBESub').textContent = '—';
+    }
+  }
+
+  gfRenderTable(rows, isWithdraw, totalPaidUsd, fx);
+  gfRenderChart(rows, isWithdraw, totalPaidUsd, usdAnnual);
+  if (typeof refreshStatusBar === 'function') refreshStatusBar();
+}
+
+function gfRenderTable(rows, isWithdraw, totalPaidUsd, fx) {
+  const head = document.getElementById('gfTableHead');
+  const body = document.getElementById('gfTableBody');
+  if (isWithdraw) {
+    head.innerHTML = '<tr><th>保單年度</th><th>已繳保費 (累計)</th><th>每年提取</th><th>累積提取</th><th>剩餘退保價值</th><th>累積收 (提取+剩餘)</th><th>≈ HKD</th></tr>';
+    body.innerHTML = rows.map(r => {
+      const yr = r[0];
+      const paid = Math.min(yr, 5) * (totalPaidUsd / 5);
+      const total = (r[2] || 0) + (r[3] || 0);
+      const hl = total >= totalPaidUsd && (r[3] != null) ? 'gf-row-highlight' : '';
+      return '<tr class="' + hl + '"><td><strong>第 ' + yr + ' 年</strong></td>' +
+        '<td>' + gfFmtUsd(paid) + '</td>' +
+        '<td>' + (r[1] ? gfFmtUsd(r[1]) : '—') + '</td>' +
+        '<td>' + gfFmtUsd(r[2] || 0) + '</td>' +
+        '<td>' + (r[3] != null ? gfFmtUsd(r[3]) : '—') + '</td>' +
+        '<td><strong style="color:#c8102e">' + gfFmtUsd(total) + '</strong></td>' +
+        '<td class="tiny" style="color:#d97706">≈ HKD ' + Math.round(total * fx).toLocaleString() + '</td></tr>';
+    }).join('');
+  } else {
+    head.innerHTML = '<tr><th>保單年度</th><th>已繳保費 (累計)</th><th>退保發還金額 (USD)</th><th>≈ HKD</th><th>倍數</th></tr>';
+    body.innerHTML = rows.map(r => {
+      const yr = r[0];
+      const paid = Math.min(yr, 5) * (totalPaidUsd / 5);
+      const surr = r[4] || 0;
+      const mult = paid > 0 ? (surr / paid).toFixed(2) : '—';
+      const hl = surr >= totalPaidUsd && yr >= 6 ? 'gf-row-highlight' : '';
+      return '<tr class="' + hl + '"><td><strong>第 ' + yr + ' 年</strong></td>' +
+        '<td>' + gfFmtUsd(paid) + '</td>' +
+        '<td><strong style="color:#c8102e">' + gfFmtUsd(surr) + '</strong></td>' +
+        '<td class="tiny" style="color:#d97706">≈ HKD ' + Math.round(surr * fx).toLocaleString() + '</td>' +
+        '<td><strong>' + mult + 'x</strong></td></tr>';
+    }).join('');
+  }
+}
+
+function gfRenderChart(rows, isWithdraw, totalPaidUsd, usdAnnual) {
+  if (typeof Chart === 'undefined') return;
+  const labels = rows.map(r => '第' + r[0] + '年');
+  const paidLine = rows.map(r => Math.min(r[0], 5) * usdAnnual);
+  if (gfChart) gfChart.destroy();
+  const datasets = [
+    { label: '已繳保費', data: paidLine, borderColor: '#8a96a8', borderDash: [5,5], fill: false, tension: 0, pointRadius: 0, borderWidth: 2 }
+  ];
+  if (isWithdraw) {
+    datasets.push({ label: '累積提取', data: rows.map(r => r[2]||0), borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.08)', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2 });
+    datasets.push({ label: '剩餘退保價值', data: rows.map(r => r[3]||0), borderColor: '#0d6efd', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2 });
+    datasets.push({ label: '累積收 (提取+剩餘)', data: rows.map(r => (r[2]||0)+(r[3]||0)), borderColor: '#c8102e', backgroundColor: 'rgba(200,16,46,0.10)', fill: true, tension: 0.2, pointRadius: 0, borderWidth: 3 });
+  } else {
+    datasets.push({ label: '退保發還金額 (預期)', data: rows.map(r => r[4]||0), borderColor: '#c8102e', backgroundColor: 'rgba(200,16,46,0.10)', fill: true, tension: 0.2, pointRadius: 0, borderWidth: 3 });
+  }
+  gfChart = new Chart(document.getElementById('gfChart'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font:{size:11} } }, tooltip: { callbacks: { label: c => c.dataset.label + ': US$ ' + Math.round(c.parsed.y).toLocaleString() } } }, scales: { y: { ticks: { callback: v => gfFmtCompact(v), font:{size:10} } }, x: { ticks: { maxRotation: 0, autoSkip: true, font:{size:10} } } } }
+  });
+
+  // pie chart for year 30 composition
+  const r30 = rows.find(r => r[0] === 30);
+  if (r30 && gfChartPie) gfChartPie.destroy();
+  if (r30) {
+    const isW = isWithdraw;
+    const data = isW
+      ? [{label:'累積提取',v:r30[2]||0,c:'#d97706'},{label:'剩餘退保價值',v:r30[3]||0,c:'#0d6efd'}]
+      : [{label:'已繳保費',v:totalPaidUsd,c:'#8a96a8'},{label:'總增值',v:Math.max(0,(r30[4]||0)-totalPaidUsd),c:'#c8102e'}];
+    gfChartPie = new Chart(document.getElementById('gfChartPie'), {
+      type: 'doughnut',
+      data: { labels: data.map(d=>d.label), datasets: [{ data: data.map(d=>d.v), backgroundColor: data.map(d=>d.c) }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position:'bottom', labels:{font:{size:11}} }, tooltip: { callbacks: { label: c => c.label + ': US$ ' + Math.round(c.parsed).toLocaleString() } } } }
+    });
+  }
+}
+
+// === Product page switching ===
+let activeProduct = 'fund';
+function switchProduct(p) {
+  activeProduct = p;
+  document.querySelectorAll('.ptab').forEach(t => t.classList.toggle('active', t.dataset.product === p));
+  document.getElementById('page-fund').style.display = p === 'fund' ? '' : 'none';
+  document.getElementById('page-gf').style.display = p === 'gf' ? '' : 'none';
+  document.getElementById('page-lc2').style.display = p === 'lc2' ? '' : 'none';
+  if (p === 'gf') gfRender();
+  if (p === 'lc2') lc2Render();
+  if (typeof refreshStatusBar === 'function') refreshStatusBar();
+}
+
+document.querySelectorAll('.ptab').forEach(t => {
+  t.addEventListener('click', () => switchProduct(t.dataset.product));
+});
+
+// GF input wiring
+document.getElementById('gfCcy').addEventListener('change', e => {
+  const oldCcy = gfState.ccy;
+  gfState.ccy = e.target.value;
+  // convert displayed amount to new ccy
+  if (oldCcy === 'HKD' && gfState.ccy === 'USD') gfState.amount = Math.round(gfState.amount / gfState.fxUsd);
+  else if (oldCcy === 'USD' && gfState.ccy === 'HKD') gfState.amount = Math.round(gfState.amount * gfState.fxUsd);
+  document.getElementById('gfAmount').value = gfState.amount.toLocaleString();
+  gfRenderPresets(); gfRender();
+});
+document.getElementById('gfAmount').addEventListener('input', e => {
+  const n = parseInt(e.target.value.replace(/[^0-9]/g,''),10);
+  if (!isNaN(n) && n > 0) { gfState.amount = n; gfRender(); }
+});
+document.getElementById('gfAmount').addEventListener('blur', e => { e.target.value = gfState.amount.toLocaleString(); });
+document.getElementById('gfFx').addEventListener('input', e => { const v = +e.target.value; if (v >= 7.5 && v <= 8.0) { gfState.fxUsd = v; gfRender(); } });
+document.querySelectorAll('#page-gf .btn[data-mode]').forEach(b => b.addEventListener('click', () => { gfState.mode = b.dataset.mode; gfRender(); }));
+document.querySelectorAll('#page-gf .btn[data-sc]').forEach(b => b.addEventListener('click', () => { gfState.scenario = b.dataset.sc; gfRender(); }));
+
+function gfRenderPresets() {
+  const el = document.getElementById('gfPresets');
+  const isHkd = gfState.ccy === 'HKD';
+  const tiers = GF_TIERS.filter(t => isHkd ? t.showHkd : t.showUsd);
+  el.innerHTML = tiers.map(t => {
+    if (isHkd) {
+      const lbl = t.hkd >= 1e6 ? (t.hkd/1e6).toFixed(2) + 'M HKD' : (t.hkd/1000) + 'K HKD';
+      return '<div class="chip" data-v="' + t.hkd + '">' + lbl + '</div>';
+    } else {
+      return '<div class="chip" data-v="' + t.usd + '">' + (t.usd/1000) + 'K USD</div>';
+    }
+  }).join('');
+  el.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    gfState.amount = +c.dataset.v;
+    document.getElementById('gfAmount').value = gfState.amount.toLocaleString();
+    gfRender();
+  });
+}
+
+// === 愛伴航 2 (OYS2) Data — HKD ===
+// 每個 entry: [monthlyPremium, payout65, payout70, payout75?, payout80?] in HKD
+// 月持續現金保障 = faceValue × 5% / 月 (最長 100 個月)
+const OYS2_DATA = {
+  18: {
+    0:  { 500000:[615,2385000,3347000], 1000000:[1213,4770000,6694000], 1500000:[1808,7155000,10041000], 2000000:[2385,9540000,13388000] },
+    5:  { 500000:[702,1899000,2670000], 1000000:[1387,3798000,5340000], 1500000:[2069,5696000,8011000], 2000000:[2733,7595000,10681000] },
+    10: { 500000:[802,1600000,2165000], 1000000:[1588,3200000,4330000], 1500000:[2369,4800000,6494000], 2000000:[3133,6399000,8659000] },
+    15: { 500000:[908,1185000,1715000], 1000000:[1800,2371000,3430000], 1500000:[2688,3556000,5145000], 2000000:[3558,4741000,6860000] },
+    20: { 500000:[1026,994000,1339000], 1000000:[2010,1989000,2678000], 1500000:[3003,2983000,4017000], 2000000:[3978,3977000,5356000] },
+    25: { 200000:[473,324000,439000], 600000:[1388,972000,1318000], 1000000:[2272,1619000,2197000],
+          1200000:[2716,1943000,2636000], 1600000:[3621,2591000,3515000], 2000000:[4502,3239000,4394000], 3000000:[6572,4858000,6591000] },
+    30: { 200000:[538,275000,368000], 600000:[1583,824000,1105000], 1000000:[2597,1373000,1842000],
+          1200000:[3107,1648000,2210000], 1600000:[4143,2197000,2947000], 2000000:[5153,2747000,3685000], 3000000:[7730,4120000,5526000] },
+    35: { 200000:[635,244000,319000], 600000:[1875,734000,958000], 1000000:[3083,1223000,1597000],
+          1200000:[3690,1467000,1916000], 1600000:[4920,1956000,2555000], 2000000:[6125,2445000,3194000], 3000000:[9187,3668000,4791000] },
+    40: { 200000:[760,213000,279000,364000], 600000:[2250,639000,838000,1093000], 1000000:[3708,1065000,1397000,1821000],
+          1200000:[4440,1278000,1677000,2186000], 1600000:[5920,1704000,2236000,2915000], 2000000:[7375,2129000,2795000,3644000], 3000000:[11062,3194000,4192000,5466000] },
+    45: { 200000:[892,109000,186000,319000,451000], 600000:[2646,326000,558000,957000,1354000], 1000000:[4351,543000,930000,1595000,2256000],
+          1200000:[5211,653000,1117000,1914000,2707000], 1600000:[6948,870000,1489000,2552000,3610000], 2000000:[8660,1088000,1861000,3190000,4512000], 3000000:[12990,1632000,2791000,4785000,6768000] }
+  },
+  25: {
+    0:  { 500000:[490,2159000,3047000], 1000000:[963,4317000,6094000], 1500000:[1431,5648000,7857000], 2000000:[1883,8635000,12188000] },
+    5:  { 500000:[550,1690000,2390000], 1000000:[1082,3379000,4780000], 1500000:[1611,5069000,7171000], 2000000:[2123,6759000,9561000] },
+    10: { 500000:[620,1368000,1900000], 1000000:[1224,2737000,3800000], 1500000:[1824,4105000,5700000], 2000000:[2407,5473000,7601000] },
+    15: { 500000:[700,1042000,1489000], 1000000:[1384,2084000,2977000], 1500000:[2064,3125000,4466000], 2000000:[2727,4167000,5954000] },
+    20: { 500000:[793,868000,1173000], 1000000:[1545,1736000,2345000], 1500000:[2305,2604000,3518000], 2000000:[3048,3472000,4690000] },
+    25: { 200000:[367,293000,387000], 600000:[1070,790000,1041000], 1000000:[1742,1316000,1734000],
+          1200000:[2080,1759000,2326000], 1600000:[2773,2346000,3096000], 2000000:[3442,2932000,3870000], 3000000:[5162,4398000,5805000] },
+    30: { 200000:[425,250000,324000], 600000:[1246,750000,973000], 1000000:[2035,1250000,1622000],
+          1200000:[2432,1500000,1947000], 1600000:[3243,2000000,2596000], 2000000:[4028,2501000,3245000], 3000000:[6042,3751000,4867000] },
+    35: { 200000:[504,228000,301000], 600000:[1483,685000,902000], 1000000:[2429,1142000,1504000],
+          1200000:[2905,1370000,1804000], 1600000:[3873,1827000,2406000], 2000000:[4817,2284000,3007000], 3000000:[7225,3425000,4511000] },
+    40: { 200000:[613,97000,265000,350000], 600000:[1809,292000,796000,1051000], 1000000:[2973,487000,1326000,1752000],
+          1200000:[3558,584000,1592000,2106000], 1600000:[4744,779000,2122000,2803000], 2000000:[5905,973000,2653000,3503000], 3000000:[8857,1460000,3979000,5255000] },
+    45: { 200000:[751,null,165000,261000,332000], 600000:[2224,null,496000,782000,997000], 1000000:[3648,null,827000,1303000,1662000] }
+  }
+};
+
+let lc2State = { age: 30, term: 25, face: 1000000 };
+let lc2Chart;
+
+function lc2GetEntry() {
+  const ageData = OYS2_DATA[lc2State.term] && OYS2_DATA[lc2State.term][lc2State.age];
+  if (!ageData) return null;
+  return ageData[lc2State.face] || null;
+}
+
+function lc2AvailableFaces() {
+  const ageData = OYS2_DATA[lc2State.term] && OYS2_DATA[lc2State.term][lc2State.age];
+  return ageData ? Object.keys(ageData).map(Number).sort((a,b)=>a-b) : [];
+}
+
+function lc2RenderFaceChips() {
+  const el = document.getElementById('lc2FaceChips');
+  const faces = lc2AvailableFaces();
+  if (!faces.includes(lc2State.face)) lc2State.face = faces[Math.floor(faces.length/2)] || faces[0];
+  el.innerHTML = faces.map(f => {
+    const lbl = f >= 1e6 ? (f/1e6).toFixed(f % 1e6 === 0 ? 0 : 1) + 'M' : (f/1000) + 'K';
+    return '<div class="chip ' + (f === lc2State.face ? 'active' : '') + '" data-v="' + f + '">HKD ' + lbl + '</div>';
+  }).join('');
+  el.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    lc2State.face = +c.dataset.v;
+    lc2RenderFaceChips(); lc2Render();
+  });
+}
+
+function lc2FmtHkd(n) { return n == null ? '—' : 'HKD ' + Math.round(n).toLocaleString(); }
+function lc2FmtCompactHkd(n) { return n >= 1e8 ? 'HKD ' + (n/1e8).toFixed(2)+'億' : n >= 1e7 ? 'HKD ' + (n/1e6).toFixed(1)+'M' : n >= 1e6 ? 'HKD ' + (n/1e6).toFixed(2)+'M' : n >= 1e3 ? 'HKD ' + (n/1e3).toFixed(0)+'K' : 'HKD ' + Math.round(n).toLocaleString(); }
+
+function lc2Render() {
+  // active term button
+  document.querySelectorAll('#page-lc2 .btn[data-lc2term]').forEach(b => b.classList.toggle('primary', +b.dataset.lc2term === lc2State.term));
+
+  const entry = lc2GetEntry();
+  const ids = ['lc2Monthly','lc2MonthlyAlt','lc2Total','lc2TotalAlt','lc2Cash','lc2CashAlt','lc2Face','lc2FaceAlt','lc2P65','lc2P70','lc2P75','lc2P80'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
+  ['lc2P65Growth','lc2P70Growth','lc2P75Growth','lc2P80Growth'].forEach(id => { const el = document.getElementById(id); if (el) { el.textContent = ''; el.className = 'growth-chip'; } });
+  document.getElementById('lc2CashAlt').textContent = '最長 100 個月';
+  document.getElementById('lc2FaceAlt').textContent = '最高賠 1,100% + 升級 50%/35%';
+
+  if (!entry) {
+    document.getElementById('lc2Monthly').textContent = '此組合未有數據';
+    return;
+  }
+  const monthly = entry[0];
+  const totalPaid = monthly * 12 * lc2State.term;
+  const monthlyCash = lc2State.face * 0.05;
+  document.getElementById('lc2Monthly').textContent = lc2FmtHkd(monthly);
+  document.getElementById('lc2MonthlyAlt').textContent = '/ 月 × ' + lc2State.term + ' 年';
+  document.getElementById('lc2Total').textContent = lc2FmtHkd(totalPaid);
+  document.getElementById('lc2TotalAlt').textContent = '繳費期內總投入';
+  document.getElementById('lc2Cash').textContent = lc2FmtHkd(monthlyCash);
+  document.getElementById('lc2Face').textContent = lc2FmtHkd(lc2State.face);
+
+  const setG = (id, v) => {
+    const el = document.getElementById(id); if (!el) return;
+    if (!v) { el.textContent = ''; return; }
+    const mult = v / totalPaid;
+    el.textContent = mult.toFixed(2) + ' 倍 · +' + Math.round((mult-1)*100) + '%';
+    el.className = 'growth-chip' + (mult >= 5 ? ' huge' : mult < 1 ? ' flat' : '');
+  };
+  document.getElementById('lc2P65').textContent = lc2FmtHkd(entry[1]); setG('lc2P65Growth', entry[1]);
+  document.getElementById('lc2P70').textContent = lc2FmtHkd(entry[2]); setG('lc2P70Growth', entry[2]);
+  document.getElementById('lc2P75').textContent = lc2FmtHkd(entry[3]); setG('lc2P75Growth', entry[3]);
+  document.getElementById('lc2P80').textContent = lc2FmtHkd(entry[4]); setG('lc2P80Growth', entry[4]);
+
+  lc2RenderChart(monthly, totalPaid, entry);
+  if (typeof refreshStatusBar === 'function') refreshStatusBar();
+}
+
+function lc2RenderChart(monthly, totalPaid, entry) {
+  if (typeof Chart === 'undefined') return;
+  const startAge = lc2State.age;
+  const endAge = 85;
+  const labels = [];
+  const paidLine = [];
+  const payoutLine = [];
+  const milestones = { 65: entry[1], 70: entry[2], 75: entry[3], 80: entry[4] };
+  for (let age = startAge; age <= endAge; age++) {
+    labels.push(age + '歲');
+    const yearsPaid = Math.min(age - startAge, lc2State.term);
+    paidLine.push(yearsPaid * 12 * monthly);
+    // payout: linear interp between milestones; before 65 = 0
+    let pv = null;
+    const ms = [65, 70, 75, 80].filter(m => milestones[m] != null);
+    if (ms.length && age >= ms[0]) {
+      // step function: take latest milestone reached
+      for (const m of ms) { if (age >= m) pv = milestones[m]; }
+    }
+    payoutLine.push(pv);
+  }
+  if (lc2Chart) lc2Chart.destroy();
+  lc2Chart = new Chart(document.getElementById('lc2Chart'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: '累積已繳保費', data: paidLine, borderColor: '#8a96a8', borderDash: [5,5], fill: false, tension: 0, pointRadius: 0, borderWidth: 2 },
+      { label: '行賠額（可領取）', data: payoutLine, borderColor: '#c8102e', backgroundColor: 'rgba(200,16,46,0.10)', fill: true, tension: 0, pointRadius: 0, borderWidth: 3, stepped: true, spanGaps: false }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font:{size:11} } }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + (c.parsed.y == null ? '—' : lc2FmtHkd(c.parsed.y)) } } }, scales: { y: { ticks: { callback: v => lc2FmtCompactHkd(v), font:{size:10} } }, x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12, font:{size:10} } } } }
+  });
+}
+
+document.getElementById('lc2Age').addEventListener('change', e => { lc2State.age = +e.target.value; lc2RenderFaceChips(); lc2Render(); });
+document.querySelectorAll('#page-lc2 .btn[data-lc2term]').forEach(b => b.addEventListener('click', () => {
+  lc2State.term = +b.dataset.lc2term; lc2RenderFaceChips(); lc2Render();
+}));
+
 // === Client Management ===
 const STORAGE_KEY = 'aia_clients_v1';
 let clientStore = { schemaVersion: 1, clients: [], currentClientId: null, currentScenarioId: null };
@@ -522,7 +1303,9 @@ function refreshClientPill() {
 }
 
 function snapshot() {
-  return JSON.stringify({ amount, fx, fxRmb, activeTab, customAlloc, reinvest });
+  if (activeProduct === 'gf') return JSON.stringify({ p: 'gf', gf: gfState });
+  if (activeProduct === 'lc2') return JSON.stringify({ p: 'lc2', lc2: lc2State });
+  return JSON.stringify({ p: 'fund', amount, fx, fxRmb, activeTab, customAlloc, reinvest });
 }
 function isDirty() {
   return lastSavedSnapshot !== null && lastSavedSnapshot !== snapshot();
@@ -604,11 +1387,18 @@ function updateCurrentScenario() {
   const c = findClient(clientStore.currentClientId);
   const s = getCurrentScenario();
   if (!c || !s) return;
-  Object.assign(s, {
-    amount, fx, fxRmb, tab: activeTab,
-    customAlloc: JSON.parse(JSON.stringify(customAlloc)),
-    reinvest, savedAt: Date.now()
-  });
+  if (activeProduct === 'gf') {
+    Object.assign(s, { productType: 'gf', gf: JSON.parse(JSON.stringify(gfState)), savedAt: Date.now() });
+  } else if (activeProduct === 'lc2') {
+    Object.assign(s, { productType: 'lc2', lc2: JSON.parse(JSON.stringify(lc2State)), savedAt: Date.now() });
+  } else {
+    Object.assign(s, {
+      productType: 'fund',
+      amount, fx, fxRmb, tab: activeTab,
+      customAlloc: JSON.parse(JSON.stringify(customAlloc)),
+      reinvest, savedAt: Date.now()
+    });
+  }
   c.updatedAt = Date.now();
   lastSavedSnapshot = snapshot();
   lastSaveAt = Date.now();
@@ -632,12 +1422,14 @@ function saveAsNewScenario() {
   const scnName = prompt('方案名稱（例如：保守版 / 進取版 / 退休方案）：', '方案 ' + new Date().toLocaleDateString('zh-HK'));
   if (!scnName || !scnName.trim()) return;
   const cur = findClient(clientStore.currentClientId);
-  const scn = {
-    id: uid(), name: scnName.trim(), note: '',
-    amount, fx, fxRmb, tab: activeTab,
-    customAlloc: JSON.parse(JSON.stringify(customAlloc)),
-    reinvest, savedAt: Date.now()
-  };
+  const scn = activeProduct === 'gf'
+    ? { id: uid(), name: scnName.trim(), note: '', productType: 'gf', gf: JSON.parse(JSON.stringify(gfState)), savedAt: Date.now() }
+    : activeProduct === 'lc2'
+    ? { id: uid(), name: scnName.trim(), note: '', productType: 'lc2', lc2: JSON.parse(JSON.stringify(lc2State)), savedAt: Date.now() }
+    : { id: uid(), name: scnName.trim(), note: '', productType: 'fund',
+        amount, fx, fxRmb, tab: activeTab,
+        customAlloc: JSON.parse(JSON.stringify(customAlloc)),
+        reinvest, savedAt: Date.now() };
   cur.scenarios = cur.scenarios || [];
   cur.scenarios.push(scn);
   cur.updatedAt = Date.now();
@@ -682,15 +1474,21 @@ function renderModal() {
     title.textContent = '👤 ' + c.name;
     const scnHtml = (c.scenarios||[]).length === 0
       ? '<div class="empty-state"><div class="icon">📋</div><div>仲未有方案</div><div class="tiny" style="margin-top:6px">關閉此窗，調整好設定，再㩒「💾 保存目前方案」</div></div>'
-      : c.scenarios.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(s =>
-          '<div class="scenario-card"><div class="row-top">' +
+      : c.scenarios.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(s => {
+          const meta = s.productType === 'gf'
+            ? '💰 環宇盈活 · ' + (s.gf ? (s.gf.amount||0).toLocaleString() + ' ' + s.gf.ccy + '/年 × 5 · ' + (s.gf.mode === 'withdraw' ? '提取' : '不提取') : '') + ' · ' + fmtDate(s.savedAt)
+            : s.productType === 'lc2'
+            ? '🛡️ 愛伴航 2 · ' + (s.lc2 ? s.lc2.age + '歲 · ' + s.lc2.term + '年期 · 保額 HKD ' + (s.lc2.face/1000) + 'K' : '') + ' · ' + fmtDate(s.savedAt)
+            : '📊 基金 · ' + (s.amount||0).toLocaleString() + ' HKD · ' + (tabLabel(s.tab)) + ' · ' + fmtDate(s.savedAt);
+          return '<div class="scenario-card"><div class="row-top">' +
           '<div><div class="scn-name">' + esc(s.name) + '</div>' +
-          '<div class="scn-meta">💰 ' + (s.amount||0).toLocaleString() + ' HKD · 📊 ' + (tabLabel(s.tab)) + ' · ' + fmtDate(s.savedAt) + '</div>' +
+          '<div class="scn-meta">' + meta + '</div>' +
           (s.note ? '<div class="scn-meta" style="margin-top:3px">📝 ' + esc(s.note) + '</div>' : '') +
           '</div><div class="scn-actions">' +
           '<button class="btn-sm primary" onclick="loadScenario(\'' + c.id + '\',\'' + s.id + '\')">📂 載入</button>' +
           '<button class="btn-sm danger" onclick="deleteScenario(\'' + c.id + '\',\'' + s.id + '\')">🗑️</button>' +
-          '</div></div></div>').join('');
+          '</div></div></div>';
+        }).join('');
     body.innerHTML = '<div class="crumb" onclick="modalView=\'list\';renderModal()">← 返回客戶列表</div>' +
       '<div style="margin-bottom:14px;padding:12px;background:#f7f9fc;border-radius:8px">' +
       (c.phone ? '<div style="font-size:13px">📞 ' + esc(c.phone) + '</div>' : '') +
@@ -714,9 +1512,14 @@ function renderModal() {
     body.innerHTML = '<div class="form-row"><label>方案名稱 *<input id="sName" value="" placeholder="例如：保守版 / 進取版 / 退休方案"></label></div>' +
       '<div class="form-row"><label>備註<textarea id="sNote" placeholder="客戶反應 / 跟進日期..."></textarea></label></div>' +
       '<div style="padding:12px;background:#f7f9fc;border-radius:8px;font-size:12.5px;color:#56657a">' +
-      '<strong>會保存：</strong> 保單金額 ' + amount.toLocaleString() + ' HKD · 匯率 ' + fx + '/' + fxRmb + ' · 組合「' + tabLabel(activeTab) + '」' +
-      (activeTab === 'C' ? ' (' + Object.keys(customAlloc).length + ' 隻基金)' : '') +
-      ' · ' + (reinvest ? '複利' : '純現金') + '派息</div>';
+      (activeProduct === 'gf'
+        ? '<strong>會保存：</strong> 💰 環宇盈活 · 年繳 ' + gfState.amount.toLocaleString() + ' ' + gfState.ccy + ' × 5 · ' + (gfState.mode === 'withdraw' ? '🪙 提取模式' : '💎 不提取') + ' · 情景「' + gfState.scenario + '」'
+        : activeProduct === 'lc2'
+        ? '<strong>會保存：</strong> 🛡️ 愛伴航 2 · ' + lc2State.age + '歲 · ' + lc2State.term + '年期 · 基本保額 HKD ' + lc2State.face.toLocaleString()
+        : '<strong>會保存：</strong> 📊 基金分析 · 保單金額 ' + amount.toLocaleString() + ' HKD · 匯率 ' + fx + '/' + fxRmb + ' · 組合「' + tabLabel(activeTab) + '」' +
+          (activeTab === 'C' ? ' (' + Object.keys(customAlloc).length + ' 隻基金)' : '') +
+          ' · ' + (reinvest ? '複利' : '純現金') + '派息') +
+      '</div>';
     foot.innerHTML = '<button class="btn-sm" onclick="modalView=\'detail\';renderModal()">取消</button>' +
       '<button class="btn-sm primary" onclick="submitScenario()">✓ 保存</button>';
   }
@@ -802,20 +1605,35 @@ function submitScenario() {
 function loadScenario(clientId, scnId) {
   const c = findClient(clientId); if (!c) return;
   const s = (c.scenarios||[]).find(x => x.id === scnId); if (!s) return;
-  amount = s.amount; fx = s.fx; fxRmb = s.fxRmb;
-  activeTab = s.tab; customAlloc = JSON.parse(JSON.stringify(s.customAlloc||{})); reinvest = !!s.reinvest;
-  document.getElementById('amountInput').value = amount.toLocaleString();
-  document.getElementById('fx').value = fx;
-  document.getElementById('fxRmb').value = fxRmb;
-  document.getElementById('toggleReinvest').checked = reinvest;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.port === activeTab));
-  document.getElementById('builderArea').style.display = (activeTab === 'C') ? 'block' : 'none';
+  if (s.productType === 'gf') {
+    gfState = Object.assign({ ccy:'HKD', amount:100000, fxUsd:7.69, mode:'withdraw', scenario:'expected' }, s.gf || {});
+    document.getElementById('gfCcy').value = gfState.ccy;
+    document.getElementById('gfAmount').value = gfState.amount.toLocaleString();
+    document.getElementById('gfFx').value = gfState.fxUsd;
+    switchProduct('gf');
+    gfRenderPresets();
+  } else if (s.productType === 'lc2') {
+    lc2State = Object.assign({ age:30, term:25, face:1000000 }, s.lc2 || {});
+    document.getElementById('lc2Age').value = lc2State.age;
+    switchProduct('lc2');
+    lc2RenderFaceChips();
+  } else {
+    amount = s.amount; fx = s.fx; fxRmb = s.fxRmb;
+    activeTab = s.tab; customAlloc = JSON.parse(JSON.stringify(s.customAlloc||{})); reinvest = !!s.reinvest;
+    document.getElementById('amountInput').value = amount.toLocaleString();
+    document.getElementById('fx').value = fx;
+    document.getElementById('fxRmb').value = fxRmb;
+    document.getElementById('toggleReinvest').checked = reinvest;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.port === activeTab));
+    document.getElementById('builderArea').style.display = (activeTab === 'C') ? 'block' : 'none';
+    switchProduct('fund');
+    updateChipsHighlight(); renderBuilder(); render();
+  }
   clientStore.currentClientId = clientId;
   clientStore.currentScenarioId = scnId;
   lastSavedSnapshot = snapshot();
   lastSaveAt = s.savedAt;
   saveStore(); refreshClientPill();
-  updateChipsHighlight(); renderBuilder(); render();
   closeClientModal();
   toast('✓ 已載入「' + s.name + '」(' + c.name + ')', 'success');
 }
@@ -914,6 +1732,8 @@ async function init() {
   renderBuilder();
   updateChipsHighlight();
   render();
+  gfRenderPresets();
+  lc2RenderFaceChips();
 }
 init();
 </script>
