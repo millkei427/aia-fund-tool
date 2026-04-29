@@ -115,11 +115,95 @@ table.funds tr:hover td { background: #fbfcfe; }
 .toggle-row label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
 .cls-tag { display: inline-block; padding: 1px 6px; background: #eef1f5; color: #56657a; border-radius: 3px; font-size: 10px; font-weight: 600; }
 @media (max-width: 880px) { .summary-row { grid-template-columns: 1fr 1fr; } .charts-row { grid-template-columns: 1fr; } .proj-grid { grid-template-columns: repeat(3, 1fr); } .equals-sign { display: none; } .rmb-display { width: 100%; } }
+
+/* === Client Management === */
+.action-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
+.action-bar .spacer { flex: 1; }
+.btn-action { padding: 8px 14px; background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+.btn-action:hover { background: rgba(255,255,255,0.28); border-color: #fff; }
+.btn-action.solid { background: #fff; color: #c8102e; }
+.btn-action.solid:hover { background: #fef2f4; }
+.client-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 12px; color: #fff; font-weight: 600; }
+.modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.55); z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+.modal-bg.show { display: flex; }
+.modal { background: #fff; border-radius: 14px; max-width: 720px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin: 20px auto; overflow: hidden; }
+.modal-head { background: linear-gradient(135deg, #c8102e 0%, #8b0a1f 100%); color: #fff; padding: 16px 22px; display: flex; justify-content: space-between; align-items: center; }
+.modal-head h2 { font-size: 17px; font-weight: 700; }
+.modal-close { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; }
+.modal-close:hover { background: rgba(255,255,255,0.35); }
+.modal-body { padding: 18px 22px; max-height: 70vh; overflow-y: auto; }
+.modal-foot { padding: 12px 22px; background: #f7f9fc; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.client-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; background: #fff; }
+.client-card:hover { border-color: #c8102e; background: #fef2f4; }
+.client-card .row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.client-card .name { font-size: 15px; font-weight: 700; color: #1a2332; }
+.client-card .badge { font-size: 11px; padding: 2px 8px; background: #c8102e; color: #fff; border-radius: 10px; font-weight: 600; }
+.client-card .meta-line { font-size: 12px; color: #6b7a8e; }
+.client-card .note { font-size: 12px; color: #8a96a8; margin-top: 4px; font-style: italic; }
+.empty-state { text-align: center; padding: 40px 20px; color: #8a96a8; }
+.empty-state .icon { font-size: 48px; margin-bottom: 10px; }
+.scenario-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; background: #fff; }
+.scenario-card .row-top { display: flex; justify-content: space-between; align-items: center; }
+.scenario-card .scn-name { font-size: 14px; font-weight: 700; color: #1a2332; }
+.scenario-card .scn-meta { font-size: 11.5px; color: #6b7a8e; margin-top: 3px; }
+.scenario-card .scn-actions { display: flex; gap: 6px; }
+.form-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.form-row label { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #56657a; font-weight: 600; }
+.form-row input, .form-row textarea { padding: 8px 10px; border: 1px solid #d4dae3; border-radius: 6px; font-size: 13px; font-family: inherit; }
+.form-row input:focus, .form-row textarea:focus { outline: none; border-color: #c8102e; }
+.form-row textarea { resize: vertical; min-height: 60px; }
+.btn-sm { padding: 5px 10px; font-size: 11.5px; border: 1px solid #d4dae3; background: #fff; border-radius: 5px; cursor: pointer; font-weight: 600; color: #56657a; }
+.btn-sm:hover { border-color: #c8102e; color: #c8102e; }
+.btn-sm.danger:hover { border-color: #dc2626; color: #dc2626; background: #fef2f2; }
+.btn-sm.primary { background: #c8102e; border-color: #c8102e; color: #fff; }
+.btn-sm.primary:hover { background: #8b0a1f; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a2332; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.25); z-index: 2000; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+.toast.success { background: #059669; }
+.toast.error { background: #dc2626; }
+.crumb { font-size: 13px; color: #c8102e; cursor: pointer; margin-bottom: 12px; display: inline-block; font-weight: 600; }
+.crumb:hover { text-decoration: underline; }
+.print-header { display: none; }
+.status-bar { background: #fff; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); flex-wrap: wrap; }
+.status-bar .status-icon { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.status-bar.idle { display: none; }
+.status-bar.saved .status-icon { background: #d1fae5; color: #059669; }
+.status-bar.dirty .status-icon { background: #fef3c7; color: #d97706; }
+.status-bar.unsaved .status-icon { background: #fee2e2; color: #dc2626; }
+.status-bar .status-text { flex: 1; color: #1a2332; font-weight: 600; }
+.status-bar .status-meta { color: #8a96a8; font-weight: 500; font-size: 12px; }
+.status-bar .status-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .header { background: #c8102e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .action-bar, .modal-bg, .toast, .builder-controls, .total-bar, #builderArea, .footer .links, .preset-chips, .toggle-row, .fx-group { display: none !important; }
+  .tabs { display: none; }
+  .section, .proj-card, .chart-card, .fund-table-wrap { box-shadow: none !important; border: 1px solid #e2e8f0; page-break-inside: avoid; }
+  .charts-row { page-break-inside: avoid; }
+  .print-header { display: block; padding: 14px 22px; background: #f7f9fc; border-radius: 10px; margin-bottom: 14px; border-left: 4px solid #c8102e; }
+  .print-header h2 { font-size: 18px; color: #1a2332; }
+  .print-header .meta-line { font-size: 12px; color: #56657a; margin-top: 4px; }
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="header"><h1>卓達智悅 · 月月派息基金分析工具 v3.2</h1><div class="sub">兩個預設組合 + 4 個主題組合 + 自選組合 · HKD/RMB 雙幣顯示 · 24 隻 USD Z 字頭基金</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div></div>
+<div class="header"><h1>卓達智悅 · 月月派息基金分析工具 v3.3</h1><div class="sub">客戶管理 · HKD/RMB 雙幣 · 24 隻 USD Z 字頭基金 · 6 預設組合 + 自選</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
+<div class="action-bar">
+  <button class="btn-action solid" id="btnOpenClients">👥 客戶管理 <span class="client-pill" id="clientCountPill" style="display:none">0</span></button>
+  <button class="btn-action" id="btnSaveScenario">💾 保存目前方案</button>
+  <button class="btn-action" id="btnPrintReport">🖨️ 列印 / PDF</button>
+  <span class="spacer"></span>
+  <span class="client-pill" id="currentClientPill" style="display:none"></span>
+</div>
+</div>
+<div class="print-header" id="printHeader"></div>
+<div class="status-bar idle" id="statusBar">
+  <span class="status-icon" id="statusIcon">✓</span>
+  <div style="flex:1;min-width:200px"><div class="status-text" id="statusText"></div><div class="status-meta" id="statusMeta"></div></div>
+  <div class="status-actions" id="statusActions"></div>
+</div>
 <div class="section"><div class="label-bar"><span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span><div class="fx-group"><div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0"></div><div class="fx-control"><span>HKD/CNY 匯率</span><input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00"></div></div></div><div class="amount-row"><input type="text" class="amount-input" id="amountInput" value="2,000,000"><span class="ccy-label">HKD</span><span class="equals-sign">=</span><span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span><span class="ccy-label">人民幣</span></div><div class="preset-chips" id="presets"></div></div>
 <div class="tabs"><div class="tab active" data-port="A">🎯 組合 A · 集中型</div><div class="tab" data-port="B">🌐 組合 B · 分散型</div><div class="tab" data-port="NA">🇺🇸 北美市場</div><div class="tab" data-port="ASIA">🌏 亞洲市場</div><div class="tab" data-port="TECH">💻 科技類</div><div class="tab" data-port="CONS">🛒 消費類</div><div class="tab" data-port="C">⚙️ 自選</div></div>
 <div class="section"><div class="summary-row"><div class="metric hero"><div class="label">每月派息</div><div class="value" id="sumMonthly">—</div><div class="sub-value" id="sumMonthlyRmb">≈ ¥ —</div></div><div class="metric"><div class="label">每年回報</div><div class="value" id="sumAnnual">—</div><div class="sub-value" id="sumAnnualRmb">≈ ¥ —</div></div><div class="metric"><div class="label">派息利率</div><div class="value" id="sumYield">—</div></div><div class="metric"><div class="label">已選基金</div><div class="value" id="sumCount">—</div></div></div>
@@ -131,6 +215,20 @@ table.funds tr:hover td { background: #fbfcfe; }
 <div class="section-title">📋 基金詳細資料</div>
 <div class="fund-table-wrap"><table class="funds"><thead><tr><th>代號</th><th>基金名稱</th><th>資產類別</th><th>比例</th><th>配置 (HKD)</th><th>價格 (USD)</th><th>派息率</th><th>每月派息<br>HKD / RMB</th><th>每年回報<br>HKD / RMB</th><th>1年</th><th>3年</th><th>5年</th><th>風險</th></tr></thead><tbody id="fundBody"></tbody></table></div>
 <div class="footer"><strong>📚 AIA 官方參考連結</strong><div class="links"><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a></div><div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。基金價格採自 AIA 官方公佈 (04/24/2026)。HKD/CNY 匯率僅作參考。本工具不構成投資建議,投資涉及風險。</div></div>
+
+<!-- Client Management Modal -->
+<div class="modal-bg" id="clientModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">👥 客戶管理</h2>
+      <button class="modal-close" onclick="closeClientModal()">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept="application/json" style="display:none">
 </div>
 <script>
 let FUNDS = {
@@ -304,6 +402,7 @@ function computePortfolio(allocPct, totalHKD, fxRate) {
 let chartProj, chartGeo;
 
 function render() {
+  if (typeof refreshStatusBar === 'function') refreshStatusBar();
   document.getElementById("rmbDisplay").textContent = fmtRMB(amount * fxRmb);
   const allocPct = (activeTab === "C") ? customAlloc : PORTFOLIOS[activeTab].alloc;
   const totalAlloc = Object.values(allocPct).reduce((s,x)=>s+(+x||0), 0);
@@ -381,6 +480,409 @@ function renderChart(port) {
   });
 }
 
+// === Client Management ===
+const STORAGE_KEY = 'aia_clients_v1';
+let clientStore = { schemaVersion: 1, clients: [], currentClientId: null, currentScenarioId: null };
+let modalView = 'list';
+let editingClientId = null;
+let lastSavedSnapshot = null;
+let lastSaveAt = null;
+
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) clientStore = Object.assign({ schemaVersion: 1, clients: [], currentClientId: null }, JSON.parse(raw));
+  } catch (e) { console.warn('load store fail', e); }
+}
+function saveStore() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(clientStore)); } catch (e) { toast('儲存失敗：' + e.message, 'error'); }
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function fmtDate(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleDateString('zh-HK') + ' ' + d.toTimeString().slice(0,5);
+}
+function findClient(id) { return clientStore.clients.find(c => c.id === id); }
+function refreshClientPill() {
+  const n = clientStore.clients.length;
+  const pill = document.getElementById('clientCountPill');
+  pill.style.display = n > 0 ? 'inline-flex' : 'none';
+  pill.textContent = n;
+  const cur = document.getElementById('currentClientPill');
+  const c = findClient(clientStore.currentClientId);
+  if (c) { cur.style.display = 'inline-flex'; cur.textContent = '👤 ' + c.name; }
+  else cur.style.display = 'none';
+  refreshStatusBar();
+}
+
+function snapshot() {
+  return JSON.stringify({ amount, fx, fxRmb, activeTab, customAlloc, reinvest });
+}
+function isDirty() {
+  return lastSavedSnapshot !== null && lastSavedSnapshot !== snapshot();
+}
+function relTime(ts) {
+  if (!ts) return '';
+  const sec = (Date.now() - ts) / 1000;
+  if (sec < 60) return '剛剛';
+  if (sec < 3600) return Math.floor(sec/60) + ' 分鐘前';
+  if (sec < 86400) return Math.floor(sec/3600) + ' 小時前';
+  return fmtDate(ts);
+}
+function getCurrentScenario() {
+  const c = findClient(clientStore.currentClientId);
+  if (!c || !clientStore.currentScenarioId) return null;
+  return (c.scenarios||[]).find(s => s.id === clientStore.currentScenarioId);
+}
+
+function refreshStatusBar() {
+  const bar = document.getElementById('statusBar');
+  const icon = document.getElementById('statusIcon');
+  const text = document.getElementById('statusText');
+  const meta = document.getElementById('statusMeta');
+  const actions = document.getElementById('statusActions');
+  const c = findClient(clientStore.currentClientId);
+  const s = getCurrentScenario();
+
+  if (!c && !lastSaveAt) { bar.className = 'status-bar idle'; return; }
+  bar.classList.remove('idle');
+
+  if (s && !isDirty()) {
+    bar.className = 'status-bar saved';
+    icon.textContent = '✓';
+    text.innerHTML = '已載入：<span style="color:#c8102e">' + esc(c.name) + '</span> · ' + esc(s.name);
+    meta.textContent = '上次儲存 ' + relTime(s.savedAt) + ' · 設定未變動';
+    actions.innerHTML =
+      '<button class="btn-sm" onclick="clearCurrentScenario()">↩️ 離開此方案</button>' +
+      '<button class="btn-sm" onclick="saveAsNewScenario()">➕ 另存新方案</button>';
+  } else if (s && isDirty()) {
+    bar.className = 'status-bar dirty';
+    icon.textContent = '●';
+    text.innerHTML = '已修改：<span style="color:#c8102e">' + esc(c.name) + '</span> · ' + esc(s.name);
+    meta.textContent = '改咗未存 · 上次儲存 ' + relTime(s.savedAt);
+    actions.innerHTML =
+      '<button class="btn-sm" onclick="saveAsNewScenario()">➕ 另存為新方案</button>' +
+      '<button class="btn-sm primary" onclick="updateCurrentScenario()">💾 更新此方案</button>';
+  } else if (c && !s) {
+    bar.className = 'status-bar unsaved';
+    icon.textContent = '!';
+    text.innerHTML = '當前客戶：<span style="color:#c8102e">' + esc(c.name) + '</span>';
+    meta.textContent = '仲未保存任何方案';
+    actions.innerHTML =
+      '<button class="btn-sm" onclick="clearCurrentClient()">↩️ 取消</button>' +
+      '<button class="btn-sm primary" onclick="saveAsNewScenario()">💾 保存方案到 ' + esc(c.name) + '</button>';
+  } else if (lastSaveAt && !c) {
+    bar.className = 'status-bar saved';
+    icon.textContent = '✓';
+    text.textContent = '已保存';
+    meta.textContent = relTime(lastSaveAt);
+    actions.innerHTML = '';
+  } else {
+    bar.className = 'status-bar idle';
+  }
+}
+
+function clearCurrentScenario() {
+  clientStore.currentScenarioId = null;
+  lastSavedSnapshot = null;
+  saveStore(); refreshClientPill();
+  toast('已離開方案', 'success');
+}
+function clearCurrentClient() {
+  clientStore.currentClientId = null;
+  clientStore.currentScenarioId = null;
+  lastSavedSnapshot = null;
+  saveStore(); refreshClientPill();
+}
+function updateCurrentScenario() {
+  const c = findClient(clientStore.currentClientId);
+  const s = getCurrentScenario();
+  if (!c || !s) return;
+  Object.assign(s, {
+    amount, fx, fxRmb, tab: activeTab,
+    customAlloc: JSON.parse(JSON.stringify(customAlloc)),
+    reinvest, savedAt: Date.now()
+  });
+  c.updatedAt = Date.now();
+  lastSavedSnapshot = snapshot();
+  lastSaveAt = Date.now();
+  saveStore(); refreshClientPill();
+  toast('✓ 已更新「' + s.name + '」', 'success');
+}
+function saveAsNewScenario() {
+  const c = findClient(clientStore.currentClientId);
+  if (!c) {
+    if (clientStore.clients.length === 0) {
+      const name = prompt('未有客戶。輸入新客戶姓名：');
+      if (!name || !name.trim()) return;
+      const newC = { id: uid(), name: name.trim(), phone: '', note: '', scenarios: [], createdAt: Date.now(), updatedAt: Date.now() };
+      clientStore.clients.push(newC);
+      clientStore.currentClientId = newC.id;
+      saveStore();
+    } else {
+      openClientModal('list'); return;
+    }
+  }
+  const scnName = prompt('方案名稱（例如：保守版 / 進取版 / 退休方案）：', '方案 ' + new Date().toLocaleDateString('zh-HK'));
+  if (!scnName || !scnName.trim()) return;
+  const cur = findClient(clientStore.currentClientId);
+  const scn = {
+    id: uid(), name: scnName.trim(), note: '',
+    amount, fx, fxRmb, tab: activeTab,
+    customAlloc: JSON.parse(JSON.stringify(customAlloc)),
+    reinvest, savedAt: Date.now()
+  };
+  cur.scenarios = cur.scenarios || [];
+  cur.scenarios.push(scn);
+  cur.updatedAt = Date.now();
+  clientStore.currentScenarioId = scn.id;
+  lastSavedSnapshot = snapshot();
+  lastSaveAt = Date.now();
+  saveStore(); refreshClientPill();
+  toast('✓ 已保存「' + scn.name + '」到 ' + cur.name, 'success');
+}
+
+function openClientModal(view) {
+  modalView = view || 'list';
+  document.getElementById('clientModal').classList.add('show');
+  renderModal();
+}
+function closeClientModal() { document.getElementById('clientModal').classList.remove('show'); }
+
+function renderModal() {
+  const title = document.getElementById('modalTitle');
+  const body = document.getElementById('modalBody');
+  const foot = document.getElementById('modalFoot');
+  if (modalView === 'list') {
+    title.textContent = '👥 我的客戶 (' + clientStore.clients.length + ')';
+    if (clientStore.clients.length === 0) {
+      body.innerHTML = '<div class="empty-state"><div class="icon">👥</div><div>仲未有客戶記錄</div><div class="tiny" style="margin-top:6px">㩒「+ 新增客戶」開始</div></div>';
+    } else {
+      body.innerHTML = clientStore.clients
+        .slice().sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0))
+        .map(c => '<div class="client-card" onclick="openClient(\'' + c.id + '\')">' +
+          '<div class="row-top"><span class="name">' + esc(c.name) + '</span>' +
+          '<span class="badge">' + (c.scenarios||[]).length + ' 方案</span></div>' +
+          '<div class="meta-line">' + (c.phone ? '📞 ' + esc(c.phone) + ' · ' : '') + '更新 ' + fmtDate(c.updatedAt) + '</div>' +
+          (c.note ? '<div class="note">' + esc(c.note) + '</div>' : '') +
+          '</div>').join('');
+    }
+    foot.innerHTML = '<button class="btn-sm" onclick="exportData()">📤 匯出全部</button>' +
+      '<button class="btn-sm" onclick="document.getElementById(\'importFile\').click()">📥 匯入</button>' +
+      '<button class="btn-sm primary" onclick="newClient()">+ 新增客戶</button>';
+  } else if (modalView === 'detail') {
+    const c = findClient(editingClientId);
+    if (!c) { modalView = 'list'; renderModal(); return; }
+    title.textContent = '👤 ' + c.name;
+    const scnHtml = (c.scenarios||[]).length === 0
+      ? '<div class="empty-state"><div class="icon">📋</div><div>仲未有方案</div><div class="tiny" style="margin-top:6px">關閉此窗，調整好設定，再㩒「💾 保存目前方案」</div></div>'
+      : c.scenarios.slice().sort((a,b)=>(b.savedAt||0)-(a.savedAt||0)).map(s =>
+          '<div class="scenario-card"><div class="row-top">' +
+          '<div><div class="scn-name">' + esc(s.name) + '</div>' +
+          '<div class="scn-meta">💰 ' + (s.amount||0).toLocaleString() + ' HKD · 📊 ' + (tabLabel(s.tab)) + ' · ' + fmtDate(s.savedAt) + '</div>' +
+          (s.note ? '<div class="scn-meta" style="margin-top:3px">📝 ' + esc(s.note) + '</div>' : '') +
+          '</div><div class="scn-actions">' +
+          '<button class="btn-sm primary" onclick="loadScenario(\'' + c.id + '\',\'' + s.id + '\')">📂 載入</button>' +
+          '<button class="btn-sm danger" onclick="deleteScenario(\'' + c.id + '\',\'' + s.id + '\')">🗑️</button>' +
+          '</div></div></div>').join('');
+    body.innerHTML = '<div class="crumb" onclick="modalView=\'list\';renderModal()">← 返回客戶列表</div>' +
+      '<div style="margin-bottom:14px;padding:12px;background:#f7f9fc;border-radius:8px">' +
+      (c.phone ? '<div style="font-size:13px">📞 ' + esc(c.phone) + '</div>' : '') +
+      (c.note ? '<div style="font-size:13px;color:#56657a;margin-top:4px">📝 ' + esc(c.note) + '</div>' : '') +
+      '<div class="tiny" style="margin-top:6px">建立 ' + fmtDate(c.createdAt) + ' · 更新 ' + fmtDate(c.updatedAt) + '</div>' +
+      '</div>' + '<h3 style="font-size:13px;color:#56657a;margin-bottom:8px">📋 方案 (' + (c.scenarios||[]).length + ')</h3>' + scnHtml;
+    foot.innerHTML = '<button class="btn-sm danger" onclick="deleteClient(\'' + c.id + '\')">🗑️ 刪除客戶</button>' +
+      '<button class="btn-sm" onclick="editClient(\'' + c.id + '\')">✏️ 編輯資料</button>' +
+      '<button class="btn-sm primary" onclick="closeClientModal();saveScenarioFlow(\'' + c.id + '\')">💾 保存目前方案</button>';
+  } else if (modalView === 'new' || modalView === 'edit') {
+    const c = modalView === 'edit' ? findClient(editingClientId) : { name: '', phone: '', note: '' };
+    title.textContent = modalView === 'edit' ? '✏️ 編輯客戶' : '+ 新增客戶';
+    body.innerHTML = '<div class="form-row"><label>姓名 *<input id="fName" value="' + esc(c.name||'') + '" placeholder="張先生"></label></div>' +
+      '<div class="form-row"><label>電話<input id="fPhone" value="' + esc(c.phone||'') + '" placeholder="6xxx xxxx"></label></div>' +
+      '<div class="form-row"><label>備註<textarea id="fNote" placeholder="年齡 / 風險偏好 / 跟進事項...">' + esc(c.note||'') + '</textarea></label></div>';
+    foot.innerHTML = '<button class="btn-sm" onclick="modalView=\'' + (modalView==='edit'?'detail':'list') + '\';renderModal()">取消</button>' +
+      '<button class="btn-sm primary" onclick="submitClient()">' + (modalView==='edit'?'💾 儲存':'✓ 建立') + '</button>';
+  } else if (modalView === 'saveScenario') {
+    const c = findClient(editingClientId);
+    title.textContent = '💾 保存方案 → ' + (c ? c.name : '');
+    body.innerHTML = '<div class="form-row"><label>方案名稱 *<input id="sName" value="" placeholder="例如：保守版 / 進取版 / 退休方案"></label></div>' +
+      '<div class="form-row"><label>備註<textarea id="sNote" placeholder="客戶反應 / 跟進日期..."></textarea></label></div>' +
+      '<div style="padding:12px;background:#f7f9fc;border-radius:8px;font-size:12.5px;color:#56657a">' +
+      '<strong>會保存：</strong> 保單金額 ' + amount.toLocaleString() + ' HKD · 匯率 ' + fx + '/' + fxRmb + ' · 組合「' + tabLabel(activeTab) + '」' +
+      (activeTab === 'C' ? ' (' + Object.keys(customAlloc).length + ' 隻基金)' : '') +
+      ' · ' + (reinvest ? '複利' : '純現金') + '派息</div>';
+    foot.innerHTML = '<button class="btn-sm" onclick="modalView=\'detail\';renderModal()">取消</button>' +
+      '<button class="btn-sm primary" onclick="submitScenario()">✓ 保存</button>';
+  }
+}
+
+function esc(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function tabLabel(t) {
+  return ({A:'組合 A 集中型',B:'組合 B 分散型',NA:'🇺🇸 北美',ASIA:'🌏 亞洲',TECH:'💻 科技',CONS:'🛒 消費',C:'⚙️ 自選'}[t] || t);
+}
+
+function newClient() { editingClientId = null; modalView = 'new'; renderModal(); }
+function editClient(id) { editingClientId = id; modalView = 'edit'; renderModal(); }
+function openClient(id) { editingClientId = id; modalView = 'detail'; renderModal(); }
+
+function submitClient() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { toast('請輸入姓名', 'error'); return; }
+  const phone = document.getElementById('fPhone').value.trim();
+  const note = document.getElementById('fNote').value.trim();
+  const now = Date.now();
+  if (modalView === 'edit') {
+    const c = findClient(editingClientId);
+    Object.assign(c, { name, phone, note, updatedAt: now });
+    toast('已更新 ' + name, 'success');
+    modalView = 'detail';
+  } else {
+    const c = { id: uid(), name, phone, note, scenarios: [], createdAt: now, updatedAt: now };
+    clientStore.clients.push(c);
+    editingClientId = c.id;
+    toast('已新增 ' + name, 'success');
+    modalView = 'detail';
+  }
+  saveStore(); refreshClientPill(); renderModal();
+}
+
+function deleteClient(id) {
+  const c = findClient(id); if (!c) return;
+  if (!confirm('確定刪除「' + c.name + '」？包埋全部 ' + (c.scenarios||[]).length + ' 個方案，無法復原。')) return;
+  clientStore.clients = clientStore.clients.filter(x => x.id !== id);
+  if (clientStore.currentClientId === id) clientStore.currentClientId = null;
+  saveStore(); refreshClientPill();
+  modalView = 'list'; renderModal();
+  toast('已刪除', 'success');
+}
+
+function saveScenarioFlow(clientId) {
+  if (!clientId) {
+    if (clientStore.clients.length === 0) {
+      if (!confirm('仲未有客戶。要而家新增一個嗎？')) return;
+      openClientModal('new'); return;
+    }
+    openClientModal('list'); return;
+  }
+  editingClientId = clientId;
+  openClientModal();
+  modalView = 'saveScenario';
+  renderModal();
+}
+
+function submitScenario() {
+  const name = document.getElementById('sName').value.trim();
+  if (!name) { toast('請輸入方案名稱', 'error'); return; }
+  const note = document.getElementById('sNote').value.trim();
+  const c = findClient(editingClientId); if (!c) return;
+  const scn = {
+    id: uid(), name, note,
+    amount, fx, fxRmb, tab: activeTab,
+    customAlloc: JSON.parse(JSON.stringify(customAlloc)),
+    reinvest, savedAt: Date.now()
+  };
+  c.scenarios = c.scenarios || [];
+  c.scenarios.push(scn);
+  c.updatedAt = Date.now();
+  clientStore.currentClientId = c.id;
+  clientStore.currentScenarioId = scn.id;
+  lastSavedSnapshot = snapshot();
+  lastSaveAt = Date.now();
+  saveStore(); refreshClientPill();
+  toast('✓ 已保存「' + name + '」到 ' + c.name, 'success');
+  modalView = 'detail'; renderModal();
+}
+
+function loadScenario(clientId, scnId) {
+  const c = findClient(clientId); if (!c) return;
+  const s = (c.scenarios||[]).find(x => x.id === scnId); if (!s) return;
+  amount = s.amount; fx = s.fx; fxRmb = s.fxRmb;
+  activeTab = s.tab; customAlloc = JSON.parse(JSON.stringify(s.customAlloc||{})); reinvest = !!s.reinvest;
+  document.getElementById('amountInput').value = amount.toLocaleString();
+  document.getElementById('fx').value = fx;
+  document.getElementById('fxRmb').value = fxRmb;
+  document.getElementById('toggleReinvest').checked = reinvest;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.port === activeTab));
+  document.getElementById('builderArea').style.display = (activeTab === 'C') ? 'block' : 'none';
+  clientStore.currentClientId = clientId;
+  clientStore.currentScenarioId = scnId;
+  lastSavedSnapshot = snapshot();
+  lastSaveAt = s.savedAt;
+  saveStore(); refreshClientPill();
+  updateChipsHighlight(); renderBuilder(); render();
+  closeClientModal();
+  toast('✓ 已載入「' + s.name + '」(' + c.name + ')', 'success');
+}
+
+function deleteScenario(clientId, scnId) {
+  const c = findClient(clientId); if (!c) return;
+  const s = (c.scenarios||[]).find(x => x.id === scnId);
+  if (!s || !confirm('刪除方案「' + s.name + '」？')) return;
+  c.scenarios = c.scenarios.filter(x => x.id !== scnId);
+  c.updatedAt = Date.now();
+  saveStore(); renderModal();
+  toast('已刪除方案', 'success');
+}
+
+function exportData() {
+  const data = JSON.stringify(clientStore, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'aia-clients-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('已匯出 ' + clientStore.clients.length + ' 位客戶', 'success');
+}
+
+document.getElementById('importFile').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.clients || !Array.isArray(data.clients)) throw new Error('格式錯誤');
+      const action = confirm('匯入 ' + data.clients.length + ' 位客戶。\n\n按「確定」= 合併（保留現有 + 新加）\n按「取消」= 全部覆蓋（會刪除現有資料）');
+      if (action) {
+        const existingIds = new Set(clientStore.clients.map(c => c.id));
+        data.clients.forEach(c => { if (!existingIds.has(c.id)) clientStore.clients.push(c); });
+      } else {
+        if (!confirm('⚠️ 確定要覆蓋現有 ' + clientStore.clients.length + ' 位客戶？')) return;
+        clientStore = data;
+      }
+      saveStore(); refreshClientPill(); renderModal();
+      toast('匯入成功', 'success');
+    } catch (err) { toast('匯入失敗：' + err.message, 'error'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+function printReport() {
+  const c = findClient(clientStore.currentClientId);
+  const ph = document.getElementById('printHeader');
+  ph.innerHTML = '<h2>AIA 卓達智悅・基金分析報告</h2>' +
+    '<div class="meta-line">' + (c ? '客戶：' + esc(c.name) + ' · ' : '') +
+    '保單金額：' + amount.toLocaleString() + ' HKD · 組合：' + tabLabel(activeTab) + ' · 列印日期：' + new Date().toLocaleDateString('zh-HK') + '</div>';
+  setTimeout(() => window.print(), 100);
+}
+
+document.getElementById('btnOpenClients').onclick = () => openClientModal('list');
+document.getElementById('btnSaveScenario').onclick = () => {
+  const s = getCurrentScenario();
+  if (s && isDirty()) updateCurrentScenario();
+  else saveAsNewScenario();
+};
+document.getElementById('btnPrintReport').onclick = printReport;
+document.getElementById('clientModal').addEventListener('click', e => { if (e.target.id === 'clientModal') closeClientModal(); });
+
 async function init() {
   try {
     const res = await fetch('data/funds.json?v=' + Date.now(), { cache: 'no-store' });
@@ -407,6 +909,8 @@ async function init() {
   }
   // 計算 div (派息金額) for all funds
   Object.keys(FUNDS).forEach(c => { FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12; });
+  loadStore();
+  refreshClientPill();
   renderBuilder();
   updateChipsHighlight();
   render();
