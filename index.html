@@ -133,7 +133,7 @@ table.funds tr:hover td { background: #fbfcfe; }
 <div class="footer"><strong>📚 AIA 官方參考連結</strong><div class="links"><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a></div><div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。基金價格採自 AIA 官方公佈 (04/24/2026)。HKD/CNY 匯率僅作參考。本工具不構成投資建議,投資涉及風險。</div></div>
 </div>
 <script>
-const FUNDS = {
+let FUNDS = {
   Z01: { name:"惠理高息", full:"惠理高息股票基金 A2 MDis", cls:"股票-亞太區", newPrice:12.98, annYield:0.05, risk:"高", regionGroup:"亞太(日本除外)", r1:31.15, r3:39.58, r5:19.32 },
   Z03: { name:"摩根亞太", full:"摩根亞太入息基金 A", cls:"多元資產-亞太", newPrice:121.16, annYield:0.04, risk:"低", regionGroup:"亞太", r1:16.86, r3:31.18, r5:18.74 },
   Z04: { name:"摩根中國", full:"摩根中國股票高息 (美元)", cls:"股票-中國香港", newPrice:9.96, annYield:0.10, risk:"高", regionGroup:"中國", r1:7.48, r3:15.60, r5:-4.67 },
@@ -159,7 +159,7 @@ const FUNDS = {
   ZL1: { name:"FTGF亞洲機會債", full:"FTGF 西方資產亞洲機會債券 A (M)", cls:"固定收入-亞太區", newPrice:62, annYield:0.05, risk:"低", regionGroup:"亞太", r1:0.78, r3:5.09, r5:-1.51 },
   ZP4: { name:"信安優先證券", full:"信安優先證券基金 D2", cls:"固定收入-環球", newPrice:8.35, annYield:0.08, risk:"低", regionGroup:"環球", r1:5.19, r3:24.27, r5:12.81 }
 };
-Object.keys(FUNDS).forEach(c => { FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12; });
+
 const PORTFOLIOS = {
   A: { alloc:{ Z07:30, Z15:30, Z17:40 } },
   B: { alloc:{ Z01:10, Z03:10, Z04:10, Z05:10, Z06:10, Z07:10, Z08:10, Z11:5, Z12:5, Z13:5, Z15:5, Z16:5, Z17:5 } },
@@ -381,9 +381,37 @@ function renderChart(port) {
   });
 }
 
-renderBuilder();
-updateChipsHighlight();
-render();
+async function init() {
+  try {
+    const res = await fetch('data/funds.json?v=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.funds && Object.keys(data.funds).length) {
+        FUNDS = data.funds;
+      }
+      if (data.fxRate) {
+        fx = data.fxRate;
+        const fxEl = document.getElementById('fx');
+        if (fxEl) fxEl.value = data.fxRate;
+      }
+      // 更新 header 顯示
+      const metaEl = document.querySelector('.header .meta');
+      if (metaEl && data.lastPriceDate) {
+        const updTime = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('zh-HK', { timeZone: 'Asia/Hong_Kong' }) : '';
+        metaEl.innerHTML = '🔄 AIA 官方最新基金價格: ' + data.lastPriceDate + ' &nbsp;|&nbsp; 📡 自動同步: ' + updTime;
+      }
+      console.log('✓ Loaded funds.json (auto-updated)');
+    }
+  } catch (e) {
+    console.warn('⚠️  使用內嵌備用資料 (funds.json 載入失敗):', e);
+  }
+  // 計算 div (派息金額) for all funds
+  Object.keys(FUNDS).forEach(c => { FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12; });
+  renderBuilder();
+  updateChipsHighlight();
+  render();
+}
+init();
 </script>
 </body>
 </html>
