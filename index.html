@@ -1718,15 +1718,24 @@ async function init() {
       const metaEl = document.querySelector('.header .meta');
       if (metaEl && data.lastPriceDate) {
         const updTime = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('zh-HK', { timeZone: 'Asia/Hong_Kong' }) : '';
-        metaEl.innerHTML = '🔄 AIA 官方最新基金價格: ' + data.lastPriceDate + ' &nbsp;|&nbsp; 📡 自動同步: ' + updTime;
+        // 從 funds 攞最新派息月份（揀第一個有 dividendMonth 嘅）
+        const divMonth = Object.values(data.funds || {}).map(f => f.dividendMonth).filter(Boolean)[0];
+        const divPart = divMonth ? ' &nbsp;|&nbsp; 💰 派息: ' + divMonth : '';
+        metaEl.innerHTML = '🔄 AIA 官方最新基金價格: ' + data.lastPriceDate + divPart + ' &nbsp;|&nbsp; 📡 自動同步: ' + updTime;
       }
       console.log('✓ Loaded funds.json (auto-updated)');
     }
   } catch (e) {
     console.warn('⚠️  使用內嵌備用資料 (funds.json 載入失敗):', e);
   }
-  // 計算 div (派息金額) for all funds
-  Object.keys(FUNDS).forEach(c => { FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12; });
+  // 計算 div (每月派息金額 USD) — 優先用 AIA 月報實際派息, 否則用 annYield 估算
+  Object.keys(FUNDS).forEach(c => {
+    if (FUNDS[c].latestDividendPerShare) {
+      FUNDS[c].div = FUNDS[c].latestDividendPerShare;  // 直接係月派息金額
+    } else {
+      FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12;  // fallback 估算
+    }
+  });
   loadStore();
   refreshClientPill();
   renderBuilder();
