@@ -192,32 +192,94 @@ DIVIDEND_PDF_URL = "https://www.aia.com.hk/content/dam/hk/zh-hk/pdf/dividend-com
 
 
 def fetch_dividend(code: str) -> dict | None:
-    """攞單一隻基金嘅最新派息. Returns {month, dividendPerShare, yieldPct} or None"""
+    """攞單一隻基金嘅最新派息. Returns {month, dividendPerShare, yieldPct} or None
+    策略:
+      1. 用 pdfplumber.extract_tables() 抽 table, 搵第一個 header 包含 'Yield'/'年息率' 嘅 table
+      2. Fallback: regex match 任何「Mon-YY ... 0.xxxx ... NN.NN%」格式
+      3. Fallback: regex match「Mon-YY ... 0.xxxx ... NN.NN」(冇 % 都得)
+    """
     url = DIVIDEND_PDF_URL.format(code=code)
     try:
         r = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
         if r.status_code != 200:
             return None
-        with pdfplumber.open(io.BytesIO(r.content)) as pdf:
+        pdf_bytes = r.content
+        # === Strategy 1: extract_tables ===
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+            for page in pdf.pages:
+                tables = page.extract_tables() or []
+                for table in tables:
+                    if not table or len(table) < 2:
+                        continue
+                    # 搵 header row index (含 Yield 或 年息率)
+                    header_idx = -1
+                    div_col = yld_col = month_col = -1
+                    for i, row in enumerate(table[:3]):
+                        cells = [str(c or "").strip() for c in row]
+                        joined = " ".join(cells).lower()
+                        if "yield" in joined or "年息率" in joined or "息率" in joined:
+                            header_idx = i
+                            for j, c in enumerate(cells):
+                                cl = c.lower()
+                                if "yield" in cl or "年息率" in c or "息率" in c:
+                                    yld_col = j
+                                if "dividend" in cl or "每股股息" in c or "股息" in c:
+                                    div_col = j
+                                if "month" in cl or "月份" in c:
+                                    month_col = j
+                            break
+                    if header_idx < 0:
+                        continue
+                    # 第一個 data row (latest month)
+                    for row in table[header_idx + 1:]:
+                        cells = [str(c or "").strip() for c in row]
+                        if not any(cells):
+                            continue
+                        # 抽月份
+                        month = ""
+                        if month_col >= 0 and month_col < len(cells):
+                            m = re.search(r"[A-Z][a-z]{2}-\d{2}", cells[month_col])
+                            if m: month = m.group()
+                        if not month:
+                            for c in cells:
+                                m = re.search(r"[A-Z][a-z]{2}-\d{2}", c)
+                                if m:
+                                    month = m.group()
+                                    break
+                        # 抽 dividend
+                        div_val = None
+                        if div_col >= 0 and div_col < len(cells):
+                            m = re.search(r"\d+\.\d+", cells[div_col])
+                            if m: div_val = float(m.group())
+                        # 抽 yield
+                        yld_val = None
+                        if yld_col >= 0 and yld_col < len(cells):
+                            m = re.search(r"\d+\.\d+", cells[yld_col])
+                            if m: yld_val = float(m.group())
+                        if month and div_val is not None and yld_val is not None:
+                            return {"month": month, "dividendPerShare": div_val, "yieldPct": yld_val}
+        # === Strategy 2: text regex (寬鬆版) ===
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
             text = ""
             for p in pdf.pages:
                 t = p.extract_text()
                 if t:
                     text += t + "\n"
-        # 數據行 pattern: 月份 (eg "Mar-26") ... 任意 ... 派息 (0.NNNNNN) 空白 年息率 (NN.NN%)
-        # PDF 表頭通常 newest 喺最頂
+        # 嚴格: ...0.xxxxxx ... NN.NN%
         rows = re.findall(
-            r"([A-Z][a-z]{2}-\d{2})\b[^\n]*?(\d+\.\d{4,6})\s+(\d+\.\d{2})%",
+            r"([A-Z][a-z]{2}-\d{2})\b[^\n]*?(\d+\.\d{4,6})\s+(\d+\.\d{1,2})\s*%",
             text,
         )
         if not rows:
-            return None
-        month, div, yld = rows[0]
-        return {
-            "month": month,
-            "dividendPerShare": float(div),
-            "yieldPct": float(yld),
-        }
+            # 寬鬆: 0.xxx ... NN.NN (冇要求 %)
+            rows = re.findall(
+                r"([A-Z][a-z]{2}-\d{2})\s+[^\n]*?(\d+\.\d{3,7})\s+(\d+\.\d{1,2})\b",
+                text,
+            )
+        if rows:
+            month, div, yld = rows[0]
+            return {"month": month, "dividendPerShare": float(div), "yieldPct": float(yld)}
+        return None
     except Exception as e:
         print(f"    ⚠️  {code} dividend fetch error: {e}")
         return None
