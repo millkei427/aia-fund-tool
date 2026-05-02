@@ -1,7 +1,7 @@
 {
   "_comment": "卓達智悅基金資料 - 由 GitHub Actions 每星期日自動更新價格 + 派息率",
   "_source": "AIA 投資選擇資訊頁面 https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html",
-  "lastUpdated": "2026-05-01T09:07:24+08:00",
+  "lastUpdated": "2026-05-03T04:05:57+08:00",
   "lastPriceDate": "04/29/2026",
   "fxRate": 7.8,
   "funds": {
@@ -111,7 +111,7 @@
       "latestDividendPerShare": 0.0364,
       "latestYieldPct": 2.93,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-01T09:07:24+08:00"
+      "_lastDividendUpdate": "2026-05-03T04:05:57+08:00"
     },
     "Z12": {
       "name": "摩根環球債",
@@ -157,13 +157,17 @@
       "full": "滙豐亞洲高收益債券 AM2",
       "cls": "固定收入-亞太區",
       "newPrice": 4.673,
-      "annYield": 0.07,
+      "annYield": 0.0003,
       "risk": "高",
       "regionGroup": "亞太",
       "r1": 3.36,
       "r3": 8.64,
       "r5": -25.95,
-      "_lastPriceUpdate": "2026-05-01T09:06:41+08:00"
+      "_lastPriceUpdate": "2026-05-01T09:06:41+08:00",
+      "latestDividendPerShare": 0.0287,
+      "latestYieldPct": 0.0287,
+      "dividendMonth": "Feb-26",
+      "_lastDividendUpdate": "2026-05-03T04:05:57+08:00"
     },
     "Z17": {
       "name": "貝萊德高息",
@@ -180,7 +184,7 @@
       "latestDividendPerShare": 0.0635,
       "latestYieldPct": 8.4,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-01T09:07:24+08:00"
+      "_lastDividendUpdate": "2026-05-03T04:05:57+08:00"
     },
     "Z18": {
       "name": "富蘭克林入息",
@@ -265,26 +269,34 @@
       "full": "友邦股票入息基金 (RDM)",
       "cls": "股票-環球",
       "newPrice": 11.2573,
-      "annYield": 0.08,
+      "annYield": 0.0818,
       "risk": "中",
       "regionGroup": "環球",
       "r1": 18.07,
       "r3": null,
       "r5": null,
-      "_lastPriceUpdate": "2026-05-01T09:06:41+08:00"
+      "_lastPriceUpdate": "2026-05-01T09:06:41+08:00",
+      "latestDividendPerShare": 8.1766,
+      "latestYieldPct": 8.1766,
+      "dividendMonth": "Feb-20",
+      "_lastDividendUpdate": "2026-05-03T04:05:57+08:00"
     },
     "Z52": {
       "name": "友邦美高收益",
       "full": "友邦美國高收益債券 (RDM)",
       "cls": "固定收入-美國",
       "newPrice": 10.0371,
-      "annYield": 0.07,
+      "annYield": 0.0685,
       "risk": "高",
       "regionGroup": "美國",
       "r1": 5.83,
       "r3": null,
       "r5": null,
-      "_lastPriceUpdate": "2026-05-01T09:06:41+08:00"
+      "_lastPriceUpdate": "2026-05-01T09:06:41+08:00",
+      "latestDividendPerShare": 6.849,
+      "latestYieldPct": 6.849,
+      "dividendMonth": "Jun-20",
+      "_lastDividendUpdate": "2026-05-03T04:05:57+08:00"
     },
     "Z69": {
       "name": "安本新興市場債",
