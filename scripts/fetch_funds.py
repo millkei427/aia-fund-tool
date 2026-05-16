@@ -309,6 +309,32 @@ def fetch_dividend(code: str) -> dict | None:
             big_ylds = [float(y) for y in yld_matches if float(y) >= 2.0]
             yld_val = big_ylds[-1] if big_ylds else float(yld_matches[-1])
             return {"month": month, "dividendPerShare": div_val, "yieldPct": yld_val}
+
+        # === Strategy 3: whole-text window (處理 cell 拆 line 嘅 PDF, eg Allianz 中文版) ===
+        # 揀第一個日期 occurrence, 喺之後 500 字內搵 dividend + yield
+        first_date = None
+        for m in re.finditer(r"\b([A-Z][a-z]{2})-(\d{2})\b|\b(\d{1,2})/(\d{1,2})/(\d{4})\b", text):
+            if m.group(1):
+                first_date = (m.group(1) + "-" + m.group(2), m.end())
+            else:
+                try:
+                    mn = mon_names[int(m.group(4))-1] + "-" + m.group(5)[-2:]
+                    first_date = (mn, m.end())
+                except (ValueError, IndexError):
+                    continue
+            break
+        if first_date:
+            month, pos = first_date
+            window = text[pos:pos+500]
+            div_m = re.search(r"\b(0\.\d{3,7})\b", window)
+            # 攞所有百分比 candidates, 揀最後一個 >= 2% (年度化通常 5-15%)
+            pct_candidates = re.findall(r"(\d{1,2}\.\d{1,2})\s*%", window)
+            if not pct_candidates:
+                # 無 % sign 嘅 fallback
+                pct_candidates = re.findall(r"\b(\d{1,2}\.\d{2})\b", window)
+            big = [float(y) for y in pct_candidates if 2.0 <= float(y) <= 25.0]
+            if div_m and big:
+                return {"month": month, "dividendPerShare": float(div_m.group(1)), "yieldPct": big[-1]}
         return None
     except Exception as e:
         print(f"    ⚠️  {code} dividend fetch error: {e}")
