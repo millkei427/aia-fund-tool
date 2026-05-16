@@ -1,7 +1,7 @@
 {
   "_comment": "卓達智悅基金資料 - 由 GitHub Actions 每星期日自動更新價格 + 派息率",
   "_source": "AIA 投資選擇資訊頁面 https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html",
-  "lastUpdated": "2026-05-17T07:21:51+08:00",
+  "lastUpdated": "2026-05-17T07:27:52+08:00",
   "lastPriceDate": "05/13/2026",
   "fxRate": 7.8,
   "funds": {
@@ -59,7 +59,7 @@
       "latestDividendPerShare": 0.046275,
       "latestYieldPct": 0.04,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z06": {
       "name": "柏瑞環球",
@@ -76,7 +76,7 @@
       "latestDividendPerShare": 0.0521,
       "latestYieldPct": 7.56,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z07": {
       "name": "安聯增長",
@@ -119,7 +119,7 @@
       "latestDividendPerShare": 0.0364,
       "latestYieldPct": 2.93,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z12": {
       "name": "摩根環球債",
@@ -149,7 +149,7 @@
       "latestDividendPerShare": 0.0466,
       "latestYieldPct": 0.04,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z15": {
       "name": "霸菱環球高收益",
@@ -166,7 +166,7 @@
       "latestDividendPerShare": 0.57898,
       "latestYieldPct": 9.89,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z16": {
       "name": "滙豐亞洲高收益",
@@ -183,7 +183,7 @@
       "latestDividendPerShare": 0.0287,
       "latestYieldPct": 0.0287,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z17": {
       "name": "貝萊德高息",
@@ -200,7 +200,7 @@
       "latestDividendPerShare": 0.0635,
       "latestYieldPct": 8.4,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z18": {
       "name": "富蘭克林入息",
@@ -217,7 +217,7 @@
       "latestDividendPerShare": 0.067,
       "latestYieldPct": 8.33,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z20": {
       "name": "施羅德動力收息",
@@ -247,7 +247,7 @@
       "latestDividendPerShare": 0.0426,
       "latestYieldPct": 0.0426,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z31": {
       "name": "駿利環球地產",
@@ -290,7 +290,7 @@
       "latestDividendPerShare": 0.2267,
       "latestYieldPct": 5.7,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "Z51": {
       "name": "友邦股票入息",
@@ -354,7 +354,7 @@
       "latestDividendPerShare": 0.280095,
       "latestYieldPct": 5.0,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     },
     "ZP4": {
       "name": "信安優先證券",
@@ -371,7 +371,7 @@
       "latestDividendPerShare": 0.0528,
       "latestYieldPct": 8.0,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:21:51+08:00"
+      "_lastDividendUpdate": "2026-05-17T07:27:52+08:00"
     }
   }
 }
