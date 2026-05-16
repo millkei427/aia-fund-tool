@@ -221,6 +221,7 @@ table.funds tr:hover td { background: #fbfcfe; }
   <div class="ptab active" data-product="fund">📊 基金分析</div>
   <div class="ptab" data-product="gf">💰 環宇盈活 · 儲蓄</div>
   <div class="ptab" data-product="lc2">🛡️ 愛伴航 2 · 危疾</div>
+  <div class="ptab" data-product="discount">🎫 優惠計算</div>
 </div>
 <div id="page-fund">
 <div class="section"><div class="label-bar"><span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span><div class="fx-group"><div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0"></div><div class="fx-control"><span>HKD/CNY 匯率</span><input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00"></div></div></div><div class="amount-row"><input type="text" class="amount-input" id="amountInput" value="2,000,000"><span class="ccy-label">HKD</span><span class="equals-sign">=</span><span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span><span class="ccy-label">人民幣</span></div><div class="preset-chips" id="presets"></div></div>
@@ -257,40 +258,6 @@ table.funds tr:hover td { background: #fbfcfe; }
       <span class="rmb-display" id="gfTotalDisplay" style="background:#fef2f4;border-color:#fcd3da;color:#c8102e">HKD 500,000</span>
     </div>
     <div class="preset-chips" id="gfPresets"></div>
-  </div>
-
-  <div class="section" id="gfDiscountSection">
-    <div class="label-bar"><span>💰 銷售優惠計算 (現金券 + 保證回贈 + 預繳利息)</span></div>
-    <div class="builder-controls" style="margin-bottom:8px">
-      <span class="preset-label">客戶類型:</span>
-      <button class="btn primary" data-gfct="IVS">🌟 IVS 客戶 (高優惠)</button>
-      <button class="btn" data-gfct="Regular">👤 普通客戶</button>
-      <span class="preset-divider"></span>
-      <span class="preset-label">預繳保費:</span>
-      <button class="btn primary" data-gfprepay="0">無預繳</button>
-      <button class="btn" data-gfprepay="2">2年 (1年預繳)</button>
-      <button class="btn" data-gfprepay="5">5年預繳</button>
-    </div>
-    <label style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:#fef9e7;border:1px solid #fbbf24;border-radius:6px;font-size:13px;cursor:pointer;margin-top:4px">
-      <input type="checkbox" id="gfExtraDiscount" style="width:16px;height:16px;accent-color:#c8102e;cursor:pointer">
-      <span>同時投保「愛伴航 2」+「活然人生」 → 額外 <strong>+3%</strong> (5年繳專享)</span>
-    </label>
-    <div class="note" style="font-size:11.5px;color:#78350f;background:#fef9e7;padding:6px 10px;border-radius:6px;margin-top:8px;display:none" id="gfDiscountNote">IVS = 友邦團體保險/強積金/退休金成員</div>
-
-    <div style="background:linear-gradient(135deg,#fef2f4,#fde8ed);border:2px solid #fcd3da;border-radius:12px;padding:18px;margin-top:14px;position:relative">
-      <div style="position:absolute;top:12px;right:12px;display:flex;gap:6px" id="gfDiscountBadges"></div>
-      <div style="font-size:12px;color:#6b7a8e;font-weight:600">客戶可獲總優惠 (USD)</div>
-      <div style="font-size:32px;font-weight:800;color:#c8102e;font-variant-numeric:tabular-nums" id="gfDiscountTotal">—</div>
-      <div style="font-size:13px;color:#d97706;font-weight:700;margin-top:2px" id="gfDiscountPct">—</div>
-      <div style="font-size:13px;color:#56657a;margin-top:4px" id="gfDiscountCcy">—</div>
-    </div>
-
-    <div class="summary-row" style="margin-top:12px">
-      <div class="metric"><div class="label">現金券優惠</div><div class="value" id="gfDC1" style="color:#c8102e">—</div><div class="sub-value" id="gfDC1Sub">—</div></div>
-      <div class="metric"><div class="label">保證回贈 (基本)</div><div class="value" id="gfDC2" style="color:#c8102e">—</div><div class="sub-value" id="gfDC2Sub">—</div></div>
-      <div class="metric"><div class="label" id="gfDC3Label">預繳利息</div><div class="value" id="gfDC3" style="color:#c8102e">—</div><div class="sub-value" id="gfDC3Sub">—</div></div>
-      <div class="metric"><div class="label">實付保費 (5 年共付)</div><div class="value" id="gfDC4">—</div><div class="sub-value" id="gfDC4Sub">—</div></div>
-    </div>
   </div>
 
   <div class="section">
@@ -334,6 +301,110 @@ table.funds tr:hover td { background: #fbfcfe; }
       <a href="https://www.aia.com.hk/zh-hk/dividend-philosophy-history.html" target="_blank">📊 過往派發紅利資料</a>
     </div>
     <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於 AIA 環宇盈活儲蓄保險計劃（5 年繳費）標準個案建議書（30歲女非吸煙標準），實際保證及非保證金額由 AIA 全權決定。預期內部回報率受 6.5% 上限約束。投保前請詳閱保單契約。</div>
+  </div>
+</div>
+
+
+<!-- ===== 🎫 優惠計算 ===== -->
+<div id="page-discount" style="display:none">
+  <div class="section">
+    <div class="label-bar">
+      <span>🎫 環宇盈活儲蓄保險・銷售優惠試算 (現金券 + 保證回贈 + 預繳利息)</span>
+      <div class="fx-group">
+        <div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="dcFxHkd" value="7.69" step="0.01" min="7.5" max="8.0"></div>
+        <div class="fx-control"><span>USD/RMB 匯率</span><input type="number" id="dcFxRmb" value="6.93" step="0.01" min="6.5" max="7.5"></div>
+      </div>
+    </div>
+
+    <div class="builder-controls" style="margin-bottom:8px">
+      <span class="preset-label">計劃:</span>
+      <button class="btn primary" data-dcplan="GF">GF (環宇盈活)</button>
+      <button class="btn" data-dcplan="GP3">GP3</button>
+      <span class="preset-divider"></span>
+      <span class="preset-label">繳費期:</span>
+      <button class="btn" data-dcterm="1">整付 (1年)</button>
+      <button class="btn primary" data-dcterm="5">5 年繳</button>
+      <button class="btn" data-dcterm="10">10 年繳</button>
+    </div>
+
+    <div class="amount-row" style="margin-top:10px">
+      <span class="ccy-label">年繳保費 (USD)</span>
+      <input type="text" class="amount-input" id="dcPremium" value="15,000" style="width:200px">
+      <div class="preset-chips" id="dcPremiumChips"></div>
+    </div>
+
+    <div class="builder-controls" style="margin-top:8px">
+      <span class="preset-label">客戶類型:</span>
+      <button class="btn primary" data-dcct="IVS">🌟 IVS 客戶 (高優惠)</button>
+      <button class="btn" data-dcct="Regular">👤 普通客戶</button>
+      <span class="preset-divider"></span>
+      <span class="preset-label">預繳保費:</span>
+      <button class="btn primary" data-dcprepay="0">無預繳</button>
+      <button class="btn" data-dcprepay="2">2年 (1年預繳)</button>
+      <button class="btn" data-dcprepay="5">5年預繳</button>
+    </div>
+    <label style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:#fef9e7;border:1px solid #fbbf24;border-radius:6px;font-size:13px;cursor:pointer;margin-top:8px">
+      <input type="checkbox" id="dcExtra" style="width:16px;height:16px;accent-color:#c8102e;cursor:pointer">
+      <span>同時投保「愛伴航 2」+「活然人生」 → 額外 <strong>+3%</strong> 優惠 (5年繳費期專享)</span>
+    </label>
+    <div class="note" style="font-size:11.5px;color:#78350f;background:#fef9e7;padding:6px 10px;border-radius:6px;margin-top:8px">
+      <strong>IVS</strong> = 友邦團體保險 / 強積金 / 退休金成員 (回贈率高約 2%)
+    </div>
+  </div>
+
+  <div class="section">
+    <div style="background:linear-gradient(135deg,#fef2f4,#fde8ed);border:2px solid #fcd3da;border-radius:12px;padding:20px;position:relative">
+      <div style="position:absolute;top:14px;right:14px;display:flex;gap:6px;flex-wrap:wrap" id="dcBadges"></div>
+      <div style="font-size:12px;color:#6b7a8e;font-weight:600">客戶可獲總優惠 (USD)</div>
+      <div style="font-size:36px;font-weight:800;color:#c8102e;font-variant-numeric:tabular-nums;margin-top:4px" id="dcHero">—</div>
+      <div style="font-size:14px;color:#d97706;font-weight:700;margin-top:2px" id="dcHeroPct">—</div>
+      <div style="font-size:13px;color:#56657a;margin-top:4px" id="dcHeroCcy">—</div>
+    </div>
+
+    <div class="summary-row" style="margin-top:14px">
+      <div class="metric"><div class="label">現金券優惠</div><div class="value" id="dcM1" style="color:#c8102e">—</div><div class="sub-value" id="dcM1Sub">—</div></div>
+      <div class="metric"><div class="label" id="dcM2L">保證回贈 (基本)</div><div class="value" id="dcM2" style="color:#c8102e">—</div><div class="sub-value" id="dcM2Sub">—</div></div>
+      <div class="metric"><div class="label" id="dcM3L">預繳利息 / 額外優惠</div><div class="value" id="dcM3" style="color:#c8102e">—</div><div class="sub-value" id="dcM3Sub">—</div></div>
+      <div class="metric hero"><div class="label">總優惠</div><div class="value" id="dcM4">—</div><div class="sub-value" id="dcM4Sub">—</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label-bar"><span>📋 詳細計算 (對應 Excel)</span></div>
+    <div class="fund-table-wrap">
+      <table class="funds" id="dcDetailTable"><thead><tr><th>項目</th><th>USD</th><th>HKD</th><th>RMB</th><th>%</th></tr></thead><tbody id="dcDetailBody"></tbody></table>
+    </div>
+  </div>
+
+  <div class="section">
+    <details>
+      <summary style="cursor:pointer;font-weight:700;color:#d97706;font-size:14px;padding:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px">⚙️ 進階設定:現金券單位 / 季度優惠率 / 預繳利率 (點開可修改, 自動儲存喺本機)</summary>
+      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:14px;margin-top:8px">
+        <h4 style="font-size:13px;margin-bottom:8px;color:#92400e">📌 現金券設定 (上限 USD 2,815)</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+          <div><label style="font-size:12px;color:#56657a;font-weight:600">大額單位 (USD/個)</label><input type="number" id="dcCpBig" value="1250" style="width:100%;padding:6px 10px;border:1px solid #fed7aa;border-radius:6px"></div>
+          <div><label style="font-size:12px;color:#56657a;font-weight:600">小額單位 (USD/個)</label><input type="number" id="dcCpSm" value="63" style="width:100%;padding:6px 10px;border:1px solid #fed7aa;border-radius:6px"></div>
+          <div><label style="font-size:12px;color:#56657a;font-weight:600">現金券上限</label><input type="number" id="dcCpMax" value="2815" style="width:100%;padding:6px 10px;border:1px solid #fed7aa;border-radius:6px"></div>
+        </div>
+        <div class="note" style="font-size:11.5px;color:#78350f;background:#fef9e7;padding:6px 10px;border-radius:6px;margin-top:8px">公式: 可用優惠額 = 保費 ÷ 10。先用 $1,250 大券 (floor),再用 $63 細券 (floor),取 min(計算值, 上限)。例: $13K → $1,250;$15.2K → $1,502</div>
+
+        <h4 style="font-size:13px;margin:14px 0 8px;color:#92400e">📊 保證回贈率 - <span id="dcTierTypeLabel">🌟 IVS 客戶</span> (按保費分層,可按季度更新)</h4>
+        <table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#fef3c7"><th style="padding:6px;border-bottom:1px solid #fed7aa">保費 USD ≥</th><th style="padding:6px;border-bottom:1px solid #fed7aa">GF 回贈率 (%)</th><th style="padding:6px;border-bottom:1px solid #fed7aa">GP3 回贈率 (%)</th></tr></thead><tbody id="dcTiersBody"></tbody></table>
+        <div class="note" style="font-size:11.5px;color:#78350f;background:#fef9e7;padding:6px 10px;border-radius:6px;margin-top:6px">📌 IVS (5月1日-5月31日 promo) | 普通 (4月1日-5月31日 promo)。切換上面「客戶類型」即可編輯對應 tier</div>
+
+        <h4 style="font-size:13px;margin:14px 0 8px;color:#92400e">💵 預繳利率</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div><label style="font-size:12px;color:#56657a;font-weight:600">1年預繳利率 (%)</label><input type="number" id="dcPp1" value="4.30" step="0.01" style="width:100%;padding:6px 10px;border:1px solid #fed7aa;border-radius:6px"></div>
+          <div><label style="font-size:12px;color:#56657a;font-weight:600">5年預繳利率 (%)</label><input type="number" id="dcPp5" value="3.80" step="0.01" style="width:100%;padding:6px 10px;border:1px solid #fed7aa;border-radius:6px"></div>
+        </div>
+
+        <button id="dcReset" class="btn" style="margin-top:14px;background:#fff;border-color:#fed7aa;color:#92400e">🔄 重置為原廠預設 (清除本機儲存)</button>
+      </div>
+    </details>
+  </div>
+
+  <div class="footer">
+    <div class="disclaimer" style="font-size:10.5px;color:#8a96a8;line-height:1.6">⚠️ 本工具計算基於 2026/02/01 GP3 & GF PIR Excel 邏輯。現金券、保證回贈率每 2-3 個月由 AIA 公佈新版本,使用前請核對。額外 +3% 優惠須符合條件:同一保單持有人,同時投保「愛伴航 2」+「活然人生」,且活然人生年度化保費達 $3,000 USD 或以上。設定改完自動儲存喺本機 localStorage。</div>
   </div>
 </div>
 
@@ -849,24 +920,7 @@ const GF_TIERS = [
   { usd: 200000, hkd: 1540000, showHkd: true,  showUsd: true,  hasData: true }
 ];
 
-let gfState = {
-  ccy: 'HKD', amount: 100000, fxUsd: 7.69, fxRmb: 6.93,
-  mode: 'withdraw', scenario: 'expected',
-  // 銷售優惠
-  customerType: 'IVS', prepay: 0, extraDiscount: false,
-  couponBigUnit: 1250, couponSmallUnit: 63, couponMax: 2815,
-  prepay1Rate: 0.043, prepay5Rate: 0.038,
-  discountTiersIVS: [
-    { min: 0, gf: 0.07 }, { min: 10000, gf: 0.14 }, { min: 30000, gf: 0.20 },
-    { min: 50000, gf: 0.26 }, { min: 100000, gf: 0.33 }, { min: 200000, gf: 0.34 },
-    { min: 1000000, gf: 0.35 }
-  ],
-  discountTiersRegular: [
-    { min: 0, gf: 0.05 }, { min: 10000, gf: 0.12 }, { min: 30000, gf: 0.18 },
-    { min: 50000, gf: 0.24 }, { min: 100000, gf: 0.31 }, { min: 200000, gf: 0.32 },
-    { min: 1000000, gf: 0.33 }
-  ]
-};
+let gfState = { ccy: 'HKD', amount: 100000, fxUsd: 7.69, mode: 'withdraw', scenario: 'expected' };
 
 function gfUsdAmount() { return gfState.ccy === 'USD' ? gfState.amount : gfState.amount / gfState.fxUsd; }
 function gfHkdAmount() { return gfState.ccy === 'HKD' ? gfState.amount : gfState.amount * gfState.fxUsd; }
@@ -918,100 +972,10 @@ function gfFmtCompact(n) { return n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ?
 
 let gfChart, gfChartPie;
 
-// ===== 銷售優惠計算 =====
-function gfCalcCoupon(p) {
-  const B = gfState.couponBigUnit, S = gfState.couponSmallUnit, M = gfState.couponMax;
-  const budget = p / 10;
-  const big = Math.floor(budget / B);
-  const small = Math.floor((budget - big * B) / S);
-  return Math.min(M, big * B + small * S);
-}
-function gfGetDiscountRate(p) {
-  const tiers = gfState.customerType === 'IVS' ? gfState.discountTiersIVS : gfState.discountTiersRegular;
-  let rate = tiers[0].gf;
-  for (const t of tiers) { if (p >= t.min) rate = t.gf; }
-  return rate;
-}
-function gfCalcPrepay5Interest(p) {
-  const r = gfState.prepay5Rate;
-  let c = 4 * p, total = 0;
-  for (let y = 1; y <= 4; y++) {
-    const e = c * r;
-    total += e;
-    if (y < 4) c = c - p + e;
-  }
-  return total;
-}
-function gfRenderDiscount(usdAnnual, fx) {
-  const fmtU = n => 'USD ' + Math.round(n).toLocaleString();
-  const fmtH = n => 'HKD ' + Math.round(n).toLocaleString();
-  const fmtR = n => '¥ ' + Math.round(n).toLocaleString();
-  const fmtP = n => (n*100).toFixed(2) + '%';
-  const rmbRate = (gfState.fxRmb || 6.93) / fx;
-  const u2h = u => u * fx;
-  const u2r = u => u * fx * rmbRate;
-
-  const p = usdAnnual;
-  const coupon = gfCalcCoupon(p);
-  const baseRate = gfGetDiscountRate(p);
-  const extraRate = gfState.extraDiscount ? 0.03 : 0;
-  const baseRebate = p * baseRate;
-  const extraRebate = p * extraRate;
-  const prepayInt = gfState.prepay === 2 ? p * gfState.prepay1Rate
-                  : gfState.prepay === 5 ? gfCalcPrepay5Interest(p) : 0;
-  const totalDiscount = coupon + baseRebate + extraRebate + prepayInt;
-  const yearsPaid = gfState.prepay === 2 ? 2 : gfState.prepay === 5 ? 5 : 1;
-  const totalPremium = p * yearsPaid;
-  const totalNet = totalPremium - totalDiscount;
-
-  // Hero
-  document.getElementById('gfDiscountTotal').textContent = fmtU(totalDiscount);
-  document.getElementById('gfDiscountPct').textContent =
-    '保費比 ' + fmtP(totalDiscount/p) + (yearsPaid > 1 ? ' · 總繳費比 ' + fmtP(totalDiscount/totalPremium) : '');
-  document.getElementById('gfDiscountCcy').textContent =
-    '≈ ' + fmtH(u2h(totalDiscount)) + '  |  ' + fmtR(u2r(totalDiscount));
-
-  // Badges
-  const badges = [];
-  badges.push(gfState.customerType === 'IVS'
-    ? '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fef9e7;color:#92400e;border:1px solid #fbbf24">🌟 IVS</span>'
-    : '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#eef1f5;color:#475569;border:1px solid #cbd5e1">👤 普通</span>');
-  if (gfState.prepay > 0) badges.push('<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#dbeafe;color:#1e40af;border:1px solid #93c5fd">' + (gfState.prepay === 2 ? '1年預繳' : '5年預繳') + '</span>');
-  if (gfState.extraDiscount) badges.push('<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fce7f3;color:#9d174d;border:1px solid #f9a8d4">+3% 額外</span>');
-  document.getElementById('gfDiscountBadges').innerHTML = badges.join('');
-
-  // Metrics
-  const setM = (id, val, pct) => {
-    document.getElementById(id).textContent = fmtU(val);
-    document.getElementById(id + 'Sub').textContent = fmtP(pct) + ' · ≈ ' + fmtH(u2h(val));
-  };
-  setM('gfDC1', coupon, coupon/p);
-  setM('gfDC2', baseRebate + extraRebate, baseRate + extraRate);
-  if (extraRate > 0) document.getElementById('gfDC2Sub').textContent = fmtP(baseRate) + '+' + fmtP(extraRate) + ' · ≈ ' + fmtH(u2h(baseRebate+extraRebate));
-
-  document.getElementById('gfDC3Label').textContent = gfState.prepay === 0 ? '預繳利息 (未啟用)' : (gfState.prepay === 2 ? '預繳利息 (1年)' : '預繳利息 (5年累積)');
-  if (prepayInt > 0) {
-    document.getElementById('gfDC3').textContent = fmtU(prepayInt);
-    document.getElementById('gfDC3Sub').textContent = '≈ ' + fmtH(u2h(prepayInt));
-  } else {
-    document.getElementById('gfDC3').textContent = '—';
-    document.getElementById('gfDC3Sub').textContent = '—';
-  }
-
-  document.getElementById('gfDC4').textContent = fmtU(totalNet);
-  document.getElementById('gfDC4Sub').textContent = '已扣除優惠 · ≈ ' + fmtH(u2h(totalNet));
-
-  // Active button highlights
-  document.querySelectorAll('#page-gf .btn[data-gfct]').forEach(b => b.classList.toggle('primary', b.dataset.gfct === gfState.customerType));
-  document.querySelectorAll('#page-gf .btn[data-gfprepay]').forEach(b => b.classList.toggle('primary', +b.dataset.gfprepay === gfState.prepay));
-  document.getElementById('gfExtraDiscount').checked = gfState.extraDiscount;
-}
-
 function gfRender() {
   const fx = gfState.fxUsd;
   const usdAnnual = gfUsdAmount();
   const totalPaidUsd = usdAnnual * 5;
-  gfRenderDiscount(usdAnnual, fx);
   const totalPaidHkd = totalPaidUsd * fx;
   document.getElementById('gfTotalDisplay').textContent = gfState.ccy === 'HKD'
     ? 'HKD ' + Math.round(totalPaidHkd).toLocaleString() + '  (≈ US$ ' + Math.round(totalPaidUsd).toLocaleString() + ')'
@@ -1234,10 +1198,6 @@ document.getElementById('gfAmount').addEventListener('blur', e => { e.target.val
 document.getElementById('gfFx').addEventListener('input', e => { const v = +e.target.value; if (v >= 7.5 && v <= 8.0) { gfState.fxUsd = v; gfRender(); } });
 document.querySelectorAll('#page-gf .btn[data-mode]').forEach(b => b.addEventListener('click', () => { gfState.mode = b.dataset.mode; gfRender(); }));
 document.querySelectorAll('#page-gf .btn[data-sc]').forEach(b => b.addEventListener('click', () => { gfState.scenario = b.dataset.sc; gfRender(); }));
-// 銷售優惠 listeners
-document.querySelectorAll('#page-gf .btn[data-gfct]').forEach(b => b.addEventListener('click', () => { gfState.customerType = b.dataset.gfct; gfRender(); }));
-document.querySelectorAll('#page-gf .btn[data-gfprepay]').forEach(b => b.addEventListener('click', () => { gfState.prepay = +b.dataset.gfprepay; gfRender(); }));
-document.getElementById('gfExtraDiscount').addEventListener('change', e => { gfState.extraDiscount = e.target.checked; gfRender(); });
 
 function gfRenderPresets() {
   const el = document.getElementById('gfPresets');
@@ -1890,6 +1850,222 @@ async function init() {
   lc2RenderFaceChips();
 }
 init();
+
+// ===== 🎫 優惠計算 (Discount Calculator) =====
+const DC_STORAGE = 'aia_dc_settings_v1';
+let dcState = {
+  plan: 'GF', term: 5, premium: 15000,
+  customerType: 'IVS', prepay: 0, extraDiscount: false,
+  fxHkd: 7.69, fxRmb: 6.93,
+  couponBigUnit: 1250, couponSmallUnit: 63, couponMax: 2815,
+  prepay1Rate: 0.043, prepay5Rate: 0.038,
+  discountTiersIVS: [
+    { min: 0, gf: 0.07, gp3: 0.05 }, { min: 10000, gf: 0.14, gp3: 0.10 },
+    { min: 30000, gf: 0.20, gp3: 0.12 }, { min: 50000, gf: 0.26, gp3: 0.14 },
+    { min: 100000, gf: 0.33, gp3: 0.20 }, { min: 200000, gf: 0.34, gp3: 0.24 },
+    { min: 1000000, gf: 0.35, gp3: 0.28 }
+  ],
+  discountTiersRegular: [
+    { min: 0, gf: 0.05, gp3: 0.03 }, { min: 10000, gf: 0.12, gp3: 0.08 },
+    { min: 30000, gf: 0.18, gp3: 0.10 }, { min: 50000, gf: 0.24, gp3: 0.12 },
+    { min: 100000, gf: 0.31, gp3: 0.18 }, { min: 200000, gf: 0.32, gp3: 0.22 },
+    { min: 1000000, gf: 0.33, gp3: 0.26 }
+  ]
+};
+function dcSave() {
+  try { localStorage.setItem(DC_STORAGE, JSON.stringify(dcState)); } catch(e){}
+}
+function dcLoad() {
+  try {
+    const raw = localStorage.getItem(DC_STORAGE);
+    if (raw) Object.assign(dcState, JSON.parse(raw));
+  } catch(e){}
+}
+function dcCalcCoupon(p) {
+  const B = dcState.couponBigUnit, S = dcState.couponSmallUnit, M = dcState.couponMax;
+  const budget = p / 10;
+  const big = Math.floor(budget / B);
+  const small = Math.floor((budget - big * B) / S);
+  return Math.min(M, big * B + small * S);
+}
+function dcGetRate(p, plan) {
+  const tiers = dcState.customerType === 'IVS' ? dcState.discountTiersIVS : dcState.discountTiersRegular;
+  let rate = tiers[0][plan === 'GF' ? 'gf' : 'gp3'];
+  for (const t of tiers) if (p >= t.min) rate = t[plan === 'GF' ? 'gf' : 'gp3'];
+  return rate;
+}
+function dcCalcPrepay5(p) {
+  const r = dcState.prepay5Rate;
+  let c = 4 * p, total = 0;
+  for (let y = 1; y <= 4; y++) {
+    const e = c * r; total += e;
+    if (y < 4) c = c - p + e;
+  }
+  return total;
+}
+function dcRender() {
+  const p = dcState.premium;
+  const fxH = dcState.fxHkd, fxR = dcState.fxRmb;
+  const fmtU = n => 'USD ' + Math.round(n).toLocaleString();
+  const fmtH = n => 'HKD ' + Math.round(n).toLocaleString();
+  const fmtR = n => '¥ ' + Math.round(n).toLocaleString();
+  const fmtP = n => (n*100).toFixed(2) + '%';
+  const u2h = u => u * fxH;
+  const u2r = u => u * fxR;
+
+  // Active button highlights
+  document.querySelectorAll('#page-discount [data-dcplan]').forEach(b => b.classList.toggle('primary', b.dataset.dcplan === dcState.plan));
+  document.querySelectorAll('#page-discount [data-dcterm]').forEach(b => b.classList.toggle('primary', +b.dataset.dcterm === dcState.term));
+  document.querySelectorAll('#page-discount [data-dcct]').forEach(b => b.classList.toggle('primary', b.dataset.dcct === dcState.customerType));
+  document.querySelectorAll('#page-discount [data-dcprepay]').forEach(b => b.classList.toggle('primary', +b.dataset.dcprepay === dcState.prepay));
+  document.getElementById('dcExtra').checked = dcState.extraDiscount;
+
+  const coupon = dcCalcCoupon(p);
+  const baseRate = dcGetRate(p, dcState.plan);
+  const extraRate = (dcState.extraDiscount && dcState.term === 5) ? 0.03 : 0;
+  const baseRebate = p * baseRate;
+  const extraRebate = p * extraRate;
+  const prepayInt = dcState.prepay === 2 ? p * dcState.prepay1Rate
+                  : dcState.prepay === 5 ? dcCalcPrepay5(p) : 0;
+  const totalDiscount = coupon + baseRebate + extraRebate + prepayInt;
+  const yearsPaid = dcState.prepay === 2 ? 2 : dcState.prepay === 5 ? 5 : 1;
+  const totalPremium = p * yearsPaid;
+  const totalNet = totalPremium - totalDiscount;
+
+  // Hero
+  document.getElementById('dcHero').textContent = fmtU(totalDiscount);
+  document.getElementById('dcHeroPct').textContent = '保費比 ' + fmtP(totalDiscount/p) + ' · 總繳費比 ' + fmtP(totalDiscount/totalPremium);
+  document.getElementById('dcHeroCcy').textContent = '≈ ' + fmtH(u2h(totalDiscount)) + '  |  ' + fmtR(u2r(totalDiscount));
+
+  // Badges
+  const badges = [];
+  badges.push(dcState.customerType === 'IVS'
+    ? '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fef9e7;color:#92400e;border:1px solid #fbbf24">🌟 IVS</span>'
+    : '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#eef1f5;color:#475569;border:1px solid #cbd5e1">👤 普通</span>');
+  if (dcState.prepay > 0) badges.push('<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#dbeafe;color:#1e40af;border:1px solid #93c5fd">' + (dcState.prepay === 2 ? '1年預繳' : '5年預繳') + '</span>');
+  if (extraRate > 0) badges.push('<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fce7f3;color:#9d174d;border:1px solid #f9a8d4">+3% 額外</span>');
+  document.getElementById('dcBadges').innerHTML = badges.join('');
+
+  // Metric cards
+  const setM = (id, val, sub) => {
+    document.getElementById(id).textContent = val;
+    document.getElementById(id + 'Sub').textContent = sub;
+  };
+  setM('dcM1', fmtU(coupon), fmtP(coupon/p) + ' · ≈ ' + fmtH(u2h(coupon)));
+  setM('dcM2', fmtU(baseRebate + extraRebate), (extraRate > 0 ? fmtP(baseRate) + '+' + fmtP(extraRate) : fmtP(baseRate)) + ' · ≈ ' + fmtH(u2h(baseRebate + extraRebate)));
+  if (dcState.prepay > 0) {
+    document.getElementById('dcM3L').textContent = '預繳利息 (' + (dcState.prepay === 2 ? '1年' : '5年累積') + ')';
+    setM('dcM3', fmtU(prepayInt), fmtP(prepayInt/p) + ' · ≈ ' + fmtH(u2h(prepayInt)));
+  } else {
+    document.getElementById('dcM3L').textContent = '預繳利息 (未啟用)';
+    setM('dcM3', '—', '—');
+  }
+  setM('dcM4', fmtU(totalDiscount), fmtP(totalDiscount/p));
+
+  // Detail table (Excel-style)
+  const rows = [
+    ['每年繳費', p, false],
+    ['共繳保費 (' + yearsPaid + ' 年)', totalPremium, false],
+    ['現金券優惠', -coupon, true, coupon/p],
+    ['保證回贈 (' + dcState.plan + ')', -baseRebate, true, baseRate]
+  ];
+  if (extraRate > 0) rows.push(['額外 +3% 優惠', -extraRebate, true, extraRate]);
+  if (prepayInt > 0) rows.push(['保證利息 (預繳)', -prepayInt, true, prepayInt/p]);
+  rows.push(['總優惠', -totalDiscount, true, totalDiscount/p, true]);
+  rows.push(['實付保費 (' + yearsPaid + ' 年共付)', totalNet, false, null, true]);
+  document.getElementById('dcDetailBody').innerHTML = rows.map(r => {
+    const [label, usd, isDisc, pct, isTotal] = r;
+    const cls = (isDisc ? 'discount' : '') + (isTotal ? ' total' : '');
+    const style = (isTotal ? 'background:#fef2f4;font-weight:700;' : '') + (isDisc ? 'color:#c8102e;' : '');
+    const arrow = usd < 0 ? ' ↓' : '';
+    return '<tr style="' + style + '"><td style="padding:8px">' + label + '</td>' +
+           '<td style="padding:8px">' + fmtU(Math.abs(usd)) + arrow + '</td>' +
+           '<td style="padding:8px">' + fmtH(Math.abs(u2h(usd))) + '</td>' +
+           '<td style="padding:8px">' + fmtR(Math.abs(u2r(usd))) + '</td>' +
+           '<td style="padding:8px">' + (pct != null ? fmtP(pct) : '—') + '</td></tr>';
+  }).join('');
+
+  // Update tier table label
+  const lbl = document.getElementById('dcTierTypeLabel');
+  if (lbl) lbl.textContent = dcState.customerType === 'IVS' ? '🌟 IVS 客戶' : '👤 普通客戶';
+
+  // Save settings
+  dcSave();
+}
+function dcRenderTiers() {
+  const key = dcState.customerType === 'IVS' ? 'discountTiersIVS' : 'discountTiersRegular';
+  document.getElementById('dcTiersBody').innerHTML = dcState[key].map((t, i) =>
+    '<tr><td style="padding:6px;border-bottom:1px solid #fed7aa">' + t.min.toLocaleString() + '</td>' +
+    '<td style="padding:6px;border-bottom:1px solid #fed7aa"><input type="number" data-dctier="' + i + '" data-dcp="gf" value="' + (t.gf*100).toFixed(2) + '" step="0.5" style="width:80px;padding:4px 6px;border:1px solid #fed7aa;border-radius:4px;text-align:right"></td>' +
+    '<td style="padding:6px;border-bottom:1px solid #fed7aa"><input type="number" data-dctier="' + i + '" data-dcp="gp3" value="' + (t.gp3*100).toFixed(2) + '" step="0.5" style="width:80px;padding:4px 6px;border:1px solid #fed7aa;border-radius:4px;text-align:right"></td></tr>'
+  ).join('');
+  document.querySelectorAll('#dcTiersBody input').forEach(inp => {
+    inp.addEventListener('input', e => {
+      const i = +e.target.dataset.dctier, p = e.target.dataset.dcp;
+      dcState[key][i][p] = (+e.target.value)/100;
+      dcRender();
+    });
+  });
+}
+function dcRenderPremiumChips() {
+  const PRESETS = [2000, 5000, 8000, 13000, 15000, 30000, 50000, 100000, 200000];
+  const el = document.getElementById('dcPremiumChips');
+  el.innerHTML = PRESETS.map(v => '<div class="chip" data-dcv="' + v + '">$' + v.toLocaleString() + '</div>').join('');
+  el.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      dcState.premium = +c.dataset.dcv;
+      document.getElementById('dcPremium').value = dcState.premium.toLocaleString();
+      dcRender();
+    });
+  });
+}
+
+// ===== Initialize when document ready =====
+function dcInit() {
+  dcLoad();
+  // Sync UI inputs from state
+  document.getElementById('dcPremium').value = dcState.premium.toLocaleString();
+  document.getElementById('dcFxHkd').value = dcState.fxHkd;
+  document.getElementById('dcFxRmb').value = dcState.fxRmb;
+  document.getElementById('dcCpBig').value = dcState.couponBigUnit;
+  document.getElementById('dcCpSm').value = dcState.couponSmallUnit;
+  document.getElementById('dcCpMax').value = dcState.couponMax;
+  document.getElementById('dcPp1').value = (dcState.prepay1Rate*100).toFixed(2);
+  document.getElementById('dcPp5').value = (dcState.prepay5Rate*100).toFixed(2);
+  dcRenderPremiumChips();
+  dcRenderTiers();
+
+  // Event listeners
+  document.querySelectorAll('#page-discount [data-dcplan]').forEach(b => b.addEventListener('click', () => { dcState.plan = b.dataset.dcplan; dcRender(); }));
+  document.querySelectorAll('#page-discount [data-dcterm]').forEach(b => b.addEventListener('click', () => { dcState.term = +b.dataset.dcterm; dcRender(); }));
+  document.querySelectorAll('#page-discount [data-dcct]').forEach(b => b.addEventListener('click', () => { dcState.customerType = b.dataset.dcct; dcRenderTiers(); dcRender(); }));
+  document.querySelectorAll('#page-discount [data-dcprepay]').forEach(b => b.addEventListener('click', () => { dcState.prepay = +b.dataset.dcprepay; dcRender(); }));
+  document.getElementById('dcExtra').addEventListener('change', e => { dcState.extraDiscount = e.target.checked; dcRender(); });
+  document.getElementById('dcPremium').addEventListener('input', e => {
+    const n = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+    if (!isNaN(n) && n > 0) { dcState.premium = n; dcRender(); }
+  });
+  document.getElementById('dcPremium').addEventListener('blur', e => { e.target.value = dcState.premium.toLocaleString(); });
+  document.getElementById('dcFxHkd').addEventListener('input', e => { const v=+e.target.value; if (v>=7.5&&v<=8) { dcState.fxHkd=v; dcRender(); } });
+  document.getElementById('dcFxRmb').addEventListener('input', e => { const v=+e.target.value; if (v>=6.5&&v<=7.5) { dcState.fxRmb=v; dcRender(); } });
+  document.getElementById('dcCpBig').addEventListener('input', e => { dcState.couponBigUnit = +e.target.value; dcRender(); });
+  document.getElementById('dcCpSm').addEventListener('input', e => { dcState.couponSmallUnit = +e.target.value; dcRender(); });
+  document.getElementById('dcCpMax').addEventListener('input', e => { dcState.couponMax = +e.target.value; dcRender(); });
+  document.getElementById('dcPp1').addEventListener('input', e => { dcState.prepay1Rate = (+e.target.value)/100; dcRender(); });
+  document.getElementById('dcPp5').addEventListener('input', e => { dcState.prepay5Rate = (+e.target.value)/100; dcRender(); });
+  document.getElementById('dcReset').addEventListener('click', () => {
+    if (confirm('確定重置所有優惠設定為預設值?\n(本機儲存嘅設定會被清除)')) {
+      localStorage.removeItem(DC_STORAGE);
+      location.reload();
+    }
+  });
+
+  dcRender();
+}
+// Run dcInit on load
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', dcInit);
+else setTimeout(dcInit, 100);
+
 </script>
 </body>
 </html>
