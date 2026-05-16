@@ -190,6 +190,142 @@ def scrape_aia_prices(expected_codes: set) -> dict:
 
 DIVIDEND_PDF_URL = "https://www.aia.com.hk/content/dam/hk/zh-hk/pdf/dividend-composition-and-distribution-record/{code}.pdf"
 
+# === 基金月報 URL discovery (Phase 1: Allianz only) ===
+# Allianz 系列嘅「派息成分」PDF 冇 yield 欄, 需要去 fund detail 頁攞「基金月報」PDF URL
+ALLIANZ_FUNDS = {"Z07", "Z08"}
+
+
+def scrape_factsheet_urls(codes: set) -> dict:
+    """用 Playwright 由 AIA detail 頁攞每隻 fund 嘅「基金月報」PDF URL"""
+    if not codes:
+        return {}
+    print(f"\n[{hk_now()}] 攞 {len(codes)} 隻基金月報 URL: {sorted(codes)}")
+    result = {}
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        ctx = browser.new_context(
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            locale="zh-HK",
+            viewport={"width": 1440, "height": 900},
+        )
+        page = ctx.new_page()
+        try:
+            page.goto(AIA_URL, wait_until="networkidle", timeout=60000)
+            page.wait_for_timeout(6000)
+            for sel in ["button:has-text('接受')", "button:has-text('Accept')", "button[aria-label='Close']"]:
+                try:
+                    btn = page.locator(sel).first
+                    if btn.is_visible(timeout=1500):
+                        btn.click(timeout=3000); page.wait_for_timeout(500)
+                except Exception:
+                    pass
+            page.wait_for_selector("table tr td", timeout=20000)
+            page.wait_for_timeout(2000)
+            rows = page.locator("tr").all()
+            for code in sorted(codes):
+                detail_href = None
+                for row in rows:
+                    try:
+                        cells = row.locator("td").all()
+                        if len(cells) > 1 and cells[1].inner_text().strip() == code:
+                            # 揾「連繫基金詳情」link (通常係 td[7] 嗰個 chart icon)
+                            for link in row.locator("a").all():
+                                href = link.get_attribute("href")
+                                if href and "details.html" in href:
+                                    detail_href = href
+                                    break
+                            break
+                    except Exception:
+                        continue
+                if not detail_href:
+                    print(f"  ✗ {code}: 喺 prices 表搵唔到 detail link")
+                    continue
+                if detail_href.startswith("/"):
+                    detail_href = "https://www.aia.com.hk" + detail_href
+                # Navigate to detail page
+                try:
+                    page.goto(detail_href, wait_until="networkidle", timeout=30000)
+                    page.wait_for_timeout(4000)
+                    # 揾 基金月報 link
+                    href = None
+                    for sel in ["a:has-text('基金月報')", "a[href*='monthly']", "a[href*='fact-sheet']", "a[href*='factsheet']"]:
+                        try:
+                            link = page.locator(sel).first
+                            if link.count() > 0:
+                                href = link.get_attribute("href")
+                                if href: break
+                        except Exception:
+                            continue
+                    if href:
+                        if href.startswith("/"):
+                            href = "https://www.aia.com.hk" + href
+                        result[code] = href
+                        print(f"  ✓ {code}: {href.split('/')[-1]}")
+                    else:
+                        print(f"  ✗ {code}: detail 頁冇基金月報 link")
+                except Exception as e:
+                    print(f"  ✗ {code}: navigate fail - {e}")
+        finally:
+            browser.close()
+    return result
+
+
+def parse_allianz_factsheet(pdf_bytes: bytes) -> dict | None:
+    """Allianz 月報 parser: 揾「年度化股息收益率」第一個 data row
+    PDF table 結構: 紀錄日 | 除息日 | 每股派息 | 除息日資產淨值 | 股息收益率 | 年度化股息收益率
+    """
+    try:
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+            text = ""
+            for p in pdf.pages:
+                t = p.extract_text()
+                if t: text += t + "\n"
+        # Allianz 行 pattern: DD/MM/YYYY DD/MM/YYYY <div> <NAV> <yield%> <annualized%>
+        # eg: "13/03/2026 16/03/2026 0.05500 美元 8.2643 美元 0.67% 8.29%"
+        # 揾第一個有兩個 dates 嘅 row
+        for line in text.split("\n"):
+            line = line.strip()
+            if not line: continue
+            dates = re.findall(r"\d{1,2}/\d{1,2}/\d{4}", line)
+            if len(dates) < 2:
+                continue
+            # 揾所有 percentage values, 最後一個應該係年度化
+            pcts = re.findall(r"(\d{1,2}\.\d{1,2})\s*%", line)
+            if len(pcts) < 2:  # 起碼要有 股息收益率 + 年度化
+                continue
+            annualized = float(pcts[-1])
+            # dividend per share: 揾 0.0XXXX 或 0.XX
+            divs = re.findall(r"(?<![\d.])(0\.\d{3,7})(?![\d.])", line)
+            if not divs:
+                continue
+            div_val = float(divs[0])
+            # 月份: 用第一個 date (紀錄日)
+            mon_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+            d, m, y = dates[0].split("/")
+            try:
+                month = mon_names[int(m)-1] + "-" + y[-2:]
+            except (ValueError, IndexError):
+                continue
+            return {"month": month, "dividendPerShare": div_val, "yieldPct": annualized}
+        return None
+    except Exception as e:
+        print(f"    ⚠️  Allianz parser error: {e}")
+        return None
+
+
+def fetch_factsheet_dividend(code: str, url: str) -> dict | None:
+    """Download 基金月報 PDF + 用對應 parser 抽 yield"""
+    try:
+        r = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
+        if r.status_code != 200:
+            return None
+        if code in ALLIANZ_FUNDS:
+            return parse_allianz_factsheet(r.content)
+        return None
+    except Exception as e:
+        print(f"    ⚠️  {code} factsheet fetch error: {e}")
+        return None
+
 
 def fetch_dividend(code: str) -> dict | None:
     """攞單一隻基金嘅最新派息. Returns {month, dividendPerShare, yieldPct} or None
@@ -430,6 +566,30 @@ def main():
         if old_yield != f["latestYieldPct"]:
             mark = " (估算)" if f.get("yieldEstimated") else ""
             div_updated.append(f"{code}: {old_yield}% → {f['latestYieldPct']}%{mark} ({div['month']})")
+
+    # === Phase 1: Allianz 月報攞官方 yield (取代估算) ===
+    try:
+        factsheet_urls = scrape_factsheet_urls(ALLIANZ_FUNDS)
+        for code, fs_url in factsheet_urls.items():
+            if code not in config["funds"]:
+                continue
+            print(f"  📄 解析 {code} 月報...")
+            fs_data = fetch_factsheet_dividend(code, fs_url)
+            if fs_data and fs_data.get("yieldPct"):
+                f = config["funds"][code]
+                old = f.get("latestYieldPct")
+                f["latestYieldPct"] = fs_data["yieldPct"]
+                f["latestDividendPerShare"] = fs_data["dividendPerShare"]
+                f["dividendMonth"] = fs_data["month"]
+                f["annYield"] = round(fs_data["yieldPct"] / 100, 4)
+                f["yieldEstimated"] = False
+                f["_lastDividendUpdate"] = hk_now()
+                div_updated.append(f"{code}: {old}% → {fs_data['yieldPct']}% (官方月報 {fs_data['month']})")
+                print(f"  ✓ {code}: {fs_data['yieldPct']}% (官方)")
+            else:
+                print(f"  ✗ {code}: 月報 parse 失敗")
+    except Exception as e:
+        print(f"⚠️  月報抓取失敗 (繼續): {e}")
 
     config["lastUpdated"] = hk_now()
     if scraped.get("lastPriceDate"):
