@@ -565,7 +565,8 @@ function renderBuilder() {
   body.innerHTML = Object.keys(FUNDS).map(code => {
     const f = FUNDS[code];
     const checked = customAlloc[code] !== undefined && customAlloc[code] > 0;
-    const yld = (f.div * 12 / f.newPrice * 100).toFixed(2);
+    // 派息率優先用 AIA 官方「年度化股息收益率」, 冇就 fallback 自己算
+    const yld = (f.latestYieldPct != null ? f.latestYieldPct : (f.div * 12 / f.newPrice * 100)).toFixed(2);
     const rc = f.risk === "低" ? "risk-low" : f.risk === "中" ? "risk-mid" : "risk-high";
     return '<tr class="' + (checked ? '' : 'disabled') + '" data-code="' + code + '">' +
       '<td><input type="checkbox" data-code="' + code + '" ' + (checked ? 'checked' : '') + '></td>' +
@@ -649,7 +650,9 @@ function computePortfolio(allocPct, totalHKD, fxRate) {
     const allocHKD = totalHKD * w;
     const units = allocHKD / (f.newPrice * fxRate);
     const annHKD = units * f.div * 12 * fxRate;
-    items.push({ code, weight: w, allocHKD, monthlyHKD: annHKD/12, annualHKD: annHKD, yield_: (f.div * 12) / f.newPrice, ...f });
+    // 派息率優先用 AIA 官方數據 (decimal form)
+    const yldDecimal = f.latestYieldPct != null ? f.latestYieldPct / 100 : (f.div * 12) / f.newPrice;
+    items.push({ code, weight: w, allocHKD, monthlyHKD: annHKD/12, annualHKD: annHKD, yield_: yldDecimal, ...f });
     annualHKD += annHKD;
   });
   return { items, annualHKD, monthlyHKD: annualHKD / 12, yield_: totalHKD ? annualHKD / totalHKD : 0 };

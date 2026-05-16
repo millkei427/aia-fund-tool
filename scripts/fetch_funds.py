@@ -211,74 +211,104 @@ def fetch_dividend(code: str) -> dict | None:
                 for table in tables:
                     if not table or len(table) < 2:
                         continue
-                    # 搵 header row index (含 Yield 或 年息率)
+                    # 搵 header row + 優先揀「年度化」yield column (有啲 PDF 有兩個 yield 欄)
                     header_idx = -1
                     div_col = yld_col = month_col = -1
+                    yld_priority = 999  # 1 = 年度化 (最好), 2 = 普通 yield
                     for i, row in enumerate(table[:3]):
                         cells = [str(c or "").strip() for c in row]
                         joined = " ".join(cells).lower()
-                        if "yield" in joined or "年息率" in joined or "息率" in joined:
-                            header_idx = i
-                            for j, c in enumerate(cells):
-                                cl = c.lower()
-                                if "yield" in cl or "年息率" in c or "息率" in c:
-                                    yld_col = j
-                                if "dividend" in cl or "每股股息" in c or "股息" in c:
-                                    div_col = j
-                                if "month" in cl or "月份" in c:
-                                    month_col = j
-                            break
+                        if not ("yield" in joined or "息率" in joined):
+                            continue
+                        header_idx = i
+                        for j, c in enumerate(cells):
+                            cl = c.lower()
+                            # Yield column 優先級：年度化 > 普通
+                            p = 999
+                            if "annualized" in cl or "年度化" in c:
+                                p = 1
+                            elif "yield" in cl or "年息率" in c or "息率" in c:
+                                p = 2
+                            if p < yld_priority:
+                                yld_col = j; yld_priority = p
+                            # Dividend column
+                            if div_col < 0 and ("dividend" in cl or "每股派息" in c or "每股股息" in c or "派息" in c or "股息" in c):
+                                div_col = j
+                            # Month/date column
+                            if month_col < 0 and ("month" in cl or "月份" in c or "紀錄日" in c or "记录日" in c or "record date" in cl):
+                                month_col = j
+                        break
                     if header_idx < 0:
                         continue
-                    # 第一個 data row (latest month)
+                    # 第一個 data row (latest)
                     for row in table[header_idx + 1:]:
                         cells = [str(c or "").strip() for c in row]
                         if not any(cells):
                             continue
-                        # 抽月份
+                        # 抽月份 — 試兩種格式: Mon-YY (eg "Mar-26") 或 DD/MM/YYYY
                         month = ""
-                        if month_col >= 0 and month_col < len(cells):
-                            m = re.search(r"[A-Z][a-z]{2}-\d{2}", cells[month_col])
-                            if m: month = m.group()
-                        if not month:
-                            for c in cells:
-                                m = re.search(r"[A-Z][a-z]{2}-\d{2}", c)
-                                if m:
-                                    month = m.group()
+                        search_cells = [cells[month_col]] if (month_col >= 0 and month_col < len(cells)) else []
+                        search_cells += cells
+                        for c in search_cells:
+                            m = re.search(r"[A-Z][a-z]{2}-\d{2}", c)
+                            if m: month = m.group(); break
+                            m = re.search(r"(\d{1,2})/(\d{1,2})/(\d{4})", c)
+                            if m:
+                                day, mo, yr = m.groups()
+                                mon_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+                                try:
+                                    month = mon_names[int(mo)-1] + "-" + yr[-2:]
                                     break
+                                except (ValueError, IndexError):
+                                    pass
                         # 抽 dividend
                         div_val = None
                         if div_col >= 0 and div_col < len(cells):
                             m = re.search(r"\d+\.\d+", cells[div_col])
                             if m: div_val = float(m.group())
-                        # 抽 yield
+                        # 抽 yield (年度化優先)
                         yld_val = None
                         if yld_col >= 0 and yld_col < len(cells):
                             m = re.search(r"\d+\.\d+", cells[yld_col])
                             if m: yld_val = float(m.group())
                         if month and div_val is not None and yld_val is not None:
                             return {"month": month, "dividendPerShare": div_val, "yieldPct": yld_val}
-        # === Strategy 2: text regex (寬鬆版) ===
+        # === Strategy 2: text-line regex (line-by-line, 揀最後一個 % 做 annualized yield) ===
         with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
             text = ""
             for p in pdf.pages:
                 t = p.extract_text()
                 if t:
                     text += t + "\n"
-        # 嚴格: ...0.xxxxxx ... NN.NN%
-        rows = re.findall(
-            r"([A-Z][a-z]{2}-\d{2})\b[^\n]*?(\d+\.\d{4,6})\s+(\d+\.\d{1,2})\s*%",
-            text,
-        )
-        if not rows:
-            # 寬鬆: 0.xxx ... NN.NN (冇要求 %)
-            rows = re.findall(
-                r"([A-Z][a-z]{2}-\d{2})\s+[^\n]*?(\d+\.\d{3,7})\s+(\d+\.\d{1,2})\b",
-                text,
-            )
-        if rows:
-            month, div, yld = rows[0]
-            return {"month": month, "dividendPerShare": float(div), "yieldPct": float(yld)}
+        mon_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        for line in text.split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            # 月份偵測 — Mon-YY 或 DD/MM/YYYY
+            month = ""
+            mm = re.search(r"\b([A-Z][a-z]{2})-(\d{2})\b", line)
+            if mm:
+                month = mm.group(1) + "-" + mm.group(2)
+            else:
+                mm = re.search(r"\b(\d{1,2})/(\d{1,2})/(\d{4})\b", line)
+                if mm:
+                    try:
+                        month = mon_names[int(mm.group(2))-1] + "-" + mm.group(3)[-2:]
+                    except (ValueError, IndexError):
+                        pass
+            if not month:
+                continue
+            # 揀第一個 0.xxxx 做 dividend, 揀最後一個 NN.NN(%) 做 annualized yield
+            div_match = re.search(r"\b(0\.\d{3,7})\b", line)
+            yld_matches = re.findall(r"\b(\d{1,2}\.\d{1,2})\s*%?", line)
+            if not div_match or not yld_matches:
+                continue
+            div_val = float(div_match.group(1))
+            # 篩走 0.xx% (單期 yield 通常 < 2%)、保留 > 2% 嘅
+            big_ylds = [float(y) for y in yld_matches if float(y) >= 2.0]
+            yld_val = big_ylds[-1] if big_ylds else float(yld_matches[-1])
+            return {"month": month, "dividendPerShare": div_val, "yieldPct": yld_val}
         return None
     except Exception as e:
         print(f"    ⚠️  {code} dividend fetch error: {e}")
