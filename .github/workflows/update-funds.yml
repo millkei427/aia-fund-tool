@@ -38,10 +38,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet data/funds.json; then
+          # Stage funds.json + debug dumps (if any)
+          git add data/funds.json
+          git add -A scripts/_debug_dividends/ 2>/dev/null || true
+          if git diff --cached --quiet; then
             echo "No changes — skipping commit."
           else
-            git add data/funds.json
             git commit -m "🤖 Auto-update fund prices ($(date -u +'%Y-%m-%d %H:%M UTC'))"
             git push
           fi

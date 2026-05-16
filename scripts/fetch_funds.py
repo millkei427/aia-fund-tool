@@ -335,6 +335,16 @@ def fetch_dividend(code: str) -> dict | None:
             big = [float(y) for y in pct_candidates if 2.0 <= float(y) <= 25.0]
             if div_m and big:
                 return {"month": month, "dividendPerShare": float(div_m.group(1)), "yieldPct": big[-1]}
+        # === Debug dump: save extracted text for failed funds ===
+        try:
+            debug_dir = REPO_ROOT / "scripts" / "_debug_dividends"
+            debug_dir.mkdir(exist_ok=True)
+            (debug_dir / f"{code}.txt").write_text(
+                f"=== PDF text extracted for {code} ===\n\n{text[:3000]}\n",
+                encoding="utf-8"
+            )
+        except Exception:
+            pass
         return None
     except Exception as e:
         print(f"    ⚠️  {code} dividend fetch error: {e}")
