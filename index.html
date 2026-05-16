@@ -1171,8 +1171,11 @@ function switchProduct(p) {
   document.getElementById('page-fund').style.display = p === 'fund' ? '' : 'none';
   document.getElementById('page-gf').style.display = p === 'gf' ? '' : 'none';
   document.getElementById('page-lc2').style.display = p === 'lc2' ? '' : 'none';
+  const dcPage = document.getElementById('page-discount');
+  if (dcPage) dcPage.style.display = p === 'discount' ? '' : 'none';
   if (p === 'gf') gfRender();
   if (p === 'lc2') lc2Render();
+  if (p === 'discount' && typeof dcRender === 'function') dcRender();
   if (typeof refreshStatusBar === 'function') refreshStatusBar();
 }
 
