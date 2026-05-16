@@ -335,6 +335,10 @@ def fetch_dividend(code: str) -> dict | None:
             big = [float(y) for y in pct_candidates if 2.0 <= float(y) <= 25.0]
             if div_m and big:
                 return {"month": month, "dividendPerShare": float(div_m.group(1)), "yieldPct": big[-1]}
+            # === Strategy 3b: 有 dividend 但冇 yield (eg Allianz「派息成分」PDF) ===
+            # 返回 dividend, yieldPct = None, 由 caller 用 newPrice 自己算
+            if div_m:
+                return {"month": month, "dividendPerShare": float(div_m.group(1)), "yieldPct": None}
         # === Debug dump: save extracted text for failed funds ===
         try:
             debug_dir = REPO_ROOT / "scripts" / "_debug_dividends"
@@ -409,13 +413,23 @@ def main():
         f = config["funds"][code]
         old_yield = f.get("latestYieldPct")
         f["latestDividendPerShare"] = div["dividendPerShare"]
-        f["latestYieldPct"] = div["yieldPct"]
         f["dividendMonth"] = div["month"]
-        # annYield 同步用真實值（除以 100 轉做小數）
-        f["annYield"] = round(div["yieldPct"] / 100, 4)
+        # yieldPct: PDF 有就用官方值, 冇就用 div×12/price 估算 (eg Allianz「派息成分」PDF)
+        if div.get("yieldPct") is not None:
+            f["latestYieldPct"] = div["yieldPct"]
+            f["yieldEstimated"] = False
+        else:
+            price = f.get("newPrice", 0)
+            if price > 0:
+                f["latestYieldPct"] = round(div["dividendPerShare"] * 12 / price * 100, 2)
+                f["yieldEstimated"] = True
+            else:
+                continue
+        f["annYield"] = round(f["latestYieldPct"] / 100, 4)
         f["_lastDividendUpdate"] = hk_now()
-        if old_yield != div["yieldPct"]:
-            div_updated.append(f"{code}: {old_yield}% → {div['yieldPct']}% ({div['month']})")
+        if old_yield != f["latestYieldPct"]:
+            mark = " (估算)" if f.get("yieldEstimated") else ""
+            div_updated.append(f"{code}: {old_yield}% → {f['latestYieldPct']}%{mark} ({div['month']})")
 
     config["lastUpdated"] = hk_now()
     if scraped.get("lastPriceDate"):
