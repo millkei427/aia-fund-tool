@@ -300,7 +300,7 @@ def fetch_dividend(code: str) -> dict | None:
             if not month:
                 continue
             # 揀第一個 0.xxxx 做 dividend, 揀最後一個 NN.NN(%) 做 annualized yield
-            div_match = re.search(r"\b(0\.\d{3,7})\b", line)
+            div_match = re.search(r"(?<![\d.])(0\.\d{3,7})(?![\d.])", line)
             yld_matches = re.findall(r"\b(\d{1,2}\.\d{1,2})\s*%?", line)
             if not div_match or not yld_matches:
                 continue
@@ -326,7 +326,7 @@ def fetch_dividend(code: str) -> dict | None:
         if first_date:
             month, pos = first_date
             window = text[pos:pos+500]
-            div_m = re.search(r"\b(0\.\d{3,7})\b", window)
+            div_m = re.search(r"(?<![\d.])(0\.\d{3,7})(?![\d.])", window)
             # 攞所有百分比 candidates, 揀最後一個 >= 2% (年度化通常 5-15%)
             pct_candidates = re.findall(r"(\d{1,2}\.\d{1,2})\s*%", window)
             if not pct_candidates:
