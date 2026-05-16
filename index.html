@@ -259,6 +259,40 @@ table.funds tr:hover td { background: #fbfcfe; }
     <div class="preset-chips" id="gfPresets"></div>
   </div>
 
+  <div class="section" id="gfDiscountSection">
+    <div class="label-bar"><span>💰 銷售優惠計算 (現金券 + 保證回贈 + 預繳利息)</span></div>
+    <div class="builder-controls" style="margin-bottom:8px">
+      <span class="preset-label">客戶類型:</span>
+      <button class="btn primary" data-gfct="IVS">🌟 IVS 客戶 (高優惠)</button>
+      <button class="btn" data-gfct="Regular">👤 普通客戶</button>
+      <span class="preset-divider"></span>
+      <span class="preset-label">預繳保費:</span>
+      <button class="btn primary" data-gfprepay="0">無預繳</button>
+      <button class="btn" data-gfprepay="2">2年 (1年預繳)</button>
+      <button class="btn" data-gfprepay="5">5年預繳</button>
+    </div>
+    <label style="display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:#fef9e7;border:1px solid #fbbf24;border-radius:6px;font-size:13px;cursor:pointer;margin-top:4px">
+      <input type="checkbox" id="gfExtraDiscount" style="width:16px;height:16px;accent-color:#c8102e;cursor:pointer">
+      <span>同時投保「愛伴航 2」+「活然人生」 → 額外 <strong>+3%</strong> (5年繳專享)</span>
+    </label>
+    <div class="note" style="font-size:11.5px;color:#78350f;background:#fef9e7;padding:6px 10px;border-radius:6px;margin-top:8px;display:none" id="gfDiscountNote">IVS = 友邦團體保險/強積金/退休金成員</div>
+
+    <div style="background:linear-gradient(135deg,#fef2f4,#fde8ed);border:2px solid #fcd3da;border-radius:12px;padding:18px;margin-top:14px;position:relative">
+      <div style="position:absolute;top:12px;right:12px;display:flex;gap:6px" id="gfDiscountBadges"></div>
+      <div style="font-size:12px;color:#6b7a8e;font-weight:600">客戶可獲總優惠 (USD)</div>
+      <div style="font-size:32px;font-weight:800;color:#c8102e;font-variant-numeric:tabular-nums" id="gfDiscountTotal">—</div>
+      <div style="font-size:13px;color:#d97706;font-weight:700;margin-top:2px" id="gfDiscountPct">—</div>
+      <div style="font-size:13px;color:#56657a;margin-top:4px" id="gfDiscountCcy">—</div>
+    </div>
+
+    <div class="summary-row" style="margin-top:12px">
+      <div class="metric"><div class="label">現金券優惠</div><div class="value" id="gfDC1" style="color:#c8102e">—</div><div class="sub-value" id="gfDC1Sub">—</div></div>
+      <div class="metric"><div class="label">保證回贈 (基本)</div><div class="value" id="gfDC2" style="color:#c8102e">—</div><div class="sub-value" id="gfDC2Sub">—</div></div>
+      <div class="metric"><div class="label" id="gfDC3Label">預繳利息</div><div class="value" id="gfDC3" style="color:#c8102e">—</div><div class="sub-value" id="gfDC3Sub">—</div></div>
+      <div class="metric"><div class="label">實付保費 (5 年共付)</div><div class="value" id="gfDC4">—</div><div class="sub-value" id="gfDC4Sub">—</div></div>
+    </div>
+  </div>
+
   <div class="section">
     <div class="label-bar"><span>⚙️ 模式 · 情景</span></div>
     <div class="builder-controls" style="margin-bottom:0">
@@ -815,7 +849,24 @@ const GF_TIERS = [
   { usd: 200000, hkd: 1540000, showHkd: true,  showUsd: true,  hasData: true }
 ];
 
-let gfState = { ccy: 'HKD', amount: 100000, fxUsd: 7.69, mode: 'withdraw', scenario: 'expected' };
+let gfState = {
+  ccy: 'HKD', amount: 100000, fxUsd: 7.69, fxRmb: 6.93,
+  mode: 'withdraw', scenario: 'expected',
+  // 銷售優惠
+  customerType: 'IVS', prepay: 0, extraDiscount: false,
+  couponBigUnit: 1250, couponSmallUnit: 63, couponMax: 2815,
+  prepay1Rate: 0.043, prepay5Rate: 0.038,
+  discountTiersIVS: [
+    { min: 0, gf: 0.07 }, { min: 10000, gf: 0.14 }, { min: 30000, gf: 0.20 },
+    { min: 50000, gf: 0.26 }, { min: 100000, gf: 0.33 }, { min: 200000, gf: 0.34 },
+    { min: 1000000, gf: 0.35 }
+  ],
+  discountTiersRegular: [
+    { min: 0, gf: 0.05 }, { min: 10000, gf: 0.12 }, { min: 30000, gf: 0.18 },
+    { min: 50000, gf: 0.24 }, { min: 100000, gf: 0.31 }, { min: 200000, gf: 0.32 },
+    { min: 1000000, gf: 0.33 }
+  ]
+};
 
 function gfUsdAmount() { return gfState.ccy === 'USD' ? gfState.amount : gfState.amount / gfState.fxUsd; }
 function gfHkdAmount() { return gfState.ccy === 'HKD' ? gfState.amount : gfState.amount * gfState.fxUsd; }
@@ -867,10 +918,100 @@ function gfFmtCompact(n) { return n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ?
 
 let gfChart, gfChartPie;
 
+// ===== 銷售優惠計算 =====
+function gfCalcCoupon(p) {
+  const B = gfState.couponBigUnit, S = gfState.couponSmallUnit, M = gfState.couponMax;
+  const budget = p / 10;
+  const big = Math.floor(budget / B);
+  const small = Math.floor((budget - big * B) / S);
+  return Math.min(M, big * B + small * S);
+}
+function gfGetDiscountRate(p) {
+  const tiers = gfState.customerType === 'IVS' ? gfState.discountTiersIVS : gfState.discountTiersRegular;
+  let rate = tiers[0].gf;
+  for (const t of tiers) { if (p >= t.min) rate = t.gf; }
+  return rate;
+}
+function gfCalcPrepay5Interest(p) {
+  const r = gfState.prepay5Rate;
+  let c = 4 * p, total = 0;
+  for (let y = 1; y <= 4; y++) {
+    const e = c * r;
+    total += e;
+    if (y < 4) c = c - p + e;
+  }
+  return total;
+}
+function gfRenderDiscount(usdAnnual, fx) {
+  const fmtU = n => 'USD ' + Math.round(n).toLocaleString();
+  const fmtH = n => 'HKD ' + Math.round(n).toLocaleString();
+  const fmtR = n => '¥ ' + Math.round(n).toLocaleString();
+  const fmtP = n => (n*100).toFixed(2) + '%';
+  const rmbRate = (gfState.fxRmb || 6.93) / fx;
+  const u2h = u => u * fx;
+  const u2r = u => u * fx * rmbRate;
+
+  const p = usdAnnual;
+  const coupon = gfCalcCoupon(p);
+  const baseRate = gfGetDiscountRate(p);
+  const extraRate = gfState.extraDiscount ? 0.03 : 0;
+  const baseRebate = p * baseRate;
+  const extraRebate = p * extraRate;
+  const prepayInt = gfState.prepay === 2 ? p * gfState.prepay1Rate
+                  : gfState.prepay === 5 ? gfCalcPrepay5Interest(p) : 0;
+  const totalDiscount = coupon + baseRebate + extraRebate + prepayInt;
+  const yearsPaid = gfState.prepay === 2 ? 2 : gfState.prepay === 5 ? 5 : 1;
+  const totalPremium = p * yearsPaid;
+  const totalNet = totalPremium - totalDiscount;
+
+  // Hero
+  document.getElementById('gfDiscountTotal').textContent = fmtU(totalDiscount);
+  document.getElementById('gfDiscountPct').textContent =
+    '保費比 ' + fmtP(totalDiscount/p) + (yearsPaid > 1 ? ' · 總繳費比 ' + fmtP(totalDiscount/totalPremium) : '');
+  document.getElementById('gfDiscountCcy').textContent =
+    '≈ ' + fmtH(u2h(totalDiscount)) + '  |  ' + fmtR(u2r(totalDiscount));
+
+  // Badges
+  const badges = [];
+  badges.push(gfState.customerType === 'IVS'
+    ? '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fef9e7;color:#92400e;border:1px solid #fbbf24">🌟 IVS</span>'
+    : '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#eef1f5;color:#475569;border:1px solid #cbd5e1">👤 普通</span>');
+  if (gfState.prepay > 0) badges.push('<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#dbeafe;color:#1e40af;border:1px solid #93c5fd">' + (gfState.prepay === 2 ? '1年預繳' : '5年預繳') + '</span>');
+  if (gfState.extraDiscount) badges.push('<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#fce7f3;color:#9d174d;border:1px solid #f9a8d4">+3% 額外</span>');
+  document.getElementById('gfDiscountBadges').innerHTML = badges.join('');
+
+  // Metrics
+  const setM = (id, val, pct) => {
+    document.getElementById(id).textContent = fmtU(val);
+    document.getElementById(id + 'Sub').textContent = fmtP(pct) + ' · ≈ ' + fmtH(u2h(val));
+  };
+  setM('gfDC1', coupon, coupon/p);
+  setM('gfDC2', baseRebate + extraRebate, baseRate + extraRate);
+  if (extraRate > 0) document.getElementById('gfDC2Sub').textContent = fmtP(baseRate) + '+' + fmtP(extraRate) + ' · ≈ ' + fmtH(u2h(baseRebate+extraRebate));
+
+  document.getElementById('gfDC3Label').textContent = gfState.prepay === 0 ? '預繳利息 (未啟用)' : (gfState.prepay === 2 ? '預繳利息 (1年)' : '預繳利息 (5年累積)');
+  if (prepayInt > 0) {
+    document.getElementById('gfDC3').textContent = fmtU(prepayInt);
+    document.getElementById('gfDC3Sub').textContent = '≈ ' + fmtH(u2h(prepayInt));
+  } else {
+    document.getElementById('gfDC3').textContent = '—';
+    document.getElementById('gfDC3Sub').textContent = '—';
+  }
+
+  document.getElementById('gfDC4').textContent = fmtU(totalNet);
+  document.getElementById('gfDC4Sub').textContent = '已扣除優惠 · ≈ ' + fmtH(u2h(totalNet));
+
+  // Active button highlights
+  document.querySelectorAll('#page-gf .btn[data-gfct]').forEach(b => b.classList.toggle('primary', b.dataset.gfct === gfState.customerType));
+  document.querySelectorAll('#page-gf .btn[data-gfprepay]').forEach(b => b.classList.toggle('primary', +b.dataset.gfprepay === gfState.prepay));
+  document.getElementById('gfExtraDiscount').checked = gfState.extraDiscount;
+}
+
 function gfRender() {
   const fx = gfState.fxUsd;
   const usdAnnual = gfUsdAmount();
   const totalPaidUsd = usdAnnual * 5;
+  gfRenderDiscount(usdAnnual, fx);
   const totalPaidHkd = totalPaidUsd * fx;
   document.getElementById('gfTotalDisplay').textContent = gfState.ccy === 'HKD'
     ? 'HKD ' + Math.round(totalPaidHkd).toLocaleString() + '  (≈ US$ ' + Math.round(totalPaidUsd).toLocaleString() + ')'
@@ -1093,6 +1234,10 @@ document.getElementById('gfAmount').addEventListener('blur', e => { e.target.val
 document.getElementById('gfFx').addEventListener('input', e => { const v = +e.target.value; if (v >= 7.5 && v <= 8.0) { gfState.fxUsd = v; gfRender(); } });
 document.querySelectorAll('#page-gf .btn[data-mode]').forEach(b => b.addEventListener('click', () => { gfState.mode = b.dataset.mode; gfRender(); }));
 document.querySelectorAll('#page-gf .btn[data-sc]').forEach(b => b.addEventListener('click', () => { gfState.scenario = b.dataset.sc; gfRender(); }));
+// 銷售優惠 listeners
+document.querySelectorAll('#page-gf .btn[data-gfct]').forEach(b => b.addEventListener('click', () => { gfState.customerType = b.dataset.gfct; gfRender(); }));
+document.querySelectorAll('#page-gf .btn[data-gfprepay]').forEach(b => b.addEventListener('click', () => { gfState.prepay = +b.dataset.gfprepay; gfRender(); }));
+document.getElementById('gfExtraDiscount').addEventListener('change', e => { gfState.extraDiscount = e.target.checked; gfRender(); });
 
 function gfRenderPresets() {
   const el = document.getElementById('gfPresets');
