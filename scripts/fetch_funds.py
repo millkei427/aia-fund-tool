@@ -407,6 +407,9 @@ def fetch_dividend(code: str) -> dict | None:
                         if yld_col >= 0 and yld_col < len(cells):
                             m = re.search(r"\d+\.\d+", cells[yld_col])
                             if m: yld_val = float(m.group())
+                        # Sanity: 年度化 yield 通常 > 1%, 太細就唔 trust
+                        if yld_val is not None and yld_val < 1.0:
+                            yld_val = None
                         if month and div_val is not None and yld_val is not None:
                             return {"month": month, "dividendPerShare": div_val, "yieldPct": yld_val}
         # === Strategy 2: text-line regex (line-by-line, 揀最後一個 % 做 annualized yield) ===
@@ -441,9 +444,9 @@ def fetch_dividend(code: str) -> dict | None:
             if not div_match or not yld_matches:
                 continue
             div_val = float(div_match.group(1))
-            # 篩走 0.xx% (單期 yield 通常 < 2%)、保留 > 2% 嘅
-            big_ylds = [float(y) for y in yld_matches if float(y) >= 2.0]
-            yld_val = big_ylds[-1] if big_ylds else float(yld_matches[-1])
+            # 揀最後一個 >= 1% 嘅 % 做 annualized yield, 冇就視為冇 yield (let caller estimate)
+            big_ylds = [float(y) for y in yld_matches if float(y) >= 1.0]
+            yld_val = big_ylds[-1] if big_ylds else None
             return {"month": month, "dividendPerShare": div_val, "yieldPct": yld_val}
 
         # === Strategy 3: whole-text window (處理 cell 拆 line 嘅 PDF, eg Allianz 中文版) ===
@@ -501,7 +504,8 @@ def fetch_all_dividends(codes: set) -> dict:
         div = fetch_dividend(code)
         if div:
             result[code] = div
-            print(f"  ✓ {code}: {div['month']} 派息 ${div['dividendPerShare']:.6f} (年息 {div['yieldPct']:.2f}%)")
+            yld_str = f"{div['yieldPct']:.2f}%" if div.get('yieldPct') is not None else "估算"
+            print(f"  ✓ {code}: {div['month']} 派息 ${div['dividendPerShare']:.6f} (年息 {yld_str})")
         else:
             print(f"  ○ {code}: 冇派息 PDF / parse 失敗")
     print(f"\n  📊 派息抓取: {len(result)}/{len(codes)} 隻成功")
