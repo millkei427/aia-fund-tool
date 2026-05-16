@@ -1,7 +1,7 @@
 {
   "_comment": "卓達智悅基金資料 - 由 GitHub Actions 每星期日自動更新價格 + 派息率",
   "_source": "AIA 投資選擇資訊頁面 https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html",
-  "lastUpdated": "2026-05-17T07:35:15+08:00",
+  "lastUpdated": "2026-05-17T07:59:34+08:00",
   "lastPriceDate": "05/13/2026",
   "fxRate": 7.8,
   "funds": {
@@ -49,7 +49,7 @@
       "full": "路博邁 NB 新興市場債券 A",
       "cls": "固定收入-新興市場",
       "newPrice": 7.91,
-      "annYield": 0.0004,
+      "annYield": 0.0702,
       "risk": "低",
       "regionGroup": "新興市場",
       "r1": 11.6,
@@ -57,10 +57,10 @@
       "r5": 17.06,
       "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
       "latestDividendPerShare": 0.046275,
-      "latestYieldPct": 0.04,
+      "latestYieldPct": 7.02,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
-      "yieldEstimated": false
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
+      "yieldEstimated": true
     },
     "Z06": {
       "name": "柏瑞環球",
@@ -77,7 +77,7 @@
       "latestDividendPerShare": 0.0521,
       "latestYieldPct": 7.56,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z07": {
@@ -85,26 +85,36 @@
       "full": "安聯收益及增長 (AM)",
       "cls": "多元資產-美國",
       "newPrice": 8.8334,
-      "annYield": 0.08,
+      "annYield": 0.0747,
       "risk": "高",
       "regionGroup": "美國",
       "r1": 10.71,
       "r3": 32.43,
       "r5": 22.17,
-      "_lastPriceUpdate": "2026-05-17T04:34:16+08:00"
+      "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
+      "latestDividendPerShare": 0.055,
+      "dividendMonth": "Mar-26",
+      "latestYieldPct": 7.47,
+      "yieldEstimated": true,
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00"
     },
     "Z08": {
       "name": "安聯亞洲",
       "full": "安聯動力亞洲高收益債券 (AMg)",
       "cls": "固定收入-亞太區",
       "newPrice": 4.2993,
-      "annYield": 0.08,
+      "annYield": 0.0793,
       "risk": "高",
       "regionGroup": "亞太",
       "r1": 6.22,
       "r3": 22.43,
       "r5": -23.62,
-      "_lastPriceUpdate": "2026-05-17T04:34:16+08:00"
+      "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
+      "latestDividendPerShare": 0.02842,
+      "dividendMonth": "Mar-26",
+      "latestYieldPct": 7.93,
+      "yieldEstimated": true,
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00"
     },
     "Z11": {
       "name": "晉達中國債",
@@ -121,7 +131,7 @@
       "latestDividendPerShare": 0.0364,
       "latestYieldPct": 2.93,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z12": {
@@ -142,7 +152,7 @@
       "full": "富達美元高收益 A (G)",
       "cls": "固定收入-美國",
       "newPrice": 7.812,
-      "annYield": 0.0004,
+      "annYield": 0.0716,
       "risk": "高",
       "regionGroup": "美國",
       "r1": 6.75,
@@ -150,10 +160,10 @@
       "r5": 18.53,
       "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
       "latestDividendPerShare": 0.0466,
-      "latestYieldPct": 0.04,
+      "latestYieldPct": 7.16,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
-      "yieldEstimated": false
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
+      "yieldEstimated": true
     },
     "Z15": {
       "name": "霸菱環球高收益",
@@ -170,7 +180,7 @@
       "latestDividendPerShare": 0.57898,
       "latestYieldPct": 9.89,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z16": {
@@ -178,7 +188,7 @@
       "full": "滙豐亞洲高收益債券 AM2",
       "cls": "固定收入-亞太區",
       "newPrice": 4.67,
-      "annYield": 0.0003,
+      "annYield": 0.3554,
       "risk": "高",
       "regionGroup": "亞太",
       "r1": 3.36,
@@ -186,9 +196,9 @@
       "r5": -25.95,
       "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
       "latestDividendPerShare": 0.0287,
-      "latestYieldPct": 0.0287,
+      "latestYieldPct": 35.54,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z17": {
@@ -206,7 +216,7 @@
       "latestDividendPerShare": 0.0635,
       "latestYieldPct": 8.4,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z18": {
@@ -224,7 +234,7 @@
       "latestDividendPerShare": 0.067,
       "latestYieldPct": 8.33,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z20": {
@@ -245,7 +255,7 @@
       "full": "Capital International 全球公司債 Bfdm",
       "cls": "固定收入-環球",
       "newPrice": 10.7222,
-      "annYield": 0.0004,
+      "annYield": 0.0477,
       "risk": "低",
       "regionGroup": "環球",
       "r1": 4.14,
@@ -253,9 +263,9 @@
       "r5": null,
       "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
       "latestDividendPerShare": 0.0426,
-      "latestYieldPct": 0.0426,
+      "latestYieldPct": 4.77,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z31": {
@@ -299,7 +309,7 @@
       "latestDividendPerShare": 0.2267,
       "latestYieldPct": 5.7,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "Z51": {
@@ -364,7 +374,7 @@
       "latestDividendPerShare": 0.280095,
       "latestYieldPct": 5.0,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     },
     "ZP4": {
@@ -382,7 +392,7 @@
       "latestDividendPerShare": 0.0528,
       "latestYieldPct": 8.0,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T07:35:15+08:00",
+      "_lastDividendUpdate": "2026-05-17T07:59:18+08:00",
       "yieldEstimated": false
     }
   }
