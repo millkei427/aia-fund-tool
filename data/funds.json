@@ -1,7 +1,7 @@
 {
   "_comment": "卓達智悅基金資料 - 由 GitHub Actions 每星期日自動更新價格 + 派息率",
   "_source": "AIA 投資選擇資訊頁面 https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html",
-  "lastUpdated": "2026-05-17T08:18:34+08:00",
+  "lastUpdated": "2026-05-17T09:01:35+08:00",
   "lastPriceDate": "05/13/2026",
   "fxRate": 7.8,
   "funds": {
@@ -59,7 +59,7 @@
       "latestDividendPerShare": 0.046275,
       "latestYieldPct": 7.02,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": true
     },
     "Z06": {
@@ -77,7 +77,7 @@
       "latestDividendPerShare": 0.0521,
       "latestYieldPct": 7.56,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z07": {
@@ -97,7 +97,8 @@
       "latestYieldPct": 8.29,
       "manualYieldPct": 8.29,
       "_manualYieldNote": "Allianz 月報官方年度化股息收益率 (Mar-26). 自動爬唔到, 每月人手 update",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00"
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
+      "yieldEstimated": false
     },
     "Z08": {
       "name": "安聯亞洲",
@@ -115,7 +116,7 @@
       "dividendMonth": "Mar-26",
       "latestYieldPct": 7.93,
       "yieldEstimated": true,
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00"
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00"
     },
     "Z11": {
       "name": "晉達中國債",
@@ -132,7 +133,7 @@
       "latestDividendPerShare": 0.0364,
       "latestYieldPct": 2.93,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z12": {
@@ -163,7 +164,7 @@
       "latestDividendPerShare": 0.0466,
       "latestYieldPct": 7.16,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": true
     },
     "Z15": {
@@ -181,7 +182,7 @@
       "latestDividendPerShare": 0.57898,
       "latestYieldPct": 9.89,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z16": {
@@ -199,7 +200,7 @@
       "latestDividendPerShare": 0.0287,
       "latestYieldPct": 35.54,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z17": {
@@ -217,7 +218,7 @@
       "latestDividendPerShare": 0.0635,
       "latestYieldPct": 8.4,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z18": {
@@ -235,7 +236,7 @@
       "latestDividendPerShare": 0.067,
       "latestYieldPct": 8.33,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z20": {
@@ -266,7 +267,7 @@
       "latestDividendPerShare": 0.0426,
       "latestYieldPct": 4.77,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z31": {
@@ -310,7 +311,7 @@
       "latestDividendPerShare": 0.2267,
       "latestYieldPct": 5.7,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "Z51": {
@@ -375,7 +376,7 @@
       "latestDividendPerShare": 0.280095,
       "latestYieldPct": 5.0,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "ZP4": {
@@ -393,7 +394,7 @@
       "latestDividendPerShare": 0.0528,
       "latestYieldPct": 8.0,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
+      "_lastDividendUpdate": "2026-05-17T09:00:41+08:00",
       "yieldEstimated": false
     },
     "H01": {
@@ -405,7 +406,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     },
     "CG1": {
       "name": "Capital 新視野",
@@ -416,7 +420,10 @@
       "risk": "中",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     },
     "I07": {
       "name": "貝萊德世界黃金",
@@ -427,7 +434,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     },
     "I09": {
       "name": "貝萊德世界能源",
@@ -438,7 +448,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     },
     "P04": {
       "name": "安聯總回報亞洲",
@@ -449,7 +462,10 @@
       "risk": "高",
       "regionGroup": "亞太",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     },
     "W04": {
       "name": "東匯理美元貨幣",
@@ -460,7 +476,10 @@
       "risk": "低",
       "regionGroup": "美國",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     },
     "D14": {
       "name": "富蘭克林黃金貴金屬",
@@ -471,7 +490,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null, "r3": null, "r5": null
+      "r1": null,
+      "r3": null,
+      "r5": null,
+      "_lastReturnsUpdate": "2026-05-17T09:01:35+08:00"
     }
   }
 }
