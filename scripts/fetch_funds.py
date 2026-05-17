@@ -577,11 +577,15 @@ def main():
         old_yield = f.get("latestYieldPct")
         f["latestDividendPerShare"] = div["dividendPerShare"]
         f["dividendMonth"] = div["month"]
-        # yieldPct: PDF 有就用官方值, 冇就用 div×12/price 估算 (eg Allianz「派息成分」PDF)
-        if div.get("yieldPct") is not None:
+        # === Manual override 保護: 有 manualYieldPct 就用佢, 唔覆蓋 ===
+        if f.get("manualYieldPct") is not None:
+            f["latestYieldPct"] = f["manualYieldPct"]
+            f["yieldEstimated"] = False
+        elif div.get("yieldPct") is not None:
             f["latestYieldPct"] = div["yieldPct"]
             f["yieldEstimated"] = False
         else:
+            # 冇 PDF yield + 冇 manual → 用 div×12/price 估算
             price = f.get("newPrice", 0)
             if price > 0:
                 f["latestYieldPct"] = round(div["dividendPerShare"] * 12 / price * 100, 2)
@@ -591,32 +595,11 @@ def main():
         f["annYield"] = round(f["latestYieldPct"] / 100, 4)
         f["_lastDividendUpdate"] = hk_now()
         if old_yield != f["latestYieldPct"]:
-            mark = " (估算)" if f.get("yieldEstimated") else ""
+            mark = " (手動)" if f.get("manualYieldPct") else (" (估算)" if f.get("yieldEstimated") else "")
             div_updated.append(f"{code}: {old_yield}% → {f['latestYieldPct']}%{mark} ({div['month']})")
 
-    # === Phase 1: Allianz 月報攞官方 yield (取代估算) ===
-    try:
-        factsheet_urls = scrape_factsheet_urls(ALLIANZ_FUNDS)
-        for code, fs_url in factsheet_urls.items():
-            if code not in config["funds"]:
-                continue
-            print(f"  📄 解析 {code} 月報...")
-            fs_data = fetch_factsheet_dividend(code, fs_url)
-            if fs_data and fs_data.get("yieldPct"):
-                f = config["funds"][code]
-                old = f.get("latestYieldPct")
-                f["latestYieldPct"] = fs_data["yieldPct"]
-                f["latestDividendPerShare"] = fs_data["dividendPerShare"]
-                f["dividendMonth"] = fs_data["month"]
-                f["annYield"] = round(fs_data["yieldPct"] / 100, 4)
-                f["yieldEstimated"] = False
-                f["_lastDividendUpdate"] = hk_now()
-                div_updated.append(f"{code}: {old}% → {fs_data['yieldPct']}% (官方月報 {fs_data['month']})")
-                print(f"  ✓ {code}: {fs_data['yieldPct']}% (官方)")
-            else:
-                print(f"  ✗ {code}: 月報 parse 失敗")
-    except Exception as e:
-        print(f"⚠️  月報抓取失敗 (繼續): {e}")
+    # Phase 1 (Allianz factsheet scraping) 已棄用 — PDF 用 image font, pdfplumber 抽唔到
+    # 改用 manualYieldPct 人手 override (見 funds.json Z07 / Z08)
 
     config["lastUpdated"] = hk_now()
     if scraped.get("lastPriceDate"):

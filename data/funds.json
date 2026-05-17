@@ -85,7 +85,7 @@
       "full": "安聯收益及增長 (AM)",
       "cls": "多元資產-美國",
       "newPrice": 8.8334,
-      "annYield": 0.0747,
+      "annYield": 0.0829,
       "risk": "高",
       "regionGroup": "美國",
       "r1": 10.71,
@@ -94,8 +94,9 @@
       "_lastPriceUpdate": "2026-05-17T04:34:16+08:00",
       "latestDividendPerShare": 0.055,
       "dividendMonth": "Mar-26",
-      "latestYieldPct": 7.47,
-      "yieldEstimated": true,
+      "latestYieldPct": 8.29,
+      "manualYieldPct": 8.29,
+      "_manualYieldNote": "Allianz 月報官方年度化股息收益率 (Mar-26). 自動爬唔到, 每月人手 update",
       "_lastDividendUpdate": "2026-05-17T08:17:59+08:00"
     },
     "Z08": {
