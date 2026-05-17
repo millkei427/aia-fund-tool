@@ -15,6 +15,7 @@ import traceback
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from urllib.parse import urljoin
 
 try:
     import requests
@@ -240,8 +241,8 @@ def scrape_factsheet_urls(codes: set) -> dict:
                 if not detail_href:
                     print(f"  ✗ {code}: 喺 prices 表搵唔到 detail link")
                     continue
-                if detail_href.startswith("/"):
-                    detail_href = "https://www.aia.com.hk" + detail_href
+                # Resolve relative URL (might be "details.html?..." without leading /)
+                detail_href = urljoin(AIA_URL, detail_href)
                 # Navigate to detail page
                 try:
                     page.goto(detail_href, wait_until="networkidle", timeout=30000)
@@ -257,8 +258,7 @@ def scrape_factsheet_urls(codes: set) -> dict:
                         except Exception:
                             continue
                     if href:
-                        if href.startswith("/"):
-                            href = "https://www.aia.com.hk" + href
+                        href = urljoin(page.url, href)
                         result[code] = href
                         print(f"  ✓ {code}: {href.split('/')[-1]}")
                     else:
