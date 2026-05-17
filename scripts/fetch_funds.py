@@ -228,12 +228,37 @@ def scrape_growth_returns(codes: set) -> dict:
                 pass
         page.on("response", on_response)
 
+        all_xhr_urls = []
+        def on_response_log(resp):
+            try:
+                if resp.request.resource_type in ("xhr", "fetch"):
+                    all_xhr_urls.append((resp.url, resp.status, resp.headers.get("content-type", "")))
+            except Exception:
+                pass
+        page.on("response", on_response_log)
+
         for code in sorted(codes):
             url = DETAIL_URL_FMT.format(code=code)
             try:
                 captured.clear()
+                all_xhr_urls.clear()
                 page.goto(url, wait_until="networkidle", timeout=30000)
                 page.wait_for_timeout(5000)
+                # Debug: dump first fund's XHR list
+                if code == sorted(codes)[0]:
+                    try:
+                        debug_dir = REPO_ROOT / "scripts" / "_debug_dividends"
+                        debug_dir.mkdir(exist_ok=True)
+                        lines = [f"=== {code} XHR captured ({len(all_xhr_urls)}) ==="]
+                        for u, st, ct in all_xhr_urls:
+                            lines.append(f"[{st}] {ct[:40]} | {u}")
+                        # 同時 dump 任何 JSON body 嘅前 800 chars
+                        lines.append("\n=== JSON bodies (first 800 chars each) ===")
+                        for u, b in list(captured.items())[:5]:
+                            lines.append(f"\n--- {u} ---\n{b[:800]}")
+                        (debug_dir / f"{code}_detail_xhr.txt").write_text("\n".join(lines), encoding="utf-8")
+                    except Exception:
+                        pass
                 # 嘗試㩒「All」按鈕令全部歷史數據 load 落 chart (各種 selector + JS click 都試)
                 clicked = False
                 for label in ["All", "全部", "5Y", "5年"]:
