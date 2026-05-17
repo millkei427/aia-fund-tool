@@ -1829,8 +1829,13 @@ async function init() {
       const metaEl = document.querySelector('.header .meta');
       if (metaEl && data.lastPriceDate) {
         const updTime = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('zh-HK', { timeZone: 'Asia/Hong_Kong' }) : '';
-        // 從 funds 攞最新派息月份（揀第一個有 dividendMonth 嘅）
-        const divMonth = Object.values(data.funds || {}).map(f => f.dividendMonth).filter(Boolean)[0];
+        // 從 funds 攞最新派息月份（揀所有 funds 入面 max date）
+        const monNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const allMonths = Object.values(data.funds || {}).map(f => f.dividendMonth).filter(Boolean);
+        const divMonth = allMonths.length ? allMonths.sort((a, b) => {
+          const [ma, ya] = a.split('-'); const [mb, yb] = b.split('-');
+          return (+yb - +ya) || (monNames.indexOf(mb) - monNames.indexOf(ma));
+        })[0] : null;
         const divPart = divMonth ? ' &nbsp;|&nbsp; 💰 派息: ' + divMonth : '';
         metaEl.innerHTML = '🔄 AIA 官方最新基金價格: ' + data.lastPriceDate + divPart + ' &nbsp;|&nbsp; 📡 自動同步: ' + updTime;
       }
