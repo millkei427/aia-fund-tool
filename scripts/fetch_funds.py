@@ -234,15 +234,40 @@ def scrape_growth_returns(codes: set) -> dict:
                 captured.clear()
                 page.goto(url, wait_until="networkidle", timeout=30000)
                 page.wait_for_timeout(5000)
-                # 嘗試㩒「5Y」按鈕令全部 5 年數據 load 落 chart
-                for sel in ["button:has-text('5Y')", "button:has-text('All')", "a:has-text('5Y')"]:
+                # 嘗試㩒「All」按鈕令全部歷史數據 load 落 chart (各種 selector + JS click 都試)
+                clicked = False
+                for label in ["All", "全部", "5Y", "5年"]:
+                    if clicked: break
+                    for sel in [f"button:has-text('{label}')", f"a:has-text('{label}')", f"*[role='button']:has-text('{label}')"]:
+                        try:
+                            els = page.locator(sel).all()
+                            for el in els:
+                                if el.is_visible(timeout=1000):
+                                    el.click(timeout=3000, force=True)
+                                    clicked = True
+                                    break
+                            if clicked: break
+                        except Exception:
+                            continue
+                # JS fallback: 揾所有 button/a 文字內容並 click
+                if not clicked:
                     try:
-                        b = page.locator(sel).first
-                        if b.count() > 0 and b.is_visible(timeout=1500):
-                            b.click(timeout=3000); page.wait_for_timeout(2500)
-                            break
+                        clicked = page.evaluate("""
+                            () => {
+                                for (const el of document.querySelectorAll('button, a, [role="button"]')) {
+                                    const t = (el.textContent || '').trim();
+                                    if (t === 'All' || t === '全部' || t === '5Y') {
+                                        el.click();
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        """)
                     except Exception:
-                        continue
+                        pass
+                # 等 chart reload — XHR + render
+                page.wait_for_timeout(6000)
                 # Method 1: JS evaluate to find chart instance
                 series = page.evaluate("""
                     () => {
@@ -346,8 +371,11 @@ def scrape_growth_returns(codes: set) -> dict:
                             return round((today_price - pr) / pr * 100, 2)
                     return None
                 rs = {"r1": pct_change(1), "r3": pct_change(3), "r5": pct_change(5)}
+                # Time span check
+                span_days = (today_ts - pts[0][0]) / 86400000
                 result[code] = rs
-                print(f"  ✓ {code}: 1Y={rs['r1']} 3Y={rs['r3']} 5Y={rs['r5']} (源: {len(pts)} 個 data points)")
+                hint = "" if span_days >= 365 * 5 else f" ⚠️ 只有 {span_days:.0f} 日數據, click 'All' 可能 fail"
+                print(f"  ✓ {code}: 1Y={rs['r1']} 3Y={rs['r3']} 5Y={rs['r5']} (源: {len(pts)} 個 data points, ~{span_days:.0f} 日){hint}")
             except Exception as e:
                 print(f"  ✗ {code}: {e}")
         browser.close()
