@@ -1,7 +1,7 @@
 {
   "_comment": "卓達智悅基金資料 - 由 GitHub Actions 每星期日自動更新價格 + 派息率",
   "_source": "AIA 投資選擇資訊頁面 https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html",
-  "lastUpdated": "2026-05-17T08:10:18+08:00",
+  "lastUpdated": "2026-05-17T08:18:34+08:00",
   "lastPriceDate": "05/13/2026",
   "fxRate": 7.8,
   "funds": {
@@ -59,7 +59,7 @@
       "latestDividendPerShare": 0.046275,
       "latestYieldPct": 7.02,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": true
     },
     "Z06": {
@@ -77,7 +77,7 @@
       "latestDividendPerShare": 0.0521,
       "latestYieldPct": 7.56,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z07": {
@@ -96,7 +96,7 @@
       "dividendMonth": "Mar-26",
       "latestYieldPct": 7.47,
       "yieldEstimated": true,
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00"
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00"
     },
     "Z08": {
       "name": "安聯亞洲",
@@ -114,7 +114,7 @@
       "dividendMonth": "Mar-26",
       "latestYieldPct": 7.93,
       "yieldEstimated": true,
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00"
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00"
     },
     "Z11": {
       "name": "晉達中國債",
@@ -131,7 +131,7 @@
       "latestDividendPerShare": 0.0364,
       "latestYieldPct": 2.93,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z12": {
@@ -162,7 +162,7 @@
       "latestDividendPerShare": 0.0466,
       "latestYieldPct": 7.16,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": true
     },
     "Z15": {
@@ -180,7 +180,7 @@
       "latestDividendPerShare": 0.57898,
       "latestYieldPct": 9.89,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z16": {
@@ -198,7 +198,7 @@
       "latestDividendPerShare": 0.0287,
       "latestYieldPct": 35.54,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z17": {
@@ -216,7 +216,7 @@
       "latestDividendPerShare": 0.0635,
       "latestYieldPct": 8.4,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z18": {
@@ -234,7 +234,7 @@
       "latestDividendPerShare": 0.067,
       "latestYieldPct": 8.33,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z20": {
@@ -265,7 +265,7 @@
       "latestDividendPerShare": 0.0426,
       "latestYieldPct": 4.77,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z31": {
@@ -309,7 +309,7 @@
       "latestDividendPerShare": 0.2267,
       "latestYieldPct": 5.7,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "Z51": {
@@ -374,7 +374,7 @@
       "latestDividendPerShare": 0.280095,
       "latestYieldPct": 5.0,
       "dividendMonth": "Feb-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     },
     "ZP4": {
@@ -392,7 +392,7 @@
       "latestDividendPerShare": 0.0528,
       "latestYieldPct": 8.0,
       "dividendMonth": "Mar-26",
-      "_lastDividendUpdate": "2026-05-17T08:09:52+08:00",
+      "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
     }
   }
