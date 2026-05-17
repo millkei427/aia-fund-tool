@@ -196,6 +196,164 @@ DIVIDEND_PDF_URL = "https://www.aia.com.hk/content/dam/hk/zh-hk/pdf/dividend-com
 # Allianz 系列嘅「派息成分」PDF 冇 yield 欄, 需要去 fund detail 頁攞「基金月報」PDF URL
 ALLIANZ_FUNDS = {"Z07", "Z08"}
 
+# === 增長型基金 (非派息) — 由 detail 頁 chart 攞歷史回報 ===
+GROWTH_FUNDS = {"H01", "CG1", "I07", "I09", "P04", "W04", "D14"}
+DETAIL_URL_FMT = "https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices/details.html?id={code}&cat=TMP2&lang=zh"
+
+
+def scrape_growth_returns(codes: set) -> dict:
+    """Navigate detail page → extract chart price history → compute 1/3/5 yr returns"""
+    if not codes:
+        return {}
+    print(f"\n[{hk_now()}] 抓增長型基金歷史回報: {sorted(codes)}")
+    result = {}
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        ctx = browser.new_context(
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            locale="zh-HK",
+            viewport={"width": 1440, "height": 900},
+        )
+        page = ctx.new_page()
+        captured = {}
+        # 捕獲所有 XHR JSON response (chart data 通常用 XHR)
+        def on_response(resp):
+            try:
+                ct = resp.headers.get("content-type", "")
+                if "json" in ct.lower() or resp.url.endswith(".json"):
+                    body = resp.body()
+                    if body and 100 < len(body) < 2_000_000:
+                        captured[resp.url] = body.decode("utf-8", errors="ignore")
+            except Exception:
+                pass
+        page.on("response", on_response)
+
+        for code in sorted(codes):
+            url = DETAIL_URL_FMT.format(code=code)
+            try:
+                captured.clear()
+                page.goto(url, wait_until="networkidle", timeout=30000)
+                page.wait_for_timeout(5000)
+                # 嘗試㩒「5Y」按鈕令全部 5 年數據 load 落 chart
+                for sel in ["button:has-text('5Y')", "button:has-text('All')", "a:has-text('5Y')"]:
+                    try:
+                        b = page.locator(sel).first
+                        if b.count() > 0 and b.is_visible(timeout=1500):
+                            b.click(timeout=3000); page.wait_for_timeout(2500)
+                            break
+                    except Exception:
+                        continue
+                # Method 1: JS evaluate to find chart instance
+                series = page.evaluate("""
+                    () => {
+                        const tryArrays = [];
+                        // Highcharts
+                        if (window.Highcharts && Highcharts.charts) {
+                            for (const c of Highcharts.charts) {
+                                if (!c || !c.series) continue;
+                                for (const s of c.series) {
+                                    if (!s || !s.data || s.data.length < 10) continue;
+                                    tryArrays.push(s.data.map(p => {
+                                        if (p && p.x !== undefined) return [p.x, p.y];
+                                        if (Array.isArray(p) && p.length >= 2) return [p[0], p[1]];
+                                        return null;
+                                    }).filter(Boolean));
+                                }
+                            }
+                        }
+                        // ECharts
+                        if (window.echarts && document.querySelectorAll) {
+                            for (const el of document.querySelectorAll('[_echarts_instance_]')) {
+                                try {
+                                    const inst = echarts.getInstanceByDom(el);
+                                    const opt = inst && inst.getOption();
+                                    if (opt && opt.series) {
+                                        for (const s of opt.series) {
+                                            if (s.data && s.data.length > 10) {
+                                                tryArrays.push(s.data.map(p => Array.isArray(p) ? [p[0], p[1]] : [null, p]).filter(p => p[0]));
+                                            }
+                                        }
+                                    }
+                                } catch(e){}
+                            }
+                        }
+                        // Pick longest array
+                        if (tryArrays.length === 0) return null;
+                        tryArrays.sort((a,b) => b.length - a.length);
+                        return tryArrays[0];
+                    }
+                """)
+                # Method 2 fallback: parse captured XHR JSON for date/price arrays
+                if not series:
+                    for url_c, body in captured.items():
+                        try:
+                            import json as _json
+                            data = _json.loads(body)
+                            # Try common shapes
+                            candidates = []
+                            def walk(obj, depth=0):
+                                if depth > 5: return
+                                if isinstance(obj, list) and len(obj) > 30:
+                                    if all(isinstance(x, (list, dict)) for x in obj[:5]):
+                                        candidates.append(obj)
+                                elif isinstance(obj, dict):
+                                    for v in obj.values():
+                                        walk(v, depth+1)
+                            walk(data)
+                            if candidates:
+                                candidates.sort(key=len, reverse=True)
+                                best = candidates[0]
+                                normalized = []
+                                for item in best:
+                                    if isinstance(item, list) and len(item) >= 2:
+                                        normalized.append([item[0], item[1]])
+                                    elif isinstance(item, dict):
+                                        ts = item.get("x") or item.get("date") or item.get("t")
+                                        v = item.get("y") or item.get("price") or item.get("v") or item.get("value")
+                                        if ts and v: normalized.append([ts, v])
+                                if len(normalized) > 30:
+                                    series = normalized
+                                    break
+                        except Exception:
+                            continue
+                if not series or len(series) < 30:
+                    print(f"  ✗ {code}: chart data 攞唔到 (captured {len(captured)} XHR)")
+                    continue
+                # Normalize: timestamp might be ms or seconds
+                pts = []
+                for p in series:
+                    try:
+                        ts = float(p[0]); price = float(p[1])
+                        if ts > 1e12:  # already ms
+                            pass
+                        elif ts > 1e9:  # seconds → ms
+                            ts *= 1000
+                        else:
+                            continue  # weird value
+                        pts.append((ts, price))
+                    except Exception:
+                        continue
+                if len(pts) < 30:
+                    print(f"  ✗ {code}: normalized 太少 ({len(pts)})")
+                    continue
+                pts.sort()
+                today_ts = pts[-1][0]
+                today_price = pts[-1][1]
+                def pct_change(years_ago):
+                    target = today_ts - years_ago * 365.25 * 86400 * 1000
+                    for ts, pr in reversed(pts):
+                        if ts <= target and pr > 0:
+                            return round((today_price - pr) / pr * 100, 2)
+                    return None
+                rs = {"r1": pct_change(1), "r3": pct_change(3), "r5": pct_change(5)}
+                result[code] = rs
+                print(f"  ✓ {code}: 1Y={rs['r1']} 3Y={rs['r3']} 5Y={rs['r5']} (源: {len(pts)} 個 data points)")
+            except Exception as e:
+                print(f"  ✗ {code}: {e}")
+        browser.close()
+    print(f"  📊 歷史回報抓取: {len(result)}/{len(codes)} 隻成功")
+    return result
+
 
 def scrape_factsheet_urls(codes: set) -> dict:
     """用 Playwright 由 AIA detail 頁攞每隻 fund 嘅「基金月報」PDF URL"""
@@ -601,6 +759,20 @@ def main():
 
     # Phase 1 (Allianz factsheet scraping) 已棄用 — PDF 用 image font, pdfplumber 抽唔到
     # 改用 manualYieldPct 人手 override (見 funds.json Z07 / Z08)
+
+    # === 增長型基金歷史回報 (Playwright 由 chart 攞 + 計 1/3/5 yr) ===
+    try:
+        growth_returns = scrape_growth_returns(GROWTH_FUNDS)
+        for code, rs in growth_returns.items():
+            if code not in config["funds"]:
+                continue
+            f = config["funds"][code]
+            for k in ("r1", "r3", "r5"):
+                if rs.get(k) is not None:
+                    f[k] = rs[k]
+            f["_lastReturnsUpdate"] = hk_now()
+    except Exception as e:
+        print(f"⚠️  增長型回報抓取失敗 (繼續): {e}")
 
     config["lastUpdated"] = hk_now()
     if scraped.get("lastPriceDate"):
