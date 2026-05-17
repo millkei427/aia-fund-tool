@@ -51,7 +51,8 @@ def parse_table_rows(page, expected_codes: set) -> dict:
             if len(cells) < 6:
                 continue
             code = cells[1].inner_text().strip()
-            if not code or not code.startswith("Z"):
+            # 接受 prefix: Z (派息) + H/CG/I/P/W/D (增長型) — 即係 expected_codes 包含嘅都收
+            if not code or code not in expected_codes:
                 continue
             price_text = cells[3].inner_text().strip().replace(" ", "")
             m = re.search(r"(美元|港元|歐元|英鎊|人民幣)([\d.]+)", price_text)

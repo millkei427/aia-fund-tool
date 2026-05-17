@@ -395,6 +395,83 @@
       "dividendMonth": "Mar-26",
       "_lastDividendUpdate": "2026-05-17T08:17:59+08:00",
       "yieldEstimated": false
+    },
+    "H01": {
+      "name": "駿利環球科技",
+      "full": "駿利亨德森遠見 - 環球科技領先基金 A2",
+      "cls": "股票-科技",
+      "newPrice": 336.96,
+      "annYield": 0,
+      "risk": "高",
+      "regionGroup": "環球",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
+    },
+    "CG1": {
+      "name": "Capital 新視野",
+      "full": "Capital International - Capital Group 新視野 (盧森堡) B 美元",
+      "cls": "股票-環球",
+      "newPrice": 30.021,
+      "annYield": 0,
+      "risk": "中",
+      "regionGroup": "環球",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
+    },
+    "I07": {
+      "name": "貝萊德世界黃金",
+      "full": "貝萊德全球基金 - 貝萊德世界黃金基金 A2",
+      "cls": "股票-黃金",
+      "newPrice": 111.26,
+      "annYield": 0,
+      "risk": "高",
+      "regionGroup": "環球",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
+    },
+    "I09": {
+      "name": "貝萊德世界能源",
+      "full": "貝萊德全球基金 - 貝萊德世界能源基金 A2",
+      "cls": "股票-能源",
+      "newPrice": 34.33,
+      "annYield": 0,
+      "risk": "高",
+      "regionGroup": "環球",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
+    },
+    "P04": {
+      "name": "安聯總回報亞洲",
+      "full": "安聯總回報亞洲股票基金 AT",
+      "cls": "股票-亞太",
+      "newPrice": 69.1653,
+      "annYield": 0,
+      "risk": "高",
+      "regionGroup": "亞太",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
+    },
+    "W04": {
+      "name": "東匯理美元貨幣",
+      "full": "東方匯理系列 - 美元貨幣市場基金 A2 美元類",
+      "cls": "貨幣市場-美國",
+      "newPrice": 129.78,
+      "annYield": 0,
+      "risk": "低",
+      "regionGroup": "美國",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
+    },
+    "D14": {
+      "name": "富蘭克林黃金貴金屬",
+      "full": "富蘭克林鄧普頓 - 富蘭克林黃金及貴金屬基金 A股 (累算)",
+      "cls": "股票-貴金屬",
+      "newPrice": 22.26,
+      "annYield": 0,
+      "risk": "高",
+      "regionGroup": "環球",
+      "type": "growth",
+      "r1": null, "r3": null, "r5": null
     }
   }
 }

@@ -12,7 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="AIA基金">
-<title>AIA 銷售工具・卓達智悅基金 + 環宇盈活儲蓄 v3.5</title>
+<title>AIA 銷售工具・卓達智悅基金 + 環宇盈活儲蓄 v3.7</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
 <style>
 :root { color-scheme: light; }
@@ -202,7 +202,7 @@ table.funds tr:hover td { background: #fbfcfe; }
 </head>
 <body>
 <div class="wrap">
-<div class="header"><h1>AIA 銷售工具 v3.5</h1><div class="sub">📊 卓達智悅基金分析 · 💰 環宇盈活儲蓄 · 🛡️ 愛伴航 2 危疾 · 客戶管理 · HKD/RMB/USD 多幣</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
+<div class="header"><h1>AIA 銷售工具 v3.7</h1><div class="sub">📊 卓達智悅基金分析 · 💰 環宇盈活儲蓄 · 🛡️ 愛伴航 2 危疾 · 客戶管理 · HKD/RMB/USD 多幣</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
 <div class="action-bar">
   <button class="btn-action solid" id="btnOpenClients">👥 客戶管理 <span class="client-pill" id="clientCountPill" style="display:none">0</span></button>
   <button class="btn-action" id="btnSaveScenario">💾 保存目前方案</button>
@@ -225,9 +225,9 @@ table.funds tr:hover td { background: #fbfcfe; }
 </div>
 <div id="page-fund">
 <div class="section"><div class="label-bar"><span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span><div class="fx-group"><div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0"></div><div class="fx-control"><span>HKD/CNY 匯率</span><input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00"></div></div></div><div class="amount-row"><input type="text" class="amount-input" id="amountInput" value="2,000,000"><span class="ccy-label">HKD</span><span class="equals-sign">=</span><span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span><span class="ccy-label">人民幣</span></div><div class="preset-chips" id="presets"></div></div>
-<div class="tabs"><div class="tab active" data-port="A">🎯 組合 A · 集中型</div><div class="tab" data-port="B">🌐 組合 B · 分散型</div><div class="tab" data-port="NA">🇺🇸 北美市場</div><div class="tab" data-port="ASIA">🌏 亞洲市場</div><div class="tab" data-port="TECH">💻 科技類</div><div class="tab" data-port="CONS">🛒 消費類</div><div class="tab" data-port="C">⚙️ 自選</div></div>
+<div class="tabs"><div class="tab active" data-port="A">🎯 組合 A · 集中型</div><div class="tab" data-port="B">🌐 組合 B · 分散型</div><div class="tab" data-port="NA">🇺🇸 北美市場</div><div class="tab" data-port="ASIA">🌏 亞洲市場</div><div class="tab" data-port="TECH">💻 科技類</div><div class="tab" data-port="CONS">🛒 消費類</div><div class="tab" data-port="MIX">⚡ 混合型 (派息+增長)</div><div class="tab" data-port="C">⚙️ 自選</div></div>
 <div class="section"><div class="summary-row"><div class="metric hero"><div class="label">每月派息</div><div class="value" id="sumMonthly">—</div><div class="sub-value" id="sumMonthlyRmb">≈ ¥ —</div></div><div class="metric"><div class="label">每年回報</div><div class="value" id="sumAnnual">—</div><div class="sub-value" id="sumAnnualRmb">≈ ¥ —</div></div><div class="metric"><div class="label">派息利率</div><div class="value" id="sumYield">—</div></div><div class="metric"><div class="label">已選基金</div><div class="value" id="sumCount">—</div></div></div>
-<div id="builderArea" style="display:none"><div class="section-title" style="margin-top:8px">⚙️ 自訂基金組合 (24 隻 USD Z 字頭基金可選)</div><div class="builder-controls"><button class="btn primary" id="btnSelectAll">全選</button><button class="btn" id="btnDeselectAll">全部清除</button><button class="btn" id="btnEqualize">平均分配</button><button class="btn" id="btnNormalize">自動湊夠 100%</button><span class="preset-divider"></span><span class="preset-label">📦 載入預設:</span><button class="btn" id="btnLoadA">組合 A</button><button class="btn" id="btnLoadB">組合 B</button><button class="btn theme-na" id="btnLoadNA">🇺🇸 北美</button><button class="btn theme-asia" id="btnLoadASIA">🌏 亞洲</button><button class="btn theme-tech" id="btnLoadTECH">💻 科技</button><button class="btn theme-cons" id="btnLoadCONS">🛒 消費</button></div>
+<div id="builderArea" style="display:none"><div class="section-title" style="margin-top:8px">⚙️ 自訂基金組合 (31 隻 USD 基金 · 派息 + 增長型)</div><div class="builder-controls"><button class="btn primary" id="btnSelectAll">全選</button><button class="btn" id="btnDeselectAll">全部清除</button><button class="btn" id="btnEqualize">平均分配</button><button class="btn" id="btnNormalize">自動湊夠 100%</button><span class="preset-divider"></span><span class="preset-label">📦 載入預設:</span><button class="btn" id="btnLoadA">組合 A</button><button class="btn" id="btnLoadB">組合 B</button><button class="btn theme-na" id="btnLoadNA">🇺🇸 北美</button><button class="btn theme-asia" id="btnLoadASIA">🌏 亞洲</button><button class="btn theme-tech" id="btnLoadTECH">💻 科技</button><button class="btn theme-cons" id="btnLoadCONS">🛒 消費</button><button class="btn" id="btnLoadMIX" style="background:#fef3c7;border-color:#fcd34d;color:#92400e">⚡ 混合型</button></div>
 <div style="overflow-x:auto"><table class="builder-table"><thead><tr><th></th><th>代號</th><th>基金名稱</th><th>資產類別</th><th>派息率</th><th>價格 (USD)</th><th>風險</th><th>1年</th><th>3年</th><th>5年</th><th>比例 (%)</th></tr></thead><tbody id="builderBody"></tbody></table></div>
 <div class="total-bar" id="totalBar"><span>合計比例</span><div class="progress"><div class="progress-fill" id="progressFill"></div></div><span class="total-text" id="totalText">0%</span></div></div></div>
 <div class="proj-card"><h3>📅 多年累積派息模擬 (HKD / 人民幣 雙幣顯示)</h3><div class="proj-grid" id="projGrid"></div><div class="toggle-row"><label><input type="checkbox" id="toggleReinvest"> 假設派息再投入 (按目前派息率複利)</label><span class="tiny">※ 模擬假設派息率不變</span></div></div>
@@ -511,7 +511,15 @@ let FUNDS = {
   Z52: { name:"友邦美高收益", full:"友邦美國高收益債券 (RDM)", cls:"固定收入-美國", newPrice:10.0501, annYield:0.07, risk:"高", regionGroup:"美國", r1:5.83, r3:null, r5:null },
   Z69: { name:"安本新興市場債", full:"安本新興市場公司債券 A 加速派息", cls:"固定收入-新興市場", newPrice:9.9384, annYield:0.05, risk:"低", regionGroup:"新興市場", r1:null, r3:null, r5:null },
   ZL1: { name:"FTGF亞洲機會債", full:"FTGF 西方資產亞洲機會債券 A (M)", cls:"固定收入-亞太區", newPrice:62, annYield:0.05, risk:"低", regionGroup:"亞太", r1:0.78, r3:5.09, r5:-1.51 },
-  ZP4: { name:"信安優先證券", full:"信安優先證券基金 D2", cls:"固定收入-環球", newPrice:8.35, annYield:0.08, risk:"低", regionGroup:"環球", r1:5.19, r3:24.27, r5:12.81 }
+  ZP4: { name:"信安優先證券", full:"信安優先證券基金 D2", cls:"固定收入-環球", newPrice:8.35, annYield:0.08, risk:"低", regionGroup:"環球", r1:5.19, r3:24.27, r5:12.81 },
+  // === 增長型 (非派息) ===
+  H01: { name:"駿利環球科技", full:"駿利亨德森遠見 - 環球科技領先基金 A2", cls:"股票-科技", newPrice:336.96, annYield:0, risk:"高", regionGroup:"環球", type:"growth", r1:null, r3:null, r5:null },
+  CG1: { name:"Capital 新視野", full:"Capital International - Capital Group 新視野 (盧森堡) B 美元", cls:"股票-環球", newPrice:30.021, annYield:0, risk:"中", regionGroup:"環球", type:"growth", r1:null, r3:null, r5:null },
+  I07: { name:"貝萊德世界黃金", full:"貝萊德全球基金 - 貝萊德世界黃金基金 A2", cls:"股票-黃金", newPrice:111.26, annYield:0, risk:"高", regionGroup:"環球", type:"growth", r1:null, r3:null, r5:null },
+  I09: { name:"貝萊德世界能源", full:"貝萊德全球基金 - 貝萊德世界能源基金 A2", cls:"股票-能源", newPrice:34.33, annYield:0, risk:"高", regionGroup:"環球", type:"growth", r1:null, r3:null, r5:null },
+  P04: { name:"安聯亞洲總回報", full:"安聯總回報亞洲股票基金 AT", cls:"股票-亞太", newPrice:69.1653, annYield:0, risk:"高", regionGroup:"亞太", type:"growth", r1:null, r3:null, r5:null },
+  W04: { name:"東匯理美元貨幣", full:"東方匯理系列 - 美元貨幣市場基金 A2 美元類", cls:"貨幣市場-美國", newPrice:129.78, annYield:0, risk:"低", regionGroup:"美國", type:"growth", r1:null, r3:null, r5:null },
+  D14: { name:"富蘭克林黃金貴金屬", full:"富蘭克林鄧普頓 - 富蘭克林黃金及貴金屬基金 A股 (累算)", cls:"股票-貴金屬", newPrice:22.26, annYield:0, risk:"高", regionGroup:"環球", type:"growth", r1:null, r3:null, r5:null }
 };
 
 const PORTFOLIOS = {
@@ -520,7 +528,9 @@ const PORTFOLIOS = {
   NA: { alloc:{ Z07:25, Z17:25, Z18:20, Z13:15, Z52:15 } },
   ASIA: { alloc:{ Z03:25, Z01:20, Z08:20, Z16:20, Z04:15 } },
   TECH: { alloc:{ Z07:40, Z17:35, Z01:15, Z18:10 } },
-  CONS: { alloc:{ Z16:25, Z17:25, Z03:20, Z08:15, Z13:15 } }
+  CONS: { alloc:{ Z16:25, Z17:25, Z03:20, Z08:15, Z13:15 } },
+  // 混合型: 派息 + 增長 各 50%
+  MIX: { alloc:{ Z07:20, Z17:20, Z15:10, H01:20, CG1:10, I07:10, P04:10 } }
 };
 let amount = 2000000, fx = 7.80, fxRmb = 0.92, activeTab = "A", reinvest = false;
 let customAlloc = { ...PORTFOLIOS.A.alloc };
@@ -565,15 +575,18 @@ function renderBuilder() {
   body.innerHTML = Object.keys(FUNDS).map(code => {
     const f = FUNDS[code];
     const checked = customAlloc[code] !== undefined && customAlloc[code] > 0;
-    // 派息率優先用 AIA 官方「年度化股息收益率」, 冇就 fallback 自己算
-    const yld = (f.latestYieldPct != null ? f.latestYieldPct : (f.div * 12 / f.newPrice * 100)).toFixed(2);
+    // 派息率: 增長型顯示 "—", 派息型用官方 yield 或 fallback 自己算
+    const isGrowth = f.type === "growth";
+    const yld = isGrowth ? "—" :
+      ((f.latestYieldPct != null ? f.latestYieldPct : (f.div * 12 / f.newPrice * 100)).toFixed(2) + "%");
+    const typeTag = isGrowth ? ' <span style="background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:700">增長</span>' : '';
     const rc = f.risk === "低" ? "risk-low" : f.risk === "中" ? "risk-mid" : "risk-high";
     return '<tr class="' + (checked ? '' : 'disabled') + '" data-code="' + code + '">' +
       '<td><input type="checkbox" data-code="' + code + '" ' + (checked ? 'checked' : '') + '></td>' +
-      '<td><span class="code-pill">' + code + '</span></td>' +
+      '<td><span class="code-pill">' + code + '</span>' + typeTag + '</td>' +
       '<td><strong>' + f.name + '</strong></td>' +
       '<td><span class="cls-tag">' + f.cls + '</span></td>' +
-      '<td>' + yld + '%</td>' +
+      '<td>' + yld + '</td>' +
       '<td>' + f.newPrice.toFixed(4) + '</td>' +
       '<td class="' + rc + '">' + f.risk + '</td>' +
       '<td class="' + retClass(f.r1) + '">' + fmtRet(f.r1) + '</td>' +
@@ -630,6 +643,7 @@ document.getElementById("btnLoadNA").onclick = loadPreset("NA");
 document.getElementById("btnLoadASIA").onclick = loadPreset("ASIA");
 document.getElementById("btnLoadTECH").onclick = loadPreset("TECH");
 document.getElementById("btnLoadCONS").onclick = loadPreset("CONS");
+document.getElementById("btnLoadMIX").onclick = loadPreset("MIX");
 document.getElementById("btnNormalize").onclick = () => {
   const total = Object.values(customAlloc).reduce((s,x)=>s+(+x||0), 0);
   if (total <= 0) return;
@@ -693,21 +707,23 @@ function renderTable(port) {
     document.getElementById("fundBody").innerHTML = '<tr><td colspan="13" style="text-align:center;padding:30px;color:#8a96a8">請於上方自選組合區揀基金</td></tr>';
     return;
   }
-  document.getElementById("fundBody").innerHTML = port.items.map(x =>
-    '<tr><td><span class="code-pill">' + x.code + '</span></td>' +
+  document.getElementById("fundBody").innerHTML = port.items.map(x => {
+    const isGrowth = x.type === "growth";
+    const typeTag = isGrowth ? ' <span style="background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:3px;font-size:9.5px;font-weight:700">增長</span>' : '';
+    return '<tr><td><span class="code-pill">' + x.code + '</span>' + typeTag + '</td>' +
     '<td><strong>' + x.name + '</strong><div class="tiny">' + x.full + '</div></td>' +
     '<td><span class="cls-tag">' + x.cls + '</span></td>' +
     '<td><strong>' + (x.weight*100).toFixed(1) + '%</strong></td>' +
     '<td>' + fmtHKD(x.allocHKD) + '</td>' +
     '<td>' + x.newPrice.toFixed(4) + '</td>' +
-    '<td><strong>' + fmtPct(x.yield_) + '</strong></td>' +
-    '<td><strong>' + fmtHKD(x.monthlyHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(x.monthlyHKD * fxRmb) + '</div></td>' +
-    '<td><strong style="color:#c8102e">' + fmtHKD(x.annualHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(x.annualHKD * fxRmb) + '</div></td>' +
+    '<td><strong>' + (isGrowth ? "—" : fmtPct(x.yield_)) + '</strong></td>' +
+    '<td><strong>' + (isGrowth ? "—" : fmtHKD(x.monthlyHKD)) + '</strong>' + (isGrowth ? '' : '<div class="tiny" style="color:#d97706">≈ ' + fmtRMB(x.monthlyHKD * fxRmb) + '</div>') + '</td>' +
+    '<td><strong style="color:#c8102e">' + (isGrowth ? "—" : fmtHKD(x.annualHKD)) + '</strong>' + (isGrowth ? '' : '<div class="tiny" style="color:#d97706">≈ ' + fmtRMB(x.annualHKD * fxRmb) + '</div>') + '</td>' +
     '<td class="' + retClass(x.r1) + '">' + fmtRet(x.r1) + '</td>' +
     '<td class="' + retClass(x.r3) + '">' + fmtRet(x.r3) + '</td>' +
     '<td class="' + retClass(x.r5) + '">' + fmtRet(x.r5) + '</td>' +
-    '<td class="' + rc(x.risk) + '">' + x.risk + '</td></tr>'
-  ).join("") +
+    '<td class="' + rc(x.risk) + '">' + x.risk + '</td></tr>';
+  }).join("") +
     '<tr style="background:#f7f9fc;font-weight:700"><td colspan="4">合計</td><td>' + fmtHKD(port.items.reduce((s,x)=>s+x.allocHKD,0)) + '</td><td>—</td>' +
     '<td><strong style="color:#c8102e">' + (port.yield_*100).toFixed(2) + '%</strong></td>' +
     '<td><strong style="color:#c8102e">' + fmtHKD(port.monthlyHKD) + '</strong><div class="tiny" style="color:#d97706">≈ ' + fmtRMB(port.monthlyHKD * fxRmb) + '</div></td>' +
