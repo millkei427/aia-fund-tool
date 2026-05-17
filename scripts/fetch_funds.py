@@ -222,27 +222,31 @@ def scrape_factsheet_urls(codes: set) -> dict:
                     pass
             page.wait_for_selector("table tr td", timeout=20000)
             page.wait_for_timeout(2000)
+            # === Pass 1: 一次過攞晒所有 detail URLs (因為 navigate 後 row reference 會 stale) ===
+            detail_urls = {}
             rows = page.locator("tr").all()
-            for code in sorted(codes):
-                detail_href = None
-                for row in rows:
-                    try:
-                        cells = row.locator("td").all()
-                        if len(cells) > 1 and cells[1].inner_text().strip() == code:
-                            # 揾「連繫基金詳情」link (通常係 td[7] 嗰個 chart icon)
-                            for link in row.locator("a").all():
-                                href = link.get_attribute("href")
-                                if href and "details.html" in href:
-                                    detail_href = href
-                                    break
-                            break
-                    except Exception:
+            for row in rows:
+                try:
+                    cells = row.locator("td").all()
+                    if len(cells) < 2:
                         continue
+                    code = cells[1].inner_text().strip()
+                    if code not in codes:
+                        continue
+                    for link in row.locator("a").all():
+                        href = link.get_attribute("href")
+                        if href and "details.html" in href:
+                            detail_urls[code] = urljoin(AIA_URL, href)
+                            break
+                except Exception:
+                    continue
+            print(f"  📋 Detail URLs 取得: {len(detail_urls)}/{len(codes)} - {sorted(detail_urls.keys())}")
+            # === Pass 2: 逐個 navigate 攞基金月報 URL ===
+            for code in sorted(codes):
+                detail_href = detail_urls.get(code)
                 if not detail_href:
                     print(f"  ✗ {code}: 喺 prices 表搵唔到 detail link")
                     continue
-                # Resolve relative URL (might be "details.html?..." without leading /)
-                detail_href = urljoin(AIA_URL, detail_href)
                 # Navigate to detail page
                 try:
                     page.goto(detail_href, wait_until="networkidle", timeout=30000)
@@ -270,7 +274,7 @@ def scrape_factsheet_urls(codes: set) -> dict:
     return result
 
 
-def parse_allianz_factsheet(pdf_bytes: bytes) -> dict | None:
+def parse_allianz_factsheet(pdf_bytes: bytes, code: str = "") -> dict | None:
     """Allianz 月報 parser: 揾「年度化股息收益率」第一個 data row
     PDF table 結構: 紀錄日 | 除息日 | 每股派息 | 除息日資產淨值 | 股息收益率 | 年度化股息收益率
     """
@@ -280,33 +284,52 @@ def parse_allianz_factsheet(pdf_bytes: bytes) -> dict | None:
             for p in pdf.pages:
                 t = p.extract_text()
                 if t: text += t + "\n"
-        # Allianz 行 pattern: DD/MM/YYYY DD/MM/YYYY <div> <NAV> <yield%> <annualized%>
-        # eg: "13/03/2026 16/03/2026 0.05500 美元 8.2643 美元 0.67% 8.29%"
-        # 揾第一個有兩個 dates 嘅 row
+        mon_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        # Strategy A: 行內含 2 個 dates + 2+ percentages
         for line in text.split("\n"):
             line = line.strip()
             if not line: continue
             dates = re.findall(r"\d{1,2}/\d{1,2}/\d{4}", line)
-            if len(dates) < 2:
-                continue
-            # 揾所有 percentage values, 最後一個應該係年度化
+            if len(dates) < 2: continue
             pcts = re.findall(r"(\d{1,2}\.\d{1,2})\s*%", line)
-            if len(pcts) < 2:  # 起碼要有 股息收益率 + 年度化
-                continue
+            if len(pcts) < 2: continue
             annualized = float(pcts[-1])
-            # dividend per share: 揾 0.0XXXX 或 0.XX
             divs = re.findall(r"(?<![\d.])(0\.\d{3,7})(?![\d.])", line)
-            if not divs:
-                continue
-            div_val = float(divs[0])
-            # 月份: 用第一個 date (紀錄日)
-            mon_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+            if not divs: continue
             d, m, y = dates[0].split("/")
             try:
                 month = mon_names[int(m)-1] + "-" + y[-2:]
             except (ValueError, IndexError):
                 continue
-            return {"month": month, "dividendPerShare": div_val, "yieldPct": annualized}
+            return {"month": month, "dividendPerShare": float(divs[0]), "yieldPct": annualized}
+        # Strategy B: cells 拆 line — 揾第一個 date 之後 window 內嘅 numbers
+        first_date_pos = None
+        first_date_str = None
+        for mm in re.finditer(r"\b(\d{1,2})/(\d{1,2})/(\d{4})\b", text):
+            try:
+                first_date_str = mon_names[int(mm.group(2))-1] + "-" + mm.group(3)[-2:]
+                first_date_pos = mm.end()
+                break
+            except (ValueError, IndexError):
+                continue
+        if first_date_pos:
+            window = text[first_date_pos:first_date_pos+400]
+            divs = re.findall(r"(?<![\d.])(0\.\d{3,7})(?![\d.])", window)
+            pcts = re.findall(r"(\d{1,2}\.\d{1,2})\s*%", window)
+            big_pcts = [float(p) for p in pcts if 1.0 <= float(p) <= 25.0]
+            if divs and big_pcts:
+                return {"month": first_date_str, "dividendPerShare": float(divs[0]), "yieldPct": big_pcts[-1]}
+        # === Debug dump for parser failure ===
+        if code:
+            try:
+                debug_dir = REPO_ROOT / "scripts" / "_debug_dividends"
+                debug_dir.mkdir(exist_ok=True)
+                (debug_dir / f"{code}_allianz_factsheet.txt").write_text(
+                    f"=== Allianz factsheet text for {code} ===\n\n{text[:5000]}\n",
+                    encoding="utf-8"
+                )
+            except Exception:
+                pass
         return None
     except Exception as e:
         print(f"    ⚠️  Allianz parser error: {e}")
@@ -320,7 +343,7 @@ def fetch_factsheet_dividend(code: str, url: str) -> dict | None:
         if r.status_code != 200:
             return None
         if code in ALLIANZ_FUNDS:
-            return parse_allianz_factsheet(r.content)
+            return parse_allianz_factsheet(r.content, code)
         return None
     except Exception as e:
         print(f"    ⚠️  {code} factsheet fetch error: {e}")
