@@ -813,19 +813,8 @@ def main():
     # Phase 1 (Allianz factsheet scraping) 已棄用 — PDF 用 image font, pdfplumber 抽唔到
     # 改用 manualYieldPct 人手 override (見 funds.json Z07 / Z08)
 
-    # === 增長型基金歷史回報 (Playwright 由 chart 攞 + 計 1/3/5 yr) ===
-    try:
-        growth_returns = scrape_growth_returns(GROWTH_FUNDS)
-        for code, rs in growth_returns.items():
-            if code not in config["funds"]:
-                continue
-            f = config["funds"][code]
-            for k in ("r1", "r3", "r5"):
-                if rs.get(k) is not None:
-                    f[k] = rs[k]
-            f["_lastReturnsUpdate"] = hk_now()
-    except Exception as e:
-        print(f"⚠️  增長型回報抓取失敗 (繼續): {e}")
+    # 增長型基金歷史回報 (Playwright chart scraping) 已棄用 — AIA chart 預設只 load 6 個月,
+    # click "All" 觸發唔到 Angular SPA, 改用 _returnsSource 人手 update funds.json (見 H01 等)
 
     config["lastUpdated"] = hk_now()
     if scraped.get("lastPriceDate"):

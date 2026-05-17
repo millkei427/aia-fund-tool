@@ -406,10 +406,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 28.68,
+      "r3": 87.47,
+      "r5": 67.02,
+      "_returnsSource": "Janus Henderson factsheet 03/2026 (rolling)"
     },
     "CG1": {
       "name": "Capital 新視野",
@@ -420,10 +420,10 @@
       "risk": "中",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 19.64,
+      "r3": 69.86,
+      "r5": 45.21,
+      "_returnsSource": "AIA detail 年度表現率 (calendar year cumulative 2021-2025)"
     },
     "I07": {
       "name": "貝萊德世界黃金",
@@ -434,10 +434,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 102.53,
+      "r3": 184.27,
+      "r5": 168.47,
+      "_returnsSource": "BlackRock factsheet — r1 累計, r3/r5 由年度化 41.67%/21.84% 轉做累積"
     },
     "I09": {
       "name": "貝萊德世界能源",
@@ -448,10 +448,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 9.01,
+      "r3": 15.19,
+      "r5": 127.07,
+      "_returnsSource": "AIA detail 年度表現率 (calendar year cumulative 2021-2025)"
     },
     "P04": {
       "name": "安聯總回報亞洲",
@@ -462,10 +462,10 @@
       "risk": "高",
       "regionGroup": "亞太",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 31.14,
+      "r3": 38.26,
+      "r5": -4.74,
+      "_returnsSource": "AIA detail 年度表現率 (calendar year cumulative 2021-2025)"
     },
     "W04": {
       "name": "東匯理美元貨幣",
@@ -476,10 +476,10 @@
       "risk": "低",
       "regionGroup": "美國",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 4.17,
+      "r3": 15.42,
+      "r5": 17.27,
+      "_returnsSource": "AIA detail 年度表現率 (calendar year cumulative 2021-2025)"
     },
     "D14": {
       "name": "富蘭克林黃金貴金屬",
@@ -490,10 +490,10 @@
       "risk": "高",
       "regionGroup": "環球",
       "type": "growth",
-      "r1": null,
-      "r3": null,
-      "r5": null,
-      "_lastReturnsUpdate": "2026-05-17T09:23:08+08:00"
+      "r1": 190.79,
+      "r3": 242.54,
+      "r5": 151.31,
+      "_returnsSource": "AIA detail 年度表現率 (calendar year cumulative 2021-2025)"
     }
   }
 }
