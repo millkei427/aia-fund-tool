@@ -11,8 +11,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="AIA基金">
-<title>AIA 銷售工具 v3.7（個人用）</title>
+<meta name="apple-mobile-web-app-title" content="保險試算">
+<title>保險試算工具 v3.7（個人用）</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
 <style>
 :root { color-scheme: light; }
@@ -223,11 +223,11 @@ table.funds tr:hover td { background: #fbfcfe; }
 
 <div id="gateOverlay">
   <div id="gateBox">
-    <h2>🔐 AIA 銷售工具・登入</h2>
+    <h2>🔐 保險試算工具・登入</h2>
     <div class="gate-sub">此工具僅供本人及授權同事個人使用</div>
     <div class="gate-disc">
       ⚠️ <b>免責聲明</b><br>
-      本工具由 AIA 理財顧問<b>個人製作</b>，<b>並非 AIA 友邦保險官方產品</b>。所有計算結果、基金價格及優惠資料只供個人參考，<b>最終以 AIA 官方文件、保單條款及顧問正式報價為準</b>。請勿外傳、轉發或作公開銷售推廣用途。使用即表示已閱讀並同意以上聲明。
+      本工具由理財顧問<b>個人製作</b>，<b>並非任何保險公司官方產品</b>。所有計算結果、產品價格及優惠資料只供個人參考，<b>最終以相關保險公司官方文件、保單條款及顧問正式報價為準</b>。請勿外傳、轉發或作公開銷售推廣用途。使用即表示已閱讀並同意以上聲明。
     </div>
     <label class="gate-agree"><input type="checkbox" id="gateAgree"> 我已閱讀並同意以上免責聲明</label>
     <input type="password" id="gatePwd" placeholder="請輸入密碼" autocomplete="off">
@@ -235,9 +235,9 @@ table.funds tr:hover td { background: #fbfcfe; }
     <div class="gate-err" id="gateErr">密碼錯誤，請再試。</div>
   </div>
 </div>
-<div class="disc-banner" id="discBanner" style="display:none">⚠️ <b>個人工具・非 AIA 官方產品</b>　所有資料僅供個人參考，最終以 AIA 官方文件為準・請勿外傳</div>
+<div class="disc-banner" id="discBanner" style="display:none">⚠️ <b>個人試算工具・非任何保險公司官方產品</b>　所有資料僅供個人參考，最終以相關保險公司官方文件為準・請勿外傳</div>
 <div class="wrap">
-<div class="header"><h1>AIA 銷售工具 v3.5</h1><div class="sub">📊 卓達智悅基金分析 · 💰 環宇盈活儲蓄 · 🛡️ 愛伴航 2 危疾 · 客戶管理 · HKD/RMB/USD 多幣</div><div class="meta">🔄 AIA 官方最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
+<div class="header"><h1>保險試算工具 v3.7</h1><div class="sub">📊 基金分析 · 💰 儲蓄計劃 · 🛡️ 危疾計劃 · 客戶管理 · HKD/RMB/USD 多幣</div><div class="meta">🔄 最新基金價格: 04/24/2026 &nbsp;|&nbsp; 📈 歷史回報截至: 2026/03/31</div>
 <div class="action-bar">
   <button class="btn-action solid" id="btnOpenClients">👥 客戶管理 <span class="client-pill" id="clientCountPill" style="display:none">0</span></button>
   <button class="btn-action" id="btnSaveScenario">💾 保存目前方案</button>
@@ -269,7 +269,7 @@ table.funds tr:hover td { background: #fbfcfe; }
 <div class="charts-row"><div class="chart-card"><h3>📈 累積派息趨勢 (1-30 年)</h3><div class="chart-wrap"><canvas id="chartProj"></canvas></div></div><div class="chart-card"><h3>🌍 地區分佈 (依組合權重)</h3><div class="chart-wrap"><canvas id="chartGeo"></canvas></div></div></div>
 <div class="section-title">📋 基金詳細資料</div>
 <div class="fund-table-wrap"><table class="funds"><thead><tr><th>代號</th><th>基金名稱</th><th>資產類別</th><th>比例</th><th>配置 (HKD)</th><th>價格 (USD)</th><th>派息率</th><th>每月派息<br>HKD / RMB</th><th>每年回報<br>HKD / RMB</th><th>1年</th><th>3年</th><th>5年</th><th>風險</th></tr></thead><tbody id="fundBody"></tbody></table></div>
-<div class="footer"><strong>📚 AIA 官方參考連結</strong><div class="links"><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a></div><div class="disclaimer">⚠️ <strong>本工具只作模擬及參考用途</strong>，並非實際合約。基金價格 + 派息率每星期日由 GitHub Actions 自動由 AIA 官網爬取，最新數據如部份基金未能成功更新會沿用上次資料（每月變動通常輕微）。<strong>最準確嘅實時數據請瀏覽 <a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">AIA 官方投資選擇頁面</a></strong>。HKD/CNY 匯率僅作參考。本工具不構成投資建議，投資涉及風險。</div></div>
+<div class="footer"><strong>📚 參考連結</strong><div class="links"><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">📊 投資選擇資訊</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/time-horizon.html" target="_blank">⏳ 投資年期與回報</a><a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/education-module/dollar-cost-averaging.html" target="_blank">📉 平均成本法</a></div><div class="disclaimer">⚠️ <strong>本工具只作模擬及參考用途</strong>，並非實際合約。基金價格 + 派息率每星期日由 GitHub Actions 自動由相關公司官網爬取，最新數據如部份基金未能成功更新會沿用上次資料（每月變動通常輕微）。<strong>最準確嘅實時數據請瀏覽 <a href="https://www.aia.com.hk/zh-hk/help-and-support/individuals/investment-information/investment-options-prices.html" target="_blank">官方投資選擇頁面</a></strong>。HKD/CNY 匯率僅作參考。本工具不構成投資建議，投資涉及風險。</div></div>
 </div>
 
 <!-- ===== 環宇盈活儲蓄計劃 ===== -->
@@ -335,7 +335,7 @@ table.funds tr:hover td { background: #fbfcfe; }
       <a href="https://www.aia.com.hk/zh-hk/our-products/life-insurance/global-flexi-savings.html" target="_blank">📖 產品官網</a>
       <a href="https://www.aia.com.hk/zh-hk/dividend-philosophy-history.html" target="_blank">📊 過往派發紅利資料</a>
     </div>
-    <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於 AIA 環宇盈活儲蓄保險計劃（5 年繳費）標準個案建議書（30歲女非吸煙標準），實際保證及非保證金額由 AIA 全權決定。預期內部回報率受 6.5% 上限約束。投保前請詳閱保單契約。</div>
+    <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於相關 5 年繳費儲蓄計劃標準個案建議書（30歲女非吸煙標準），實際保證及非保證金額由保險公司全權決定。預期內部回報率受 6.5% 上限約束。投保前請詳閱保單契約。</div>
   </div>
 </div>
 
@@ -383,7 +383,7 @@ table.funds tr:hover td { background: #fbfcfe; }
       <span>同時投保「愛伴航 2」+「活然人生」 → 額外 <strong>+3%</strong> 優惠 (5年繳費期專享)</span>
     </label>
     <div class="note" style="font-size:11.5px;color:#78350f;background:#fef9e7;padding:6px 10px;border-radius:6px;margin-top:8px">
-      <strong>IVS</strong> = 友邦團體保險 / 強積金 / 退休金成員 (回贈率高約 2%)
+      <strong>IVS</strong> = 集團團體保險 / 強積金 / 退休金成員 (回贈率高約 2%)
     </div>
   </div>
 
@@ -439,7 +439,7 @@ table.funds tr:hover td { background: #fbfcfe; }
   </div>
 
   <div class="footer">
-    <div class="disclaimer" style="font-size:10.5px;color:#8a96a8;line-height:1.6">⚠️ 本工具計算基於 2026/02/01 GP3 & GF PIR Excel 邏輯。現金券、保證回贈率每 2-3 個月由 AIA 公佈新版本,使用前請核對。額外 +3% 優惠須符合條件:同一保單持有人,同時投保「愛伴航 2」+「活然人生」,且活然人生年度化保費達 $3,000 USD 或以上。設定改完自動儲存喺本機 localStorage。</div>
+    <div class="disclaimer" style="font-size:10.5px;color:#8a96a8;line-height:1.6">⚠️ 本工具計算基於 2026/02/01 GP3 & GF PIR Excel 邏輯。現金券、保證回贈率每 2-3 個月由相關公司公佈新版本,使用前請核對。額外 +3% 優惠須符合條件:同一保單持有人,同時投保「愛伴航 2」+「活然人生」,且活然人生年度化保費達 $3,000 USD 或以上。設定改完自動儲存喺本機 localStorage。</div>
   </div>
 </div>
 
@@ -503,7 +503,7 @@ table.funds tr:hover td { background: #fbfcfe; }
     <div class="links">
       <a href="https://www.aia.com.hk/zh-hk/our-products/critical-illness/on-your-side-insurance-plan-2.html" target="_blank">📖 產品官網</a>
     </div>
-    <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於 AIA 愛伴航 2 標準個案（更新至 2025/10/6 內部試算）。實際保費受核保結果影響。投保前請詳閱保單契約。</div>
+    <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於愛伴航 2 標準個案（更新至 2025/10/6 內部試算）。實際保費受核保結果影響。投保前請詳閱保單契約。</div>
   </div>
 </div>
 
@@ -542,8 +542,8 @@ let FUNDS = {
   Z31: { name:"駿利環球地產", full:"駿利亨德森環球房地產股票 A5m", cls:"股票-行業", newPrice:8.04, annYield:0.06, risk:"高", regionGroup:"環球", r1:6.17, r3:16.18, r5:null },
   Z33: { name:"駿利平衡基金", full:"駿利亨德森平衡基金 A6m", cls:"多元資產-美國", newPrice:11.47, annYield:0.07, risk:"低", regionGroup:"美國", r1:10.03, r3:null, r5:null },
   Z36: { name:"東匯理短債", full:"東方匯理美元短期債券 A2 MTD3", cls:"固定收入-美國", newPrice:49.05, annYield:0.06, risk:"低", regionGroup:"美國", r1:4.26, r3:17.26, r5:null },
-  Z51: { name:"友邦股票入息", full:"友邦股票入息基金 (RDM)", cls:"股票-環球", newPrice:11.2653, annYield:0.08, risk:"中", regionGroup:"環球", r1:18.07, r3:null, r5:null },
-  Z52: { name:"友邦美高收益", full:"友邦美國高收益債券 (RDM)", cls:"固定收入-美國", newPrice:10.0501, annYield:0.07, risk:"高", regionGroup:"美國", r1:5.83, r3:null, r5:null },
+  Z51: { name:"環球股票入息", full:"環球股票入息基金 (RDM)", cls:"股票-環球", newPrice:11.2653, annYield:0.08, risk:"中", regionGroup:"環球", r1:18.07, r3:null, r5:null },
+  Z52: { name:"美國高收益", full:"美國高收益債券 (RDM)", cls:"固定收入-美國", newPrice:10.0501, annYield:0.07, risk:"高", regionGroup:"美國", r1:5.83, r3:null, r5:null },
   Z69: { name:"安本新興市場債", full:"安本新興市場公司債券 A 加速派息", cls:"固定收入-新興市場", newPrice:9.9384, annYield:0.05, risk:"低", regionGroup:"新興市場", r1:null, r3:null, r5:null },
   ZL1: { name:"FTGF亞洲機會債", full:"FTGF 西方資產亞洲機會債券 A (M)", cls:"固定收入-亞太區", newPrice:62, annYield:0.05, risk:"低", regionGroup:"亞太", r1:0.78, r3:5.09, r5:-1.51 },
   ZP4: { name:"信安優先證券", full:"信安優先證券基金 D2", cls:"固定收入-環球", newPrice:8.35, annYield:0.08, risk:"低", regionGroup:"環球", r1:5.19, r3:24.27, r5:12.81 }
@@ -772,7 +772,7 @@ function renderChart(port) {
 }
 
 // === 環宇盈活 Data (USD-denominated) ===
-// 資料來源：AIA 環宇盈活儲蓄保險計劃 5 年繳費，30 歲女非吸煙標準個案建議書
+// 資料來源：5 年繳費儲蓄計劃，30 歲女非吸煙標準個案建議書
 // 三個 tier：USD 10,300 / 13,000 / 15,000 (年繳)
 // 兩個 mode：withdraw（第 6 年起每年提取總保費的 5.5%/6%）/ keep（不提取）
 // 四個 scenario：guarantee / expected / pessimistic / optimistic
@@ -1829,7 +1829,7 @@ document.getElementById('importFile').addEventListener('change', e => {
 function printReport() {
   const c = findClient(clientStore.currentClientId);
   const ph = document.getElementById('printHeader');
-  ph.innerHTML = '<h2>AIA 卓達智悅・基金分析報告</h2>' +
+  ph.innerHTML = '<h2>卓達智悅・基金分析報告</h2>' +
     '<div class="meta-line">' + (c ? '客戶：' + esc(c.name) + ' · ' : '') +
     '保單金額：' + amount.toLocaleString() + ' HKD · 組合：' + tabLabel(activeTab) + ' · 列印日期：' + new Date().toLocaleDateString('zh-HK') + '</div>';
   setTimeout(() => window.print(), 100);
@@ -1864,14 +1864,14 @@ async function init() {
         // 從 funds 攞最新派息月份（揀第一個有 dividendMonth 嘅）
         const divMonth = Object.values(data.funds || {}).map(f => f.dividendMonth).filter(Boolean)[0];
         const divPart = divMonth ? ' &nbsp;|&nbsp; 💰 派息: ' + divMonth : '';
-        metaEl.innerHTML = '🔄 AIA 官方最新基金價格: ' + data.lastPriceDate + divPart + ' &nbsp;|&nbsp; 📡 自動同步: ' + updTime;
+        metaEl.innerHTML = '🔄 最新基金價格: ' + data.lastPriceDate + divPart + ' &nbsp;|&nbsp; 📡 自動同步: ' + updTime;
       }
       console.log('✓ Loaded funds.json (auto-updated)');
     }
   } catch (e) {
     console.warn('⚠️  使用內嵌備用資料 (funds.json 載入失敗):', e);
   }
-  // 計算 div (每月派息金額 USD) — 優先用 AIA 月報實際派息, 否則用 annYield 估算
+  // 計算 div (每月派息金額 USD) — 優先用月報實際派息, 否則用 annYield 估算
   Object.keys(FUNDS).forEach(c => {
     if (FUNDS[c].latestDividendPerShare) {
       FUNDS[c].div = FUNDS[c].latestDividendPerShare;  // 直接係月派息金額
