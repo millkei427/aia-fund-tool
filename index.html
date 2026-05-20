@@ -1872,11 +1872,25 @@ async function init() {
     console.warn('⚠️  使用內嵌備用資料 (funds.json 載入失敗):', e);
   }
   // 計算 div (每月派息金額 USD) — 優先用月報實際派息, 否則用 annYield 估算
+  // v3.8: 加入 defensive 防護, 防止 scraper 寫錯格式 (annYield 用 % 而非 decimal, 或 div 寫錯數)
   Object.keys(FUNDS).forEach(c => {
-    if (FUNDS[c].latestDividendPerShare) {
-      FUNDS[c].div = FUNDS[c].latestDividendPerShare;  // 直接係月派息金額
+    const f = FUNDS[c];
+    // 1) Normalize annYield: 如果 > 1 表示 scraper 寫咗 percent 值 (8.51), 自動 ÷100 變 decimal (0.0851)
+    if (f.annYield != null && f.annYield > 1) {
+      console.warn('⚠️ ' + c + ' annYield=' + f.annYield + ' 超出 1, 自動 ÷100');
+      f.annYield = f.annYield / 100;
+    }
+    // 2) 用 latestDividendPerShare 計 div
+    if (f.latestDividendPerShare) {
+      f.div = f.latestDividendPerShare;
+      // 3) Sanity check: 反推 yield > 50%/年 就肯定錯, fallback 用 annYield
+      const impliedYield = (f.div * 12) / f.newPrice;
+      if (impliedYield > 0.5) {
+        console.warn('⚠️ ' + c + ' latestDividendPerShare=' + f.div + ' 推算 yield=' + (impliedYield*100).toFixed(1) + '% 過高, 改用 annYield fallback');
+        f.div = f.annYield * f.newPrice / 12;
+      }
     } else {
-      FUNDS[c].div = FUNDS[c].annYield * FUNDS[c].newPrice / 12;  // fallback 估算
+      f.div = f.annYield * f.newPrice / 12;  // fallback 估算
     }
   });
   loadStore();
