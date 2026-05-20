@@ -54,9 +54,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK"
 .builder-table tr.disabled { opacity: 0.45; }
 .builder-table tr.disabled td:not(:first-child) { color: #8a96a8; }
 .builder-table input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: #c8102e; }
-.alloc-input { width: 70px; padding: 5px 8px; border: 1px solid #d4dae3; border-radius: 5px; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
-.alloc-input:focus { outline: none; border-color: #c8102e; }
-.alloc-input:disabled { background: #f7f9fc; color: #b8c2d0; }
+.alloc-input { width: 90px; padding: 8px 12px; border: 1.5px solid #d4dae3; border-radius: 6px; font-size: 16px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; box-sizing: border-box; }
+.alloc-input:focus { outline: none; border-color: #c8102e; box-shadow: 0 0 0 3px rgba(200,16,46,.12); }
+.alloc-input:disabled { background: #f5f7fa; color: #b0b8c4; cursor: not-allowed; }
+@media (max-width: 768px) { .alloc-input { width: 78px; padding: 10px 10px; font-size: 17px; } }
 .builder-controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
 .builder-controls .preset-divider { width: 1px; height: 24px; background: #d4dae3; margin: 0 4px; }
 .builder-controls .preset-label { font-size: 11px; color: #8a96a8; font-weight: 600; }
@@ -525,26 +526,26 @@ table.funds tr:hover td { background: #fbfcfe; }
 let FUNDS = {
   Z01: { name:"惠理高息", full:"惠理高息股票基金 A2 MDis", cls:"股票-亞太區", newPrice:12.98, annYield:0.05, risk:"高", regionGroup:"亞太(日本除外)", r1:31.15, r3:39.58, r5:19.32 },
   Z03: { name:"摩根亞太", full:"摩根亞太入息基金 A", cls:"多元資產-亞太", newPrice:121.16, annYield:0.04, risk:"低", regionGroup:"亞太", r1:16.86, r3:31.18, r5:18.74 },
-  Z04: { name:"摩根中國", full:"摩根中國股票高息 (美元)", cls:"股票-中國香港", newPrice:9.96, annYield:0.10, risk:"高", regionGroup:"中國", r1:7.48, r3:15.60, r5:-4.67 },
+  Z04: { name:"摩根中國", full:"摩根中國股票高息 (美元)", cls:"股票-中國香港", newPrice:9.96, annYield:0.11, risk:"高", regionGroup:"中國", r1:7.48, r3:15.60, r5:-4.67 },
   Z05: { name:"路博邁", full:"路博邁 NB 新興市場債券 A", cls:"固定收入-新興市場", newPrice:7.94, annYield:0.08, risk:"低", regionGroup:"新興市場", r1:11.60, r3:42.08, r5:17.06 },
-  Z06: { name:"柏瑞環球", full:"柏瑞環球動態資產配置 ADC", cls:"多元資產-環球", newPrice:8.3967, annYield:0.07, risk:"低", regionGroup:"環球", r1:9.39, r3:14.34, r5:2.53 },
+  Z06: { name:"柏瑞環球", full:"柏瑞環球動態資產配置 ADC", cls:"多元資產-環球", newPrice:8.3967, annYield:0.08, risk:"低", regionGroup:"環球", r1:9.39, r3:14.34, r5:2.53 },
   Z07: { name:"安聯增長", full:"安聯收益及增長 (AM)", cls:"多元資產-美國", newPrice:8.5893, annYield:0.08, risk:"高", regionGroup:"美國", r1:10.71, r3:32.43, r5:22.17 },
   Z08: { name:"安聯亞洲", full:"安聯動力亞洲高收益債券 (AMg)", cls:"固定收入-亞太區", newPrice:4.2837, annYield:0.08, risk:"高", regionGroup:"亞太", r1:6.22, r3:22.43, r5:-23.62 },
   Z11: { name:"晉達中國債", full:"晉達全方位中國債券 A 收益-3", cls:"固定收入-中國香港", newPrice:14.80, annYield:0.03, risk:"高", regionGroup:"中國香港", r1:2.28, r3:-1.00, r5:-11.82 },
   Z12: { name:"摩根環球債", full:"摩根環球債券收益 A", cls:"固定收入-環球", newPrice:7.68, annYield:0.06, risk:"高", regionGroup:"環球", r1:4.32, r3:16.95, r5:9.33 },
   Z13: { name:"富達高收益", full:"富達美元高收益 A (G)", cls:"固定收入-美國", newPrice:7.857, annYield:0.07, risk:"高", regionGroup:"美國", r1:6.75, r3:22.31, r5:18.53 },
   Z15: { name:"霸菱環球高收益", full:"霸菱環球高收益債券 G", cls:"固定收入-環球", newPrice:74.26, annYield:0.10, risk:"高", regionGroup:"環球", r1:6.71, r3:27.19, r5:21.69 },
-  Z16: { name:"滙豐亞洲高收益", full:"滙豐亞洲高收益債券 AM2", cls:"固定收入-亞太區", newPrice:4.68, annYield:0.07, risk:"高", regionGroup:"亞太", r1:3.36, r3:8.64, r5:-25.95 },
+  Z16: { name:"滙豐亞洲高收益", full:"滙豐亞洲高收益債券 AM2", cls:"固定收入-亞太區", newPrice:4.68, annYield:0.08, risk:"高", regionGroup:"亞太", r1:3.36, r3:8.64, r5:-25.95 },
   Z17: { name:"貝萊德高息", full:"貝萊德系統分析環球股票高息 A6", cls:"股票-環球", newPrice:9.58, annYield:0.08, risk:"低", regionGroup:"環球", r1:12.06, r3:44.54, r5:43.57 },
   Z18: { name:"富蘭克林入息", full:"富蘭克林入息基金 A", cls:"多元資產-美國", newPrice:9.99, annYield:0.08, risk:"高", regionGroup:"美國", r1:11.65, r3:25.15, r5:28.21 },
   Z20: { name:"施羅德動力收息", full:"施羅德動力收息 A (MF2)", cls:"多元資產-環球", newPrice:103.4262, annYield:0.07, risk:"中", regionGroup:"環球", r1:11.29, r3:null, r5:null },
   Z29: { name:"資本集團公司債", full:"Capital International 全球公司債 Bfdm", cls:"固定收入-環球", newPrice:10.811, annYield:0.05, risk:"低", regionGroup:"環球", r1:4.14, r3:null, r5:null },
   Z31: { name:"駿利環球地產", full:"駿利亨德森環球房地產股票 A5m", cls:"股票-行業", newPrice:8.04, annYield:0.06, risk:"高", regionGroup:"環球", r1:6.17, r3:16.18, r5:null },
-  Z33: { name:"駿利平衡基金", full:"駿利亨德森平衡基金 A6m", cls:"多元資產-美國", newPrice:11.47, annYield:0.07, risk:"低", regionGroup:"美國", r1:10.03, r3:null, r5:null },
+  Z33: { name:"駿利平衡基金", full:"駿利亨德森平衡基金 A6m", cls:"多元資產-美國", newPrice:11.47, annYield:0.08, risk:"低", regionGroup:"美國", r1:10.03, r3:null, r5:null },
   Z36: { name:"東匯理短債", full:"東方匯理美元短期債券 A2 MTD3", cls:"固定收入-美國", newPrice:49.05, annYield:0.06, risk:"低", regionGroup:"美國", r1:4.26, r3:17.26, r5:null },
-  Z51: { name:"環球股票入息", full:"環球股票入息基金 (RDM)", cls:"股票-環球", newPrice:11.2653, annYield:0.08, risk:"中", regionGroup:"環球", r1:18.07, r3:null, r5:null },
-  Z52: { name:"美國高收益", full:"美國高收益債券 (RDM)", cls:"固定收入-美國", newPrice:10.0501, annYield:0.07, risk:"高", regionGroup:"美國", r1:5.83, r3:null, r5:null },
-  Z69: { name:"安本新興市場債", full:"安本新興市場公司債券 A 加速派息", cls:"固定收入-新興市場", newPrice:9.9384, annYield:0.05, risk:"低", regionGroup:"新興市場", r1:null, r3:null, r5:null },
+  Z51: { name:"環球股票入息", full:"環球股票入息基金 (RDM)", cls:"股票-環球", newPrice:11.3661, annYield:0.09, latestDividendPerShare:0.074, risk:"中", regionGroup:"環球", r1:18.07, r3:null, r5:null },
+  Z52: { name:"美國高收益", full:"美國高收益債券 (RDM)", cls:"固定收入-美國", newPrice:9.9116, annYield:0.07, risk:"高", regionGroup:"美國", r1:5.83, r3:null, r5:null },
+  Z69: { name:"安本新興市場債", full:"安本新興市場公司債券 A 加速派息", cls:"固定收入-新興市場", newPrice:9.8560, annYield:0.07, risk:"低", regionGroup:"新興市場", r1:null, r3:null, r5:null },
   ZL1: { name:"FTGF亞洲機會債", full:"FTGF 西方資產亞洲機會債券 A (M)", cls:"固定收入-亞太區", newPrice:62, annYield:0.05, risk:"低", regionGroup:"亞太", r1:0.78, r3:5.09, r5:-1.51 },
   ZP4: { name:"信安優先證券", full:"信安優先證券基金 D2", cls:"固定收入-環球", newPrice:8.35, annYield:0.08, risk:"低", regionGroup:"環球", r1:5.19, r3:24.27, r5:12.81 }
 };
@@ -2146,26 +2147,4 @@ else setTimeout(dcInit, 100);
   const pwd = document.getElementById("gatePwd");
   const btn = document.getElementById("gateBtn");
   const err = document.getElementById("gateErr");
-  const agr = document.getElementById("gateAgree");
-
-  function refresh(){ btn.disabled = !(agr.checked && pwd.value.length > 0); }
-  agr.addEventListener("change", refresh);
-  pwd.addEventListener("input", () => { err.style.display="none"; refresh(); });
-  pwd.addEventListener("keydown", e => { if(e.key==="Enter" && !btn.disabled) btn.click(); });
-
-  btn.addEventListener("click", async () => {
-    if (!agr.checked) { err.textContent="請先剔選同意免責聲明。"; err.style.display="block"; return; }
-    const h = await sha256(pwd.value.trim());
-    if (h === TARGET){
-      sessionStorage.setItem(SK, "1");
-      unlock();
-    } else {
-      err.textContent="密碼錯誤，請再試。";
-      err.style.display="block";
-      pwd.value=""; pwd.focus(); refresh();
-    }
-  });
-})();
-</script>
-</body>
-</html>
+  const agr = document
