@@ -232,7 +232,7 @@ table.funds tr:hover td { background: #fbfcfe; }
     </div>
     <label class="gate-agree"><input type="checkbox" id="gateAgree"> 我已閱讀並同意以上免責聲明</label>
     <input type="password" id="gatePwd" placeholder="請輸入密碼" autocomplete="off">
-    <button class="gate-btn" id="gateBtn" disabled>進入工具</button>
+    <button class="gate-btn" id="gateBtn">進入工具</button>
     <div class="gate-err" id="gateErr">密碼錯誤，請再試。</div>
   </div>
 </div>
@@ -2147,4 +2147,40 @@ else setTimeout(dcInit, 100);
   const pwd = document.getElementById("gatePwd");
   const btn = document.getElementById("gateBtn");
   const err = document.getElementById("gateErr");
-  const agr = document
+  const agr = document.getElementById("gateAgree");
+
+  // v3.8.2: iOS-robust — 唔再靠 disabled state, 撳掣時做 full validation
+  btn.disabled = false;
+
+  function clearErr(){ err.style.display="none"; }
+  ["change","click","input"].forEach(ev => agr.addEventListener(ev, clearErr));
+  ["input","change","keyup"].forEach(ev => pwd.addEventListener(ev, clearErr));
+  pwd.addEventListener("keydown", e => { if(e.key==="Enter") btn.click(); });
+
+  btn.addEventListener("click", async () => {
+    if (!agr.checked) {
+      err.textContent = "請先剔選「我已閱讀並同意以上免責聲明」";
+      err.style.display = "block";
+      return;
+    }
+    const val = pwd.value.trim();
+    if (val.length === 0) {
+      err.textContent = "請輸入密碼";
+      err.style.display = "block";
+      pwd.focus();
+      return;
+    }
+    const h = await sha256(val);
+    if (h === TARGET){
+      sessionStorage.setItem(SK, "1");
+      unlock();
+    } else {
+      err.textContent = "密碼錯誤，請再試。";
+      err.style.display = "block";
+      pwd.value=""; pwd.focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>
