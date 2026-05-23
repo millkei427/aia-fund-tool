@@ -4,8 +4,8 @@ JANUS HENDERSON BALANCED FUND
 駿利亨德森平衡基金
 FUND DISTRIBUTION
 基金股息分派
-February 2026
-2026年2月
+March 2026
+2026年3月
  The Fund's investments in equities are subject to equity market risk due to fluctuation of securities values.
  The Fund invests in debt securities and asset/ mortgage-backed securities/ commercial papers; and is subject to greater interest
 rate, credit/ counterparty, volatility, liquidity, downgrading, valuation, credit rating risks. It may be more volatile.
@@ -40,3 +40,4 @@ The fund is divided into accumulating share classes and distributing share class
 dividend rate is not guaranteed. Positive dividend does not mean positive return. Distributions may be paid from capital.
 基金分為累計股份及分派股份類別，有關派息政策詳情，請參閱基金銷售文件 (包括產品資料概要)。
 就提供分派股份類別而言，股息金額及派息率並非保證，正派息率亦並非代表基金之正報酬回報。分派可能由資本撥款支付。
+JA
