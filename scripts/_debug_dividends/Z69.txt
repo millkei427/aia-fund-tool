@@ -4,7 +4,7 @@ abrdn SICAV I - Emerging Markets
 Corporate Bond Fund
 安本基金 - 新興市場公司債券基金
 Dividend Payout Report 股息分派報告
-April 2026 2026年4月
+May2026 2026年5月
 Important Information
 • The Fund invests in debt and debt-related securities issued by corporations (including government-owned corporations) in a CEMBI Emerging Market
 as at the date of investment.
@@ -40,4 +40,4 @@ abrdn SICAV I - Emerging Markets Corporate Bond Fund A Fixed MIncA USD
 安本基金 - 新興市場公司債券基金 A 類固定每月加速派息（美元）(ISIN: LU3146952240)
 Month Ending Record Date Ex-Dividend Date Fund Currency Dividend per share1 Price (ex-dividend) Annualised Yield2
 截至月份 記錄日期 除息日 基金貨幣 每股派息1 除息日價格 年度化收益2
-2026-04
+2026-05-31

@@ -31,14 +31,15 @@ per unit. Also, a positive distribution yield does not imply a positive return o
 Composition of the Fund Distribution Payment 基金收益分派成分
 JPMorgan Funds – China Equity High Income 摩根基金－中國股票高息基金
 JPMorgan China Equity High Income (mth) – USD 摩根中國股票高息（美元）（每月派息）
-Apr 2026 | 2026 年 4 月
+May 2026 | 2026 年 5 月
 除息日 報價貨幣 每單位/股分派收益 期內從可分派收益淨額中支付 (1) 期內從資本中支付
 From net distributable income
 Ex-dividend date Denominated Currency Distribution per unit/share From capital for the period
 for the period (1)
+30.04.26 USD 0.0720 100.0% 0.0%
 31.03.26 USD 0.0820 100.0% 0.0%
 27.02.26 USD 0.0820 100.0% 0.0%
 30.01.26 USD 0.0820 100.0% 0.0%
 31.12.25 USD 0.0692 100.0% 0.0%
 1) “Net distributable income” means, with respect to distributions from 1 December 2025 onwards, the net investment income (i.e. dividend income and interest income net
-of fees and expenses) attributable to the relevant unit/share class and include also net realized gai
+of fees and expenses) attributable to the relevant unit/share class a
