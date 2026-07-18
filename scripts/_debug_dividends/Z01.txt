@@ -27,6 +27,7 @@ Dividend Annualized Dividend from Net Distributable
 Record Date
 per unit (USD) Dividend Rate 1 Capital Income 2
 記錄日 每單位派息 (美元) 年度化派息率1 從資本派付股息 可供分派淨收入2
+2026-05-28 0.0486 4.4% 0% 100%
 2026-04-29 0.0486 4.5% 0% 100%
 2026-03-30 0.0486 5.0% 0% 100%
 2026-02-26 0.0486 4.5% 0% 100%
@@ -38,6 +39,5 @@ per unit (USD) Dividend Rate 1 Capital Income 2
 2025-08-28 0.0458 5.0% 0% 100%
 2025-07-30 0.0458 5.0% 0% 100%
 2025-06-27 0.0458 5.2% 0% 100%
-2025-05-29 0.0458 5.5% 0% 100%
 1.Annualized yield of Class A2 MDis is calculated as follows: (dividend amount/NAV as of ex-dividend date) x 12.
 Investors should note that

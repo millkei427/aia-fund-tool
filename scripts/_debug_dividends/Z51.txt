@@ -2,7 +2,7 @@
 
 Dividend Record and Schedule for
 AIA Equity Income Fund
-as at May 2026
+as at Jun 2026
 Important information:
 1. AIA Equity Income Fund (“the Fund") is a sub-fund of AIA Investment Funds. The Fund aims to provide income through a portfolio of global
 equity securities and equity-related securities with a covered call strategy to enhance income generation.
@@ -27,7 +27,6 @@ DM
 Ex-dividend date Ex-dividend Dividend per Annualised % Distributed from % Distributed
 date NAV per share (USD) 1 dividend yield2 Net Distributable from Capital
 share (USD) Income3
-16-May-2025 10.1055 0.0680 8.3805% 0% 100%
 16-Jun-2025 10.3311 0.0680 8.1908% 12% 88%
 15-Jul-2025 10.5457 0.0680 8.0182% 16% 84%
 14-Aug-2025 10.7690 0.0680 7.8461% 32% 68%
@@ -35,4 +34,5 @@ share (USD) Income3
 15-Oct-2025 10.9424 0.0710 8.0702% 89% 11%
 17-Nov-2025 11.0168 0.0710 8.0137% 0% 100%
 12-Dec-2025 11.1881 0.0740 8.2322% 0% 100%
-15-Jan-2026 11.2781 0.0740 8.16
+15-Jan-2026 11.2781 0.0740 8.1641% 91% 9%
+13-Feb-2026 11.2282 0.0740 8.201

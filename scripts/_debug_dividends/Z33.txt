@@ -3,9 +3,41 @@
 JANUS HENDERSON BALANCED FUND
 駿利亨德森平衡基金
 FUND DISTRIBUTION
-基金股息分派(cid:3)
-(cid:36)(cid:83)(cid:85)(cid:76)(cid:79)(cid:3)(cid:21)(cid:19)(cid:21)(cid:25)(cid:3)
-(cid:21)(cid:19)(cid:21)(cid:25)年(cid:23)月
- (cid:55)(cid:75)(cid:72)(cid:3)(cid:41)(cid:88)(cid:81)(cid:71)(cid:10)(cid:86)(cid:3)(cid:76)(cid:81)(cid:89)(cid:72)(cid:86)(cid:87)(cid:80)(cid:72)(cid:81)(cid:87)(cid:86)(cid:3)(cid:76)(cid:81)(cid:3)(cid:72)(cid:84)(cid:88)(cid:76)(cid:87)(cid:76)(cid:72)(cid:86)(cid:3)(cid:68)(cid:85)(cid:72)(cid:3)(cid:86)(cid:88)(cid:69)(cid:77)(cid:72)(cid:70)(cid:87)(cid:3)(cid:87)(cid:82)(cid:3)(cid:72)(cid:84)(cid:88)(cid:76)(cid:87)(cid:92)(cid:3)(cid:80)(cid:68)(cid:85)(cid:78)(cid:72)(cid:87)(cid:3)(cid:85)(cid:76)(cid:86)(cid:78)(cid:3)(cid:71)(cid:88)(cid:72)(cid:3)(cid:87)(cid:82)(cid:3)(cid:73)(cid:79)(cid:88)(cid:70)(cid:87)(cid:88)(cid:68)(cid:87)(cid:76)(cid:82)(cid:81)(cid:3)(cid:82)(cid:73)(cid:3)(cid:86)(cid:72)(cid:70)(cid:88)(cid:85)(cid:76)(cid:87)(cid:76)(cid:72)(cid:86)(cid:3)(cid:89)(cid:68)(cid:79)(cid:88)(cid:72)(cid:86)(cid:17)
- (cid:55)(cid:75)(cid:72)(cid:3)(cid:41)(cid:88)(cid:81)(cid:71)(cid:3)(cid:76)(cid:81)(cid:89)(cid:72)(cid:86)(cid:87)(cid:86)(cid:3)(cid:76)(cid:81)(cid:3)(cid:71)(cid:72)(cid:69)(cid:87)(cid:3)(cid:86)(cid:72)(cid:70)(cid:88)(cid:85)(cid:76)(cid:87)(cid:76)(cid:72)(cid:86)(cid:3)(cid:68)(cid:81)(cid:71)(cid:3)(cid:68)(cid:86)(cid:86)(cid:72)(cid:87)(cid:18)(cid:3)(cid:80)(cid:82)(cid:85)(cid:87)(cid:74)(cid:68)(cid:74)(cid:72)(cid:16)(cid:69)(cid:68)(cid:70)(cid:78)(cid:72)(cid:71)(cid:3)(cid:86)(cid:72)(cid:70)(cid:88)(cid:85)(cid:76)(cid:87)(cid:76)(cid:72)(cid:86)(cid:18)(cid:3)(cid:70)(cid:82)(cid:80)(cid:80)(cid:72)(cid:85)(cid:70)(cid:76)(cid:68)(cid:79)(cid:3)(cid:83)(cid:68)(cid:83)(cid:72)(cid:85)(cid:86)(cid:30)(cid:3)(cid:68)(cid:81)(cid:71)(cid:3)(cid:76)(cid:86)(cid:3)(cid:86)(cid:88)(cid:69)(cid:77)(cid:72)(cid:70)(cid:87)(cid:3)(cid:87)(cid:82)(cid:3)(cid:74)(cid:85)(cid:72)(cid:68)(cid:87)(cid:72)(cid:85)(cid:3)(cid:76)(cid:81)(cid:87)(cid:72)(cid:85)(cid:72)(cid:86)(cid:87)
-(cid:85)(cid:68)(cid:87)(cid:72)(cid:15)(cid:3)(cid:70)(cid:85)(cid:72)(cid:71)(cid:76)(cid:87)(cid:18)(cid:3)(cid:70)(cid:82)(cid:88)(cid:81)(cid:87)(cid:72)(cid:85)(cid:83)(cid:68)(cid:85)(cid:87)(cid:92)(cid:15)(cid:3)(cid:89)(cid:82)(cid:79)(cid:68)(cid:87)(cid:76)(cid:79)(cid:76)(cid:87)(cid:92)(cid:15)(cid:3)(cid:79)(cid:76)(cid:84)(cid:88)(cid:76)(cid:71)(cid:76)(cid:87)(cid:92)(cid:15)(cid:3)(cid:71)(cid:82)(cid:90)(cid:81)(cid:74)(cid:85)(cid:68)(cid:71)(cid:76)(cid:81)(cid:74)(cid:15)(cid:3)(cid:89)(cid:68)(cid:79)(cid:88)(cid:68)(cid:87)(cid:76)(cid:82)(cid:81)(cid:15)(cid:3)(cid:70)(cid:85)(cid:72)(cid:71)(cid:76)(cid:87)(cid:3)(cid:85)(cid:68)(cid:87)(cid:76)(cid:81)(cid:74)(cid:3)(cid:85)(cid:76)(cid:86)(cid:78)(cid:86)(cid:17)(cid:3)(cid:44)(cid:87)(cid:3)(cid:80)(cid:68)(cid:92)(cid:3)(cid:69)(cid:72)(cid:3)(cid:80)(cid:82)(cid:85)(cid:72)(cid:3)(cid:89)(cid:82)(cid:79)(cid:68)(cid:87)(cid:76)(cid:79
+基金股息分派
+May 2026
+2026年5月
+▪ The Fund's investments in equities are subject to equity market risk due to fluctuation of securities values.
+▪ The Fund invests in debt securities and asset/ mortgage-backed securities/ commercial papers; and is subject to greater interest
+rate, credit/ counterparty, volatility, liquidity, downgrading, valuation, credit rating risks. It may be more volatile.
+▪ Investments in the Fund involve general investment, RMB currency and conversion, currency, hedging, economic, political, policy,
+foreign exchange, liquidity, tax, legal, regulatory and securities financing transactions related risks. In extreme market conditions,
+you may lose your entire investment.
+▪ The Fund may invest in financial derivatives instruments for investment and efficient portfolio management purposes. This may
+involve counterparty, liquidity, leverage, volatility, valuation, over-the-counter transaction, credit, currency, index, settlement
+default and interest risks; and the Fund may suffer total or substantial losses.
+▪ The Fund's investments are concentrated in US companies/ debt securities and may be more volatile.
+▪ The Fund may at its discretion pay dividends (i) pay dividends out of the capital of the Fund, and/ or (ii) pay dividends out of gross
+income while charging all or part of the fees and expenses to the capital of the Fund, resulting in an increase in distributable
+income available for the payment of dividends by the Fund and therefore, the Fund may effectively pay dividends out of capital.
+This may result in an immediate reduction of the Fund’s net asset value per share, and it amounts to a return or withdrawal of part
+of an investor’s original investment or from any capital gains attributable to that original investment.
+▪ Investors should not only base on this document alone to make investment decisions and should read the offering documents
+including the risk factors for further details.
+▪ 本基金投資於股票，須承受證券價值波動的股本證券風險 。
+▪ 本基金投資於債券及資產╱按揭抵押證券╱商業票據，須承受較高利率、信貸╱對手方，波動性、流動性、降級、估值及信貸評級風
+險，或會具較高波動性。
+▪ 投資本基金涉及一般投資、人民幣貨幣及兌換、貨幣、對沖、經濟、政治、政策、外匯、流動性、稅務、法律、監管及證券融資
+交易相關風險。在極端的市場環境下，閣下可能會損失全部投資。
+▪ 本基金可使用金融衍生工具作投資及有效管理投資組合目的，並涉及對手方、流動性、槓桿、波動性、估值、場外交易、信貸、
+貨幣、指數、交收違約及利率風險， 本基金可能蒙受全部或重大損失。
+▪ 本基金的投資集中於美國公司╱債券，或會具較高波動性。
+▪ 本基金可酌情決定(i)從本基金的資本中支付股息，及╱或 (ii)從收益總額中支付股息，同時從本基金的資本中扣除所有或部份費用
+及開支，導致可供本基金支付股息的可分派收益增加，故本基金實際上可從資本中支付股息。此可能導致本基金的每股資產淨值
+即時減少，並相等於從投資者的原本投資或該原本投資應佔的任何資本增益中退回或提取部份款項。
+▪ 投資者不應只根據此文件而作出投資決定，並應細閱有關基金銷售文件，了解風險因素資料。
+The fund is divided into accumulating share classes and distributing share classes, please read the fund’s offering documents
+(including key facts statement) for dividend policy details. For share classes with a distribution feature, dividend amount or
+dividend rate is not guaranteed. Positive dividend does not mean positive return. Distributions may be paid from capital.
+基金分為累計股份及分派股份類別，有關派息政策詳情，請參閱基金銷售文件 (包括產品資料概要)。
+就提供分派股份類別而言，股息金額及派息率並非保證，正派息率亦並非代表基金之正報酬回報。分派可能由資本撥款支付。
+JANU
