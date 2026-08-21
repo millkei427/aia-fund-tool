@@ -258,6 +258,7 @@ table.funds tr:hover td { background: #fbfcfe; }
   <div class="ptab" data-product="gf">💰 環宇盈活 · 儲蓄</div>
   <div class="ptab" data-product="lc2">🛡️ 愛伴航 2 · 危疾</div>
   <div class="ptab" data-product="discount">🎫 優惠計算</div>
+  <div class="ptab" data-product="yw">🎯 您想 · 投連壽險</div>
 </div>
 <div id="page-fund">
 <div class="section"><div class="label-bar"><span>📌 保單金額 (HKD ↔ 人民幣即時換算)</span><div class="fx-group"><div class="fx-control"><span>USD/HKD 匯率</span><input type="number" id="fx" value="7.80" step="0.01" min="7.5" max="8.0"></div><div class="fx-control"><span>HKD/CNY 匯率</span><input type="number" id="fxRmb" value="0.92" step="0.001" min="0.85" max="1.00"></div></div></div><div class="amount-row"><input type="text" class="amount-input" id="amountInput" value="2,000,000"><span class="ccy-label">HKD</span><span class="equals-sign">=</span><span class="rmb-display" id="rmbDisplay">¥ 1,840,000</span><span class="ccy-label">人民幣</span></div><div class="preset-chips" id="presets"></div></div>
@@ -505,6 +506,148 @@ table.funds tr:hover td { background: #fbfcfe; }
       <a href="https://www.aia.com.hk/zh-hk/our-products/critical-illness/on-your-side-insurance-plan-2.html" target="_blank">📖 產品官網</a>
     </div>
     <div class="disclaimer">⚠️ 本工具僅作銷售輔助參考。數據基於愛伴航 2 標準個案（更新至 2025/10/6 內部試算）。實際保費受核保結果影響。投保前請詳閱保單契約。</div>
+  </div>
+</div>
+
+<!-- ===== 🎯 您想 · 投連壽險 ===== -->
+<style>
+#page-yw .yw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+#page-yw .yw-field label { display: block; font-size: 11.5px; color: #6b7a8e; font-weight: 600; margin-bottom: 4px; }
+#page-yw .yw-field input, #page-yw .yw-field select { width: 100%; padding: 8px 10px; border: 1.5px solid #d4dae3; border-radius: 6px; font-size: 14px; font-weight: 600; background: #fff; }
+#page-yw .yw-field input:focus, #page-yw .yw-field select:focus { outline: none; border-color: #c8102e; }
+#page-yw .yw-field .yw-hint { font-size: 10.5px; color: #8a96a8; margin-top: 3px; }
+#page-yw .yw-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+#page-yw .yw-chip { padding: 3px 9px; background: #eef1f5; border-radius: 4px; font-size: 11px; font-weight: 600; color: #56657a; cursor: pointer; }
+#page-yw .yw-chip:hover { background: #fef2f4; color: #c8102e; }
+#page-yw .yw-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 14px; }
+#page-yw .yw-metric { background: #f7f9fc; border-radius: 8px; padding: 12px 14px; }
+#page-yw .yw-metric.hero { background: linear-gradient(135deg, #fef2f4, #fde8ed); border: 1px solid #fcd3da; }
+#page-yw .yw-metric.highlight { background: linear-gradient(135deg, #fef2f4, #fde8ed); border: 2px solid #c8102e; box-shadow: 0 4px 12px rgba(200,16,46,0.15); }
+#page-yw .yw-metric .yw-lbl { font-size: 11px; color: #6b7a8e; font-weight: 600; margin-bottom: 4px; }
+#page-yw .yw-metric .yw-val { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+#page-yw .yw-metric .yw-sub { font-size: 11px; color: #8a96a8; margin-top: 2px; }
+#page-yw .yw-tab-bar { display: flex; gap: 4px; background: #eef1f5; padding: 4px; border-radius: 8px; margin-bottom: 10px; }
+#page-yw .yw-tab-bar .yw-t { flex: 1; text-align: center; padding: 9px; font-size: 12.5px; font-weight: 600; cursor: pointer; border-radius: 6px; color: #56657a; }
+#page-yw .yw-tab-bar .yw-t.on { background: #fff; color: #c8102e; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+#page-yw .yw-chart-wrap { position: relative; height: 300px; }
+#page-yw table { width: 100%; border-collapse: collapse; font-size: 12px; }
+#page-yw th { background: #f7f9fc; text-align: right; padding: 7px 8px; font-weight: 700; color: #56657a; font-size: 11px; border-bottom: 1px solid #e2e8f0; }
+#page-yw th:first-child { text-align: center; }
+#page-yw td { padding: 6px 8px; border-bottom: 1px solid #eef1f5; font-variant-numeric: tabular-nums; text-align: right; }
+#page-yw td:first-child { text-align: center; font-weight: 700; background: #fbfcfe; }
+</style>
+<div id="page-yw" style="display:none">
+  <div class="section">
+    <div class="label-bar"><span>🎯 「您想」投資連繫壽險 · 實際收益模擬</span></div>
+    <div style="background:#fff7ed;border:1px solid #fed7aa;color:#92400e;padding:8px 12px;border-radius:6px;font-size:12px;margin-bottom:12px">
+      ⚠️ v1 只準確模擬 <strong>30 歲男非吸煙者</strong> case。其他年齡 / 性別 basic premium + COI 會唔同，需要更多 sample proposal 建立 rate table。
+    </div>
+    <div class="yw-grid">
+      <div class="yw-field">
+        <label>基本保額 (USD 人壽保障)</label>
+        <input type="number" id="ywFace" value="50000" step="5000">
+        <div class="yw-chips" id="ywChipsFace">
+          <span class="yw-chip" data-v="50000">5萬</span>
+          <span class="yw-chip" data-v="100000">10萬</span>
+          <span class="yw-chip" data-v="200000">20萬</span>
+        </div>
+      </div>
+      <div class="yw-field">
+        <label>每年基本保費 (USD)</label>
+        <input type="number" id="ywBasicPrem" value="570.50" step="10">
+        <div class="yw-hint">30M NS $50K 保額 = $570.50/年 · 保額變會自動 scale</div>
+      </div>
+      <div class="yw-field">
+        <label>首次整付投資 (USD, 一次過)</label>
+        <input type="number" id="ywLumpSum" value="10000" step="1000">
+        <div class="yw-chips" id="ywChipsLump">
+          <span class="yw-chip" data-v="0">0</span>
+          <span class="yw-chip" data-v="10000">1萬</span>
+          <span class="yw-chip" data-v="50000">5萬</span>
+          <span class="yw-chip" data-v="100000">10萬</span>
+        </div>
+      </div>
+      <div class="yw-field">
+        <label>每年定期投資 (USD)</label>
+        <input type="number" id="ywRegInv" value="0" step="1000">
+        <div class="yw-hint">額外每年定期加碼投資</div>
+      </div>
+      <div class="yw-field">
+        <label>保費繳付年數</label>
+        <input type="number" id="ywPremYears" value="60" min="1" max="70" step="1">
+        <div class="yw-hint">終身通常 60 年 · milestone > 此數才會有影響</div>
+      </div>
+      <div class="yw-field">
+        <label>🔍 查看第 __ 年退保值</label>
+        <input type="number" id="ywMilestone" value="30" min="1" max="70">
+        <div class="yw-chips" id="ywChipsMile">
+          <span class="yw-chip" data-v="5">5年</span>
+          <span class="yw-chip" data-v="10">10年</span>
+          <span class="yw-chip" data-v="20">20年</span>
+          <span class="yw-chip" data-v="30">30年</span>
+          <span class="yw-chip" data-v="40">40年</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label-bar"><span>💹 基金回報假設（升幅 + 派息 = 總回報）</span></div>
+    <div style="font-size:11.5px;color:#8a96a8;margin-bottom:10px">
+      💡 派息基金 (如 Z07/Z17) 通常「NAV 升幅低 + 派息率高」；增長基金 (如 H01) 反之。
+    </div>
+    <div class="yw-grid" style="grid-template-columns:repeat(auto-fit, minmax(220px,1fr))">
+      <div class="yw-field">
+        <label>📈 基金 NAV 年升幅（資本增值）</label>
+        <select id="ywAppRate">
+          <option value="0">0% (純派息基金)</option>
+          <option value="3">3% (穩健增長)</option>
+          <option value="6" selected>6% (中等增長)</option>
+          <option value="9">9% (高增長)</option>
+        </select>
+      </div>
+      <div class="yw-field">
+        <label>💰 基金年派息率（分紅）</label>
+        <select id="ywDivRate">
+          <option value="0">0% (不派息)</option>
+          <option value="6">6%</option>
+          <option value="7">7%</option>
+          <option value="8" selected>8% (主線)</option>
+          <option value="9">9%</option>
+          <option value="10">10%</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label-bar"><span>📊 情景 Matrix（第 <span id="ywMileLabel">30</span> 年退保值）</span></div>
+    <div style="font-size:11.5px;color:#8a96a8;margin-bottom:10px">
+      每個 cell = <strong>升幅 + 派息</strong> 嘅組合結果（複利計算）· ⭐ = 你上方選咗嘅組合
+    </div>
+    <div id="ywMatrixWrap" style="overflow-x:auto"></div>
+    <div class="yw-metrics" id="ywScenarios"></div>
+  </div>
+
+  <div class="section">
+    <div class="yw-tab-bar">
+      <div class="yw-t on" data-view="chart">📈 累積走勢圖</div>
+      <div class="yw-t" data-view="table">📋 年度詳細表</div>
+      <div class="yw-t" data-view="death">🕊️ 身故賠償</div>
+    </div>
+    <div id="ywViewChart"><div class="yw-chart-wrap"><canvas id="ywChart"></canvas></div></div>
+    <div id="ywViewTable" style="display:none; overflow-x:auto"><table id="ywTable"></table></div>
+    <div id="ywViewDeath" style="display:none; overflow-x:auto"><table id="ywTableDeath"></table></div>
+  </div>
+
+  <div class="footer">
+    <strong>📚「您想」計算基準</strong>
+    <div class="disclaimer">
+      基於 AIA「您想」投連壽險建議書 (2026-08-21 版) · 30 歲男非吸煙者 rate table
+      · 首 6 年保費費用 100%/30%/10%×4 · 整付/定期投資費用 6% · 戶口價值費用第 7 年起每月 0.5%/12
+      · 總回報 = (1+升幅) × (1+派息) − 1 複利計算
+      <br>⚠️ 只作模擬 · 不同年齡 basic premium 會有差異 · 實際數值以 AIA 正式建議書為準
+    </div>
   </div>
 </div>
 
@@ -1209,9 +1352,12 @@ function switchProduct(p) {
   document.getElementById('page-lc2').style.display = p === 'lc2' ? '' : 'none';
   const dcPage = document.getElementById('page-discount');
   if (dcPage) dcPage.style.display = p === 'discount' ? '' : 'none';
+  const ywPage = document.getElementById('page-yw');
+  if (ywPage) ywPage.style.display = p === 'yw' ? '' : 'none';
   if (p === 'gf') gfRender();
   if (p === 'lc2') lc2Render();
   if (p === 'discount' && typeof dcRender === 'function') dcRender();
+  if (p === 'yw' && typeof ywRender === 'function') ywRender();
   if (typeof refreshStatusBar === 'function') refreshStatusBar();
 }
 
@@ -2118,6 +2264,227 @@ function dcInit() {
 // Run dcInit on load
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', dcInit);
 else setTimeout(dcInit, 100);
+
+// ===== 🎯 您想 · 投連壽險計算器 =====
+const YW_COI_30M_NS = [
+  1.40, 1.42, 1.44, 1.46, 1.48, 1.48, 1.55, 1.61, 1.74, 1.88,
+  2.03, 2.20, 2.38, 2.59, 2.78, 2.95, 3.16, 3.36, 3.57, 3.68,
+  3.85, 4.27, 4.78, 5.32, 5.76, 6.19, 6.81, 7.39, 7.93, 8.45,
+  9.09, 9.99, 11.11, 12.46, 13.97, 15.39, 16.67, 17.66, 18.47, 19.28,
+  20.36, 21.95, 24.35, 27.73, 32.15, 37.33, 43.70, 50.61, 57.90, 65.39,
+  73.02, 80.67, 88.65, 96.29, 103.46, 110.36, 110.36, 110.36, 110.36, 110.36,
+  110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36
+];
+const YW_APPS = [0, 3, 6, 9];
+const YW_DIVS = [0, 6, 7, 8, 9, 10];
+const YW_START_AGE = 30;
+const YW_BASE_RATE_PER_K = 570.50 / 50; // $11.41/K for 30M NS
+
+function ywPremChargePct(yr) {
+  if (yr === 1) return 1.00;
+  if (yr === 2) return 0.30;
+  if (yr >= 3 && yr <= 6) return 0.10;
+  return 0;
+}
+function ywCombinedRate(app, div) { return (1 + app/100) * (1 + div/100) - 1; }
+
+function ywSimulate(inputs, netReturnRate) {
+  const { face, basicPrem, lumpSum, regInv, premYears } = inputs;
+  const monthlyRate = Math.pow(1 + netReturnRate, 1/12) - 1;
+  const rows = [];
+  let baseAcct = 0, lumpAcct = 0, regAcct = 0, totalPaid = 0, alive = true;
+
+  for (let yr = 1; yr <= 70; yr++) {
+    const age = YW_START_AGE + yr - 1;
+    if (!alive) { rows.push({ yr, age, totalPaid, total: 0, death: 0, terminated: true }); continue; }
+    const stopByYears = yr > premYears;
+    let payBase = !stopByYears ? basicPrem : 0;
+    let payReg = !stopByYears ? regInv : 0;
+    let payLump = yr === 1 ? lumpSum : 0;
+    totalPaid += payBase + payReg + payLump;
+
+    baseAcct += payBase * (1 - ywPremChargePct(yr));
+    lumpAcct += payLump * 0.94;
+    regAcct += payReg * 0.94;
+
+    const coiRate = YW_COI_30M_NS[Math.min(yr - 1, YW_COI_30M_NS.length - 1)];
+    const avChgMonthly = yr >= 7 ? 0.005 / 12 : 0;
+
+    for (let m = 0; m < 12; m++) {
+      let tot = baseAcct + lumpAcct + regAcct;
+      if (tot <= 0) { alive = false; break; }
+      const risk = Math.max(face, tot * 0.05);
+      const coi = coiRate * risk / 1000 / 12;
+      const av = tot * avChgMonthly;
+      let charge = coi + av;
+      if (baseAcct >= charge) baseAcct -= charge;
+      else {
+        let rem = charge - baseAcct; baseAcct = 0;
+        if (regAcct >= rem) regAcct -= rem;
+        else { rem -= regAcct; regAcct = 0; lumpAcct -= rem; if (lumpAcct < 0) lumpAcct = 0; }
+      }
+      baseAcct *= (1 + monthlyRate);
+      lumpAcct *= (1 + monthlyRate);
+      regAcct *= (1 + monthlyRate);
+      if (baseAcct + lumpAcct + regAcct <= 0) { alive = false; break; }
+    }
+    let total = alive ? baseAcct + lumpAcct + regAcct : 0;
+    let death = alive ? total + Math.max(face, total * 0.05) : 0;
+    rows.push({ yr, age, totalPaid, total, death, terminated: !alive });
+  }
+  return rows;
+}
+
+function ywGetInputs() {
+  return {
+    face: +document.getElementById('ywFace').value || 50000,
+    basicPrem: +document.getElementById('ywBasicPrem').value || 570.50,
+    lumpSum: +document.getElementById('ywLumpSum').value || 0,
+    regInv: +document.getElementById('ywRegInv').value || 0,
+    premYears: +document.getElementById('ywPremYears').value || 60,
+    milestone: +document.getElementById('ywMilestone').value || 30,
+    appRate: +document.getElementById('ywAppRate').value,
+    divRate: +document.getElementById('ywDivRate').value
+  };
+}
+
+const ywFmt = n => Math.round(n).toLocaleString();
+const ywFmtCompact = n => n >= 1e6 ? '$'+(n/1e6).toFixed(2)+'M' : n >= 1e3 ? '$'+(n/1e3).toFixed(0)+'K' : '$'+Math.round(n);
+
+let ywChart, ywCurrentSim;
+
+function ywRender() {
+  const inputs = ywGetInputs();
+  document.getElementById('ywMileLabel').textContent = inputs.milestone;
+
+  // Matrix (24 combos)
+  const mat = YW_APPS.map(app => YW_DIVS.map(div => {
+    const rate = ywCombinedRate(app, div);
+    const rows = ywSimulate(inputs, rate);
+    const r = rows.find(x => x.yr === inputs.milestone);
+    return { app, div, rate, value: r ? (r.terminated ? 0 : r.total) : 0, terminated: r ? r.terminated : false, totalPaid: r ? r.totalPaid : 0 };
+  }));
+  ywRenderMatrix(mat, inputs);
+
+  const selRate = ywCombinedRate(inputs.appRate, inputs.divRate);
+  ywCurrentSim = { app: inputs.appRate, div: inputs.divRate, rate: selRate, rows: ywSimulate(inputs, selRate), label: `升${inputs.appRate}%+派${inputs.divRate}%=總${(selRate*100).toFixed(1)}%`, color: '#c8102e' };
+
+  // Selected metric
+  const rSel = ywCurrentSim.rows.find(r => r.yr === inputs.milestone);
+  const totalPaid = rSel ? rSel.totalPaid : 0;
+  const val = rSel && !rSel.terminated ? rSel.total : 0;
+  const mult = totalPaid > 0 ? (val / totalPaid).toFixed(2) : '—';
+  const combinedPct = (selRate * 100).toFixed(2);
+  document.getElementById('ywScenarios').innerHTML = `
+    <div class="yw-metric hero"><div class="yw-lbl">總繳付</div><div class="yw-val" style="color:#c8102e">$${ywFmt(totalPaid)}</div><div class="yw-sub">保費+整付+定期 · ${inputs.milestone} 年</div></div>
+    <div class="yw-metric highlight"><div class="yw-lbl">⭐ 選定 (升${inputs.appRate}% + 派${inputs.divRate}% = 總${combinedPct}%)</div><div class="yw-val" style="color:#c8102e">$${ywFmt(val)}</div><div class="yw-sub">${rSel && rSel.terminated ? '⚠️ 保單已終止' : mult + '× 已繳倍數'}</div></div>
+  `;
+
+  ywRenderTable(); ywRenderDeath(); ywRenderChart();
+}
+
+function ywRenderMatrix(mat, inputs) {
+  let maxV = 0;
+  mat.forEach(row => row.forEach(c => { if (c.value > maxV) maxV = c.value; }));
+  let html = '<table style="min-width:600px"><thead><tr><th style="text-align:left;background:#1a2332;color:#fff">升幅 ↓ / 派息 →</th>';
+  YW_DIVS.forEach(d => {
+    const s = d === inputs.divRate;
+    html += `<th style="text-align:center;background:${s?'#fef2f4':'#f7f9fc'};color:${s?'#c8102e':'#56657a'}">${d===0?'不派息':d+'%'}${s?' ⭐':''}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+  mat.forEach((row, ai) => {
+    const app = YW_APPS[ai];
+    const rs = app === inputs.appRate;
+    html += `<tr><th style="text-align:left;background:${rs?'#fef2f4':'#f7f9fc'};color:${rs?'#c8102e':'#1a2332'}">升幅 ${app===0?'不升':app+'%'}${rs?' ⭐':''}</th>`;
+    row.forEach(cell => {
+      const sc = cell.app === inputs.appRate && cell.div === inputs.divRate;
+      const inten = maxV > 0 ? cell.value / maxV : 0;
+      const bg = cell.terminated ? '#fef2f2' : `rgba(200,16,46,${Math.min(0.4, inten*0.4)})`;
+      const tc = cell.terminated ? '#dc2626' : (inten > 0.6 ? '#fff' : '#1a2332');
+      const bd = sc ? '3px solid #c8102e' : '1px solid #eef1f5';
+      html += `<td style="text-align:right;background:${bg};color:${tc};border:${bd};font-weight:${sc?'800':'600'}">${cell.terminated?'⚠️ 終止':'$'+ywFmt(cell.value)}<div style="font-size:9.5px;opacity:0.7;font-weight:500">總 ${(cell.rate*100).toFixed(1)}%</div></td>`;
+    });
+    html += '</tr>';
+  });
+  document.getElementById('ywMatrixWrap').innerHTML = html + '</tbody>';
+}
+
+function ywRenderTable() {
+  const yrs = [1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70];
+  const sim = ywCurrentSim;
+  let html = `<thead><tr><th>保單年度</th><th>累計已繳</th><th style="color:${sim.color}">${sim.label} 退保</th></tr></thead><tbody>`;
+  yrs.forEach(yr => {
+    const r = sim.rows.find(x => x.yr === yr); if (!r) return;
+    const val = r.terminated ? '⚠️ 終止' : '$' + ywFmt(r.total);
+    const st = r.terminated ? 'color:#dc2626' : `color:${sim.color}`;
+    html += `<tr><td>第${yr}年 (${r.age}歲)</td><td>$${ywFmt(r.totalPaid)}</td><td style="${st}">${val}</td></tr>`;
+  });
+  document.getElementById('ywTable').innerHTML = html + '</tbody>';
+}
+
+function ywRenderDeath() {
+  const yrs = [1, 5, 10, 20, 30, 40, 50, 60, 65, 70];
+  const sim = ywCurrentSim;
+  let html = `<thead><tr><th>保單年度</th><th>累計已繳</th><th style="color:${sim.color}">${sim.label} 身故賠償</th></tr></thead><tbody>`;
+  yrs.forEach(yr => {
+    const r = sim.rows.find(x => x.yr === yr); if (!r) return;
+    const val = r.terminated ? '⚠️ 終止' : '$' + ywFmt(r.death);
+    const st = r.terminated ? 'color:#dc2626' : `color:${sim.color}`;
+    html += `<tr><td>第${yr}年 (${r.age}歲)</td><td>$${ywFmt(r.totalPaid)}</td><td style="${st}">${val}</td></tr>`;
+  });
+  document.getElementById('ywTableDeath').innerHTML = html + '</tbody>';
+}
+
+function ywRenderChart() {
+  const sim = ywCurrentSim;
+  const labels = []; for (let yr = 1; yr <= 60; yr++) labels.push(`第${yr}年`);
+  const datasets = [
+    { label: '累計已繳保費', data: sim.rows.slice(0,60).map(r => r.totalPaid), borderColor: '#8a96a8', borderDash: [5,5], fill: false, tension: 0, pointRadius: 0, borderWidth: 2 },
+    { label: sim.label + ' · 退保發還金額', data: sim.rows.slice(0,60).map(r => r.terminated ? null : r.total), borderColor: sim.color, fill: false, tension: 0.15, pointRadius: 0, borderWidth: 2.5, spanGaps: false }
+  ];
+  if (ywChart) ywChart.destroy();
+  ywChart = new Chart(document.getElementById('ywChart'), {
+    type: 'line', data: { labels, datasets },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => c.dataset.label + ': $' + ywFmt(c.parsed.y) } } },
+      scales: { y: { ticks: { callback: v => ywFmtCompact(v), font: { size: 10 } } },
+        x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12, font: { size: 10 } } } }
+    }
+  });
+}
+
+// Auto-scale basicPrem when face changes (for 30M NS assumption)
+function ywAutoScalePrem() {
+  const face = +document.getElementById('ywFace').value || 50000;
+  const newPrem = (face / 1000) * YW_BASE_RATE_PER_K;
+  document.getElementById('ywBasicPrem').value = newPrem.toFixed(2);
+}
+
+// Wire up
+['ywFace','ywBasicPrem','ywLumpSum','ywRegInv','ywPremYears','ywMilestone','ywAppRate','ywDivRate'].forEach(id => {
+  document.getElementById(id).addEventListener('input', ywRender);
+  document.getElementById(id).addEventListener('change', ywRender);
+});
+document.getElementById('ywFace').addEventListener('change', () => { ywAutoScalePrem(); ywRender(); });
+
+document.querySelectorAll('#ywChipsFace .yw-chip').forEach(c => c.onclick = () => {
+  document.getElementById('ywFace').value = c.dataset.v;
+  ywAutoScalePrem(); ywRender();
+});
+document.querySelectorAll('#ywChipsLump .yw-chip').forEach(c => c.onclick = () => {
+  document.getElementById('ywLumpSum').value = c.dataset.v; ywRender();
+});
+document.querySelectorAll('#ywChipsMile .yw-chip').forEach(c => c.onclick = () => {
+  document.getElementById('ywMilestone').value = c.dataset.v; ywRender();
+});
+document.querySelectorAll('#page-yw .yw-tab-bar .yw-t').forEach(t => t.onclick = () => {
+  document.querySelectorAll('#page-yw .yw-tab-bar .yw-t').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+  document.getElementById('ywViewChart').style.display = t.dataset.view === 'chart' ? '' : 'none';
+  document.getElementById('ywViewTable').style.display = t.dataset.view === 'table' ? '' : 'none';
+  document.getElementById('ywViewDeath').style.display = t.dataset.view === 'death' ? '' : 'none';
+});
 
 </script>
 
