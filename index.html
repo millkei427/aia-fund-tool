@@ -540,9 +540,21 @@ table.funds tr:hover td { background: #fbfcfe; }
   <div class="section">
     <div class="label-bar"><span>🎯 「您想」投資連繫壽險 · 實際收益模擬</span></div>
     <div style="background:#fff7ed;border:1px solid #fed7aa;color:#92400e;padding:8px 12px;border-radius:6px;font-size:12px;margin-bottom:12px">
-      ⚠️ v1 只準確模擬 <strong>30 歲男非吸煙者</strong> case。其他年齡 / 性別 basic premium + COI 會唔同，需要更多 sample proposal 建立 rate table。
+      ✅ v2 支援 <strong>30/35/40 歲男非吸煙者</strong> (basicPrem + COI 由 attained-age table 精確計算) · 其他年齡靠 interpolation。女性/吸煙者未有 rate table。
     </div>
     <div class="yw-grid">
+      <div class="yw-field">
+        <label>投保年齡 (男非吸煙者)</label>
+        <select id="ywStartAge">
+          <option value="30" selected>30 歲</option>
+          <option value="35">35 歲</option>
+          <option value="40">40 歲</option>
+          <option value="25">25 歲 (approx)</option>
+          <option value="45">45 歲 (approx)</option>
+          <option value="50">50 歲 (approx)</option>
+        </select>
+        <div class="yw-hint">rate/K: 30歲=$11.41, 35歲=$14.65, 40歲=$19.02</div>
+      </div>
       <div class="yw-field">
         <label>基本保額 (USD 人壽保障)</label>
         <input type="number" id="ywFace" value="50000" step="5000">
@@ -555,7 +567,7 @@ table.funds tr:hover td { background: #fbfcfe; }
       <div class="yw-field">
         <label>每年基本保費 (USD)</label>
         <input type="number" id="ywBasicPrem" value="570.50" step="10">
-        <div class="yw-hint">30M NS $50K 保額 = $570.50/年 · 保額變會自動 scale</div>
+        <div class="yw-hint">保額 × age rate/K 自動計 · 亦可手動改</div>
       </div>
       <div class="yw-field">
         <label>首次整付投資 (USD, 一次過)</label>
@@ -2266,19 +2278,62 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else setTimeout(dcInit, 100);
 
 // ===== 🎯 您想 · 投連壽險計算器 =====
-const YW_COI_30M_NS = [
-  1.40, 1.42, 1.44, 1.46, 1.48, 1.48, 1.55, 1.61, 1.74, 1.88,
-  2.03, 2.20, 2.38, 2.59, 2.78, 2.95, 3.16, 3.36, 3.57, 3.68,
-  3.85, 4.27, 4.78, 5.32, 5.76, 6.19, 6.81, 7.39, 7.93, 8.45,
-  9.09, 9.99, 11.11, 12.46, 13.97, 15.39, 16.67, 17.66, 18.47, 19.28,
-  20.36, 21.95, 24.35, 27.73, 32.15, 37.33, 43.70, 50.61, 57.90, 65.39,
-  73.02, 80.67, 88.65, 96.29, 103.46, 110.36, 110.36, 110.36, 110.36, 110.36,
-  110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36, 110.36
+// 🔑 關鍵發現 (2026-08-21 doc 34 verified): COI rate 按「已達年齡」而非保單年度
+// 對比: 35M year 1 (age 35) = 1.48 === 30M year 6 (age 35) = 1.48 ✓
+// 所以我用 age 30-99 統一 rate table, 任何投保年齡都適用
+const YW_COI_BY_AGE_NS = [
+  1.40, 1.42, 1.44, 1.46, 1.48,     // age 30-34
+  1.48, 1.55, 1.61, 1.74, 1.88,     // age 35-39
+  2.03, 2.20, 2.38, 2.59, 2.78,     // age 40-44
+  2.95, 3.16, 3.36, 3.57, 3.68,     // age 45-49
+  3.85, 4.27, 4.78, 5.32, 5.76,     // age 50-54
+  6.19, 6.81, 7.39, 7.93, 8.45,     // age 55-59
+  9.09, 9.99, 11.11, 12.46, 13.97,  // age 60-64
+  15.39, 16.67, 17.66, 18.47, 19.28,// age 65-69
+  20.36, 21.95, 24.35, 27.73, 32.15,// age 70-74
+  37.33, 43.70, 50.61, 57.90, 65.39,// age 75-79
+  73.02, 80.67, 88.65, 96.29, 103.46,// age 80-84
+  110.36, 110.36, 110.36, 110.36, 110.36, // age 85-89
+  110.36, 110.36, 110.36, 110.36, 110.36, // age 90-94
+  110.36, 110.36, 110.36, 110.36, 110.36  // age 95-99
 ];
+function ywGetCoiRate(age) {
+  const idx = age - 30;
+  if (idx < 0) return YW_COI_BY_AGE_NS[0];
+  if (idx >= YW_COI_BY_AGE_NS.length) return 110.36;
+  return YW_COI_BY_AGE_NS[idx];
+}
+
+// basicPrem rate/K by 投保年齡 (NS 非吸煙者) — 從 proposal 抽出
+const YW_RATE_PER_K_NS = {
+  30: 11.41,  // $570.50 / 50 = $1141 / 100 (doc 32, 33)
+  35: 14.65,  // $732.50 / 50 (doc 34)
+  40: 19.02   // $951.00 / 50 (doc 35)
+  // 45, 50... 等更多 proposal 補齊
+};
+function ywGetBasicPremRate(age) {
+  if (YW_RATE_PER_K_NS[age]) return YW_RATE_PER_K_NS[age];
+  // 用已知 age 線性 interpolate (rough)
+  const known = Object.keys(YW_RATE_PER_K_NS).map(Number).sort((a,b)=>a-b);
+  if (age <= known[0]) return YW_RATE_PER_K_NS[known[0]] * (age / known[0]); // rough scale
+  if (age >= known[known.length-1]) {
+    // extrapolate: use last 2 known ages slope
+    const [a1, a2] = known.slice(-2);
+    const slope = (YW_RATE_PER_K_NS[a2] - YW_RATE_PER_K_NS[a1]) / (a2 - a1);
+    return YW_RATE_PER_K_NS[a2] + slope * (age - a2);
+  }
+  // interpolate between two known
+  for (let i = 0; i < known.length - 1; i++) {
+    if (age >= known[i] && age <= known[i+1]) {
+      const t = (age - known[i]) / (known[i+1] - known[i]);
+      return YW_RATE_PER_K_NS[known[i]] + t * (YW_RATE_PER_K_NS[known[i+1]] - YW_RATE_PER_K_NS[known[i]]);
+    }
+  }
+  return YW_RATE_PER_K_NS[30]; // fallback
+}
+
 const YW_APPS = [0, 3, 6, 9];
 const YW_DIVS = [0, 6, 7, 8, 9, 10];
-const YW_START_AGE = 30;
-const YW_BASE_RATE_PER_K = 570.50 / 50; // $11.41/K for 30M NS
 
 function ywPremChargePct(yr) {
   if (yr === 1) return 1.00;
@@ -2289,13 +2344,13 @@ function ywPremChargePct(yr) {
 function ywCombinedRate(app, div) { return (1 + app/100) * (1 + div/100) - 1; }
 
 function ywSimulate(inputs, netReturnRate) {
-  const { face, basicPrem, lumpSum, regInv, premYears } = inputs;
+  const { face, basicPrem, lumpSum, regInv, premYears, startAge } = inputs;
   const monthlyRate = Math.pow(1 + netReturnRate, 1/12) - 1;
   const rows = [];
   let baseAcct = 0, lumpAcct = 0, regAcct = 0, totalPaid = 0, alive = true;
 
   for (let yr = 1; yr <= 70; yr++) {
-    const age = YW_START_AGE + yr - 1;
+    const age = startAge + yr - 1;
     if (!alive) { rows.push({ yr, age, totalPaid, total: 0, death: 0, terminated: true }); continue; }
     const stopByYears = yr > premYears;
     let payBase = !stopByYears ? basicPrem : 0;
@@ -2307,7 +2362,8 @@ function ywSimulate(inputs, netReturnRate) {
     lumpAcct += payLump * 0.94;
     regAcct += payReg * 0.94;
 
-    const coiRate = YW_COI_30M_NS[Math.min(yr - 1, YW_COI_30M_NS.length - 1)];
+    // COI 由已達年齡 lookup (跨投保年齡通用)
+    const coiRate = ywGetCoiRate(age);
     const avChgMonthly = yr >= 7 ? 0.005 / 12 : 0;
 
     for (let m = 0; m < 12; m++) {
@@ -2344,7 +2400,8 @@ function ywGetInputs() {
     premYears: +document.getElementById('ywPremYears').value || 60,
     milestone: +document.getElementById('ywMilestone').value || 30,
     appRate: +document.getElementById('ywAppRate').value,
-    divRate: +document.getElementById('ywDivRate').value
+    divRate: +document.getElementById('ywDivRate').value,
+    startAge: +document.getElementById('ywStartAge').value || 30
   };
 }
 
@@ -2457,16 +2514,19 @@ function ywRenderChart() {
 // Auto-scale basicPrem when face changes (for 30M NS assumption)
 function ywAutoScalePrem() {
   const face = +document.getElementById('ywFace').value || 50000;
-  const newPrem = (face / 1000) * YW_BASE_RATE_PER_K;
+  const age = +document.getElementById('ywStartAge').value || 30;
+  const ratePerK = ywGetBasicPremRate(age);
+  const newPrem = (face / 1000) * ratePerK;
   document.getElementById('ywBasicPrem').value = newPrem.toFixed(2);
 }
 
 // Wire up
-['ywFace','ywBasicPrem','ywLumpSum','ywRegInv','ywPremYears','ywMilestone','ywAppRate','ywDivRate'].forEach(id => {
+['ywFace','ywBasicPrem','ywLumpSum','ywRegInv','ywPremYears','ywMilestone','ywAppRate','ywDivRate','ywStartAge'].forEach(id => {
   document.getElementById(id).addEventListener('input', ywRender);
   document.getElementById(id).addEventListener('change', ywRender);
 });
 document.getElementById('ywFace').addEventListener('change', () => { ywAutoScalePrem(); ywRender(); });
+document.getElementById('ywStartAge').addEventListener('change', () => { ywAutoScalePrem(); ywRender(); });
 
 document.querySelectorAll('#ywChipsFace .yw-chip').forEach(c => c.onclick = () => {
   document.getElementById('ywFace').value = c.dataset.v;
